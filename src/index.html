@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>兰州鲜百合物流 ABC 分析数据</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#ffffff; --line:#e4e9f2; --ink:#1b2738; --muted:#6b7689;
+  --blue:#1f5fd6; --blue-d:#153f94; --blue-l:#eaf1fe;
+  --a:#d93a3a; --b:#e58a15; --c:#2f9979; --risk:#8b5cf6;
+  --shadow:0 8px 28px rgba(27,45,80,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",-apple-system,"Segoe UI",sans-serif;font-size:14px}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.topbar{height:64px;background:linear-gradient(100deg,#12336f,#1f5fd6);color:#fff;display:flex;align-items:center;gap:18px;padding:0 26px;position:sticky;top:0;z-index:50;box-shadow:0 4px 18px rgba(18,51,111,.18)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand .logo{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:19px;flex:none}
+.brand h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{margin:2px 0 0;font-size:11px;color:#c9dcff}
+.top-actions{margin-left:auto;display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.btn{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:8px;padding:8px 13px;transition:.2s;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.26);transform:translateY(-1px)}
+.btn.primary{background:#fff;color:var(--blue-d);border-color:#fff;font-weight:700}
+.btn.primary:hover{background:#eaf1fe}
+.shell{display:flex;min-height:calc(100vh - 64px)}
+.sidebar{width:236px;flex:none;background:#fff;border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}
+.side-title{font-size:11px;letter-spacing:2px;color:#9aa5b8;font-weight:700;margin:6px 10px 14px}
+.step{display:flex;gap:11px;align-items:center;padding:11px 12px;border-radius:10px;margin-bottom:5px;color:#5b6678;transition:.18s;text-align:left;width:100%}
+.step:hover{background:#f2f6fd;color:var(--blue-d)}
+.step.active{background:var(--blue-l);color:var(--blue-d);font-weight:700;box-shadow:inset 3px 0 0 var(--blue)}
+.step .num{width:25px;height:25px;flex:none;border-radius:8px;background:#eef2f8;display:grid;place-items:center;font-size:12px;font-weight:700;color:#8793a7}
+.step.active .num{background:var(--blue);color:#fff}
+.step .tx{font-size:13px;line-height:1.25}
+.step .tx small{display:block;font-size:10.5px;font-weight:400;color:#98a3b5;margin-top:3px}
+.role-card{margin-top:20px;background:linear-gradient(145deg,#f2f7ff,#e8f0ff);border:1px solid #d8e5fb;border-radius:12px;padding:14px}
+.role-card b{font-size:12px;color:var(--blue-d)}
+.role-card p{margin:8px 0 0;font-size:11.5px;color:#5c6d88;line-height:1.75}
+.stage{flex:1;min-width:0;padding:22px 26px 70px}
+.view{display:none;animation:fadeUp .45s ease both}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.vhead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.vhead h2{font-size:21px;margin:0;letter-spacing:.3px}
+.vhead h2 span{color:var(--blue)}
+.vhead p{margin:5px 0 0;color:var(--muted);font-size:12.5px}
+.tagline{font-size:11px;background:var(--blue-l);color:var(--blue-d);padding:6px 11px;border-radius:20px;border:1px solid #d6e4fb}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.card h3{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h3::before{content:"";width:4px;height:15px;background:var(--blue);border-radius:3px}
+.card .desc{color:var(--muted);font-size:12px;margin:0 0 14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}.sidebar{display:none}}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;right:-18px;top:-18px;width:70px;height:70px;border-radius:50%;background:#f0f5ff}
+.kpi b{display:block;font-size:25px;color:var(--blue-d);line-height:1.2;position:relative;z-index:1}
+.kpi .lb{font-size:12px;color:var(--muted);margin-bottom:7px}
+.kpi .sb{font-size:10.5px;color:#94a0b2;margin-top:5px;position:relative;z-index:1}
+.kpi.red b{color:var(--a)}.kpi.amber b{color:var(--b)}.kpi.green b{color:var(--c)}.kpi.purple b{color:var(--risk)}
+textarea{width:100%;min-height:150px;border:1px solid #d5deed;border-radius:10px;padding:12px;font-family:Consolas,"Microsoft YaHei",monospace;font-size:12px;line-height:1.6;resize:vertical;outline:none;background:#fbfcff}
+textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,95,214,.1)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.tools .btn{background:#fff;color:var(--blue-d);border:1px solid #cddaf0}
+.tools .btn:hover{background:var(--blue-l)}
+.tools .btn.fill{background:var(--blue);color:#fff;border-color:var(--blue)}
+.note{font-size:11.5px;color:var(--muted);line-height:1.8;background:#f7f9fd;border-left:3px solid #b8cdf2;padding:9px 12px;border-radius:0 8px 8px 0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#f4f7fc;color:#5d6b80;font-weight:700;text-align:left;padding:9px 10px;white-space:nowrap;border-bottom:1px solid var(--line);position:sticky;top:0}
+td{padding:8px 10px;border-bottom:1px solid #eef1f6;white-space:nowrap}
+tr:hover td{background:#fafdff}
+td input{width:100%;min-width:55px;border:1px solid transparent;background:transparent;border-radius:5px;padding:4px 5px}
+td input:hover{border-color:#d8e2f2}
+td input:focus{outline:none;border-color:var(--blue);background:#fff}
+.tablewrap{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;color:#fff}
+.pA{background:var(--a)}.pB{background:var(--b)}.pC{background:var(--c)}
+.lv{font-weight:700;border-radius:6px;padding:3px 8px;font-size:11px;display:inline-block;color:#fff}
+.slider-row{display:flex;align-items:center;gap:9px;margin:8px 0;font-size:12px}
+.slider-row label{width:104px;flex:none;color:#5d6b80;font-size:11.5px}
+.slider-row input[type=range]{flex:1;min-width:60px;accent-color:var(--blue)}
+.slider-row output{width:50px;text-align:right;font-weight:700;color:var(--blue-d)}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.pbar{transform-box:fill-box;transform-origin:bottom;animation:growBar .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes growBar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.pline{fill:none;stroke:#1f5fd6;stroke-width:2.5;stroke-dasharray:2400;stroke-dashoffset:2400;animation:drawLine 1.5s .35s ease forwards}
+@keyframes drawLine{to{stroke-dashoffset:0}}
+.pdot{animation:popIn .4s both}
+@keyframes popIn{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+.dim{opacity:.13!important;filter:grayscale(.7)}
+.caption{margin-top:8px;font-size:12px;color:var(--blue-d);background:var(--blue-l);border-radius:8px;padding:9px 12px;min-height:36px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.cross th,.cross td{text-align:center;border:1px solid #e6ebf4}
+.cross td{white-space:normal;line-height:1.9;min-width:110px}
+.xcell{display:inline-block;background:#eef2f8;color:#4e5b70;border-radius:6px;padding:2px 7px;margin:2px;font-size:11px;font-weight:700}
+.xcell.A{background:#fdeaea;color:#a62639}.xcell.B{background:#fdf1e0;color:#a35c06}.xcell.C{background:#e7f5f0;color:#1f7358}
+.barrow{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:12px}
+.barrow .nm{width:110px;flex:none;color:#4e5b70;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.barrow .track{flex:1;height:18px;background:#eef2f8;border-radius:10px;overflow:hidden}
+.barrow .fillv{height:100%;border-radius:10px;animation:growWidth 1s ease both}
+@keyframes growWidth{from{width:0}}
+.barrow .sc{width:46px;text-align:right;font-weight:700}
+.concl{background:linear-gradient(135deg,#f4f8ff,#fff);border:1px solid #dce7fa}
+.concl li{margin-bottom:10px;line-height:1.8}
+.concl b{color:var(--blue-d)}
+.present-controls{display:none;position:fixed;right:24px;bottom:22px;z-index:80;background:rgba(255,255,255,.96);border:1px solid #d6e1f4;box-shadow:0 10px 34px rgba(18,51,111,.18);border-radius:14px;padding:9px 12px;gap:8px;align-items:center}
+.present-controls button{border:1px solid #cddaf0;background:#fff;color:var(--blue-d);border-radius:8px;padding:7px 12px}
+.present-controls button:hover{background:var(--blue-l)}
+.present-controls .pnum{font-size:12px;color:#6b7689;min-width:64px;text-align:center}
+body.presenting .sidebar{display:none}
+body.presenting .stage{padding:26px clamp(20px,5vw,80px) 100px}
+body.presenting .topbar{height:56px}
+body.presenting .vhead h2{font-size:clamp(24px,3vw,36px)}
+body.presenting .card{padding:22px 24px}
+body.presenting .present-controls{display:flex}
+.progress{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,#1f5fd6,#6aa9ff);z-index:90;transition:width .4s;display:none}
+body.presenting .progress{display:block}
+.notes{display:none;position:fixed;left:24px;bottom:22px;width:min(420px,40vw);background:rgba(255,255,255,.97);border:1px solid #d6e1f4;border-left:4px solid var(--blue);border-radius:12px;padding:14px 16px;box-shadow:0 10px 34px rgba(18,51,111,.15);z-index:80;font-size:12.5px;line-height:1.8;color:#43506a}
+.notes h4{margin:0 0 6px;font-size:12px;color:var(--blue-d);letter-spacing:1px}
+body.presenting.notes-on .notes{display:block}
+.badge{font-size:10px;background:#eef2f8;color:#7d899d;border-radius:5px;padding:2px 6px;margin-left:6px}
+.err{color:#c62828;font-size:12px;margin-top:8px;min-height:16px}
+.rowsel{cursor:pointer}
+.editing{outline:1px dashed #e58a15;background:#fffdf6;cursor:text;border-radius:3px}
+.editbar{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:95;background:#fff;border:1px solid #e58a15;box-shadow:0 10px 30px rgba(120,80,10,.18);border-radius:12px;padding:9px 14px;gap:9px;align-items:center;font-size:12px}
+body.editing-mode .editbar{display:flex}
+.editbar button{border:1px solid #e58a15;color:#8a5a11;background:#fff8ec;border-radius:7px;padding:6px 10px}
+.editbar button:hover{background:#ffefd4}
+.editbar .hint{color:#8a5a11;max-width:380px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">🌿</div>
+    <div><h1>兰州鲜百合物流 ABC 分析数据</h1><p>销售收入 · 累计占比 · 物流 ABC 分类 · 等级对照 · 供应商贡献</p></div>
+  </div>
+  <div class="top-actions">
+    <button class="btn" id="btnLoad">初始数据</button>
+    <button class="btn" id="btnEdit">✎ 编辑文字</button>
+    <button class="btn" id="btnFile">导入 CSV</button>
+    <input type="file" id="fileInput" accept=".csv,.txt" hidden>
+    <button class="btn" id="btnExport">导出分析结果</button>
+    <button class="btn primary" id="btnPresent">▶ 演讲模式</button>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-title">数据演示流程</div>
+    <div id="stepNav"></div>
+    <div class="role-card">
+      <b>分类口径</b>
+      <p>销售收入 = 产量 × 销售单价<br>降序累计占比 ≤70% 为 A、≤90% 为 B<br>阈值可现场拖动，结果跟着变</p>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <!-- 0 概览 -->
+    <section class="view active" data-step="0">
+      <div class="vhead"><div><h2>数据<span>总览</span></h2><p>按销售收入给单品分 A / B / C，再看等级和供方是否匹配，最后落到各自的作业动作</p></div><div class="tagline">口径可调 · 结果跟着变</div></div>
+      <div class="grid g4" id="kpis"></div>
+      <div class="grid g2" style="margin-top:14px">
+        <div class="card"><h3>这张表怎么算的</h3><p class="desc">从原始六列走到分类结果，一步一步看</p>
+          <ul class="rules">
+            <li><b>销售收入</b>：产量 × 销售单价，按金额从高到低排队。</li>
+            <li><b>累计占比</b>：逐个累加销售收入，除以全部销售收入。累计到 70% 以内划 A，90% 以内划 B，剩下的是 C。</li>
+            <li><b>初判等级</b>：表里自带的 A / B / C 初判，和按金额算出来的物流 ABC 放在一起对照，看两边有没有错位。</li>
+          </ul>
+        </div>
+        <div class="card"><h3>分析重点</h3><p class="desc">分类不是目的，是为了把精力放对地方</p>
+          <div class="notice">销售额集中在一两个单品上，就把保供和作业精力压在它们身上。<b>初判等级高但销售占比低的单品</b>，以及<b>销售占比高但初判等级一般的单品</b>，是最值得拿出来讲的两类错位。</div>
+          <div class="flow" style="margin-top:14px"><span>数据工作台</span><em>→</em><span>ABC 分类</span><em>→</em><span>等级对照</span><em>→</em><span>供应商贡献</span><em>→</em><span>分类作业规范</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 数据工作台 -->
+    <section class="view" data-step="1">
+      <div class="vhead"><div><h2>数据<span>工作台</span></h2><p>粘贴 Excel 区域或导入 CSV，销售收入、累计占比和分类结果实时重算</p></div><div class="tagline">支持直接改表格</div></div>
+      <div class="card">
+        <h3>原始数据输入</h3>
+        <p class="desc">列顺序：单品编号, 供应商, 初判等级, 产量(kg), 收购单价(元/kg), 销售单价(元/kg)</p>
+        <textarea id="csvBox" spellcheck="false"></textarea>
+        <div class="tools">
+          <button class="btn fill" id="btnApply">应用数据</button>
+          <button class="btn" id="btnSample2">重置数据</button>
+          <button class="btn" id="btnClear">清空</button>
+          <span class="note" style="margin-left:auto;padding:5px 10px">可直接从 Excel 复制整块区域粘贴，带表头也行</span>
+        </div>
+        <div class="err" id="err"></div>
+      </div>
+      <div class="card">
+        <h3>数据明细（单元格可直接修改）</h3><p class="desc">改产量、收购单价或销售单价，右边的金额、占比、分类跟着刷新</p>
+        <div class="tablewrap"><table id="dataTable"></table></div>
+      </div>
+      <div class="card"><h3>分类阈值</h3><p class="desc">销售收入累计占比的分界线，可现场拖动演绎</p>
+        <div class="grid g3">
+          <div>
+            <div class="slider-row"><label>A 类累计上限</label><input type="range" id="sA" min="40" max="85" value="70"><output id="oA">70%</output></div>
+            <div class="slider-row"><label>B 类累计上限</label><input type="range" id="sB" min="70" max="97" value="90"><output id="oB">90%</output></div>
+          </div>
+          <div><div class="note">累计占比 ≤ A 线归 A 类，≤ B 线归 B 类，超过 B 线归 C 类。改完线，全部分类立即重排。</div></div>
+          <div><div class="note">销售收入 = 产量 × 销售单价；毛利空间 =（销售单价 − 收购单价）÷ 销售单价。两列都是按原始字段现算的。</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 ABC -->
+    <section class="view" data-step="2">
+      <div class="vhead"><div><h2>ABC <span>分类分析</span></h2><p>按销售收入做帕累托，找出撑起大部分销售额的“关键少数”单品</p></div><div class="tagline">收入降序 · 累计占比</div></div>
+      <div class="card">
+        <h3>销售收入帕累托图</h3><p class="desc">柱子是单品销售收入（左轴），折线是累计占比（右轴），阴影区对应 A / B / C 三段</p>
+        <div id="pareto"></div>
+        <div class="tools"><button class="btn" id="btnDemo">▶ 演示分类过程</button></div>
+        <div class="caption" id="paretoCaption">点“演示分类过程”，逐项看累计占比怎么越过分界线。</div>
+        <div class="legend"><span><i style="background:#d93a3a"></i>A 类</span><span><i style="background:#e58a15"></i>B 类</span><span><i style="background:#2f9979"></i>C 类</span><span><i style="background:#1f5fd6"></i>累计占比</span></div>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h3>销售收入结构</h3><div id="donut" style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap"></div></div>
+        <div class="card"><h3>分类策略解读</h3><div id="abcInsight"></div></div>
+      </div>
+      <div class="card"><h3>ABC 分类明细</h3><p class="desc">点任意行跳到该单品的作业卡；初判等级和物流 ABC 并排看</p><div class="tablewrap" style="max-height:420px"><table id="abcTable"></table></div></div>
+    </section>
+
+    <!-- 3 等级对照 -->
+    <section class="view" data-step="3">
+      <div class="vhead"><div><h2>初判等级与<span>物流 ABC 对照</span></h2><p>同一个单品，初判等级和物流分类落在哪两格，错位的才是要重点讲的</p></div><div class="tagline">两张表交叉看</div></div>
+      <div class="card"><h3>等级 × 分类 交叉分布</h3><p class="desc">行是初判等级，列是物流 ABC，格子里是单品编号</p><div id="crossMatrix"></div></div>
+      <div class="card"><h3>错位单品</h3><div id="crossInsight"></div></div>
+    </section>
+
+    <!-- 4 供应商 -->
+    <section class="view" data-step="4">
+      <div class="vhead"><div><h2>供应商<span>贡献分析</span></h2><p>按供方汇总销售收入、产量和毛利空间，看谁撑盘子、谁价差高</p></div><div class="tagline">按表格里的供方字段汇总</div></div>
+      <div class="grid g2">
+        <div class="card"><h3>销售收入贡献排名</h3><p class="desc">条形长度是各供方的销售收入占总收入的比例</p><div id="supBars"></div></div>
+        <div class="card"><h3>集中度</h3><div id="concentration"></div></div>
+      </div>
+      <div class="card"><h3>供应商明细</h3><div class="tablewrap" style="max-height:none"><table id="supTable"></table></div></div>
+    </section>
+
+    <!-- 5 作业规范 -->
+    <section class="view" data-step="5">
+      <div class="vhead"><div><h2>分类<span>作业规范</span></h2><p>选中单品，直接出这张作业卡，动作跟着 ABC 类别走</p></div><div class="tagline">分类落到动作</div></div>
+      <div class="card">
+        <h3>选择单品</h3>
+        <div class="tools"><select id="skuSelect" style="flex:1;min-width:220px;border:1px solid #d5deed;border-radius:8px;padding:9px;background:#fff"></select></div>
+        <div id="workcard"></div>
+      </div>
+      <div class="card"><h3>到货作业专项要求</h3>
+        <ul class="check" id="seedCheck"></ul>
+      </div>
+    </section>
+
+    <!-- 6 结论 -->
+    <section class="view" data-step="6">
+      <div class="vhead"><div><h2>结论与<span>建议</span></h2><p>结论跟着当前数据走，改一次参数就重出一版</p></div><div class="tagline">要点汇总</div></div>
+      <div class="card concl"><h3>分析结论</h3><ol id="conclusion" style="padding-left:20px"></ol></div>
+      <div class="grid g3" id="finalCards"></div>
+    </section>
+  </main>
+</div>
+
+<div class="present-controls">
+  <button id="prevBtn">← 上一步</button>
+  <span class="pnum" id="pnum">1 / 7</span>
+  <button id="nextBtn">下一步 →</button>
+  <button id="autoBtn">自动播放</button>
+  <button id="notesBtn">备注</button>
+  <button id="exitBtn">退出</button>
+</div>
+<div class="notes" id="notes"><h4>演示备注</h4><div id="notesText"></div></div>
+<div class="editbar" id="editbar">
+  <span class="hint">页面文字可直接点开改，改完自动存本机，刷新不丢。</span>
+  <button id="btnEditDone">完成编辑</button>
+  <button id="btnEditExport">导出修改记录</button>
+  <button id="btnEditImport">导入修改记录</button>
+  <input type="file" id="editFile" accept=".txt" hidden>
+  <button id="btnEditReset">清除修改</button>
+</div>
+
+<script>
+/* ============ 原始数据：按 ABC计算.csv 的六个原始字段 ============ */
+const SAMPLE = `单品编号,供应商,初判等级,产量(kg),收购单价(元/kg),销售单价(元/kg)
+PB-01,产地合作社.甲,B,2500,20.00,32.00
+PA-02,产地合作社.乙,A,1200,24.00,48.00
+PA-01,经纪人.丙,A,900,24.00,48.00
+PB-02,加工厂.丁,C,1500,16.00,24.00
+PA-03,餐饮供应链,B,1100,20.00,32.00
+PB-03,加工.百合干原料,C,700,16.00,24.00`;
+
+const STEPS = [
+  ['数据总览','分类口径'],['数据工作台','数据与阈值'],['ABC 分类','帕累托分析'],
+  ['等级对照','两张表交叉'],['供应商贡献','按供方汇总'],['分类作业规范','按类别出动作'],['结论建议','要点汇总']
+];
+const NOTES = [
+  '先看总览：这份表按销售收入排队，累计占比 70% 以内是 A 类，90% 以内 B 类，剩下 C 类。',
+  '底表就是那张 ABC 计算表。六列原始数据都能直接改，销售收入、累计占比和分类跟着重算。',
+  '折线是累计占比，柱子是销售收入。点演示分类过程，一项一项看它怎么越过分界线。',
+  '左边是初判等级，列是物流 ABC。两边错位的单品值得单独讲，品质好但卖得少、或者反过来。',
+  '供应商这页按供方汇总销售收入和毛利，谁撑盘子、谁价差高一眼看出来。',
+  '随手点一个单品，作业卡就出来了。A 类重点保障，C 类简化流程，动作跟着分类走。',
+  '最后这页是汇总的结论。改一次数据，这里就重出一版。'
+];
+const POLICY = {
+  'A':{color:'#d93a3a',label:'重点保障',safety:'高备货 · 周盘点',review:'月度复盘',focus:'优先锁定产能与运力，到货全数清点'},
+  'B':{color:'#e58a15',label:'常规管理',safety:'常规备货 · 半月盘点',review:'季度复盘',focus:'按量采购，抽样复核，保持供方稳定'},
+  'C':{color:'#2f9979',label:'简化流程',safety:'按需采购 · 月度盘点',review:'年度复盘',focus:'简化作业，控制库存，避免占用过多精力'}
+};
+const FIELDS = ['code','supplier','grade0','qty','buyPrice','sellPrice'];
+const ALIAS = {
+  code:['单品编号','编码','编号','货号'],
+  supplier:['供应商','供方'],
+  grade0:['初判等级','初判','等级'],
+  qty:['产量','数量','产量(kg)'],
+  buyPrice:['收购单价','收购价'],
+  sellPrice:['销售单价','销售价']
+};
+const state = {rows:[],sorted:[],suppliers:[],total:0,abcA:70,abcB:90,step:0,presenting:false,notes:false,auto:null,selectedSup:null,selectedSku:null,editing:false};
+
+/* ============ 工具 ============ */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => { const n=parseFloat(String(v==null?'':v).replace(/[,%¥\s]/g,'')); return isNaN(n)?0:n; };
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const money=n=>'¥'+Math.round(n).toLocaleString('zh-CN');
+const pct=n=>n.toFixed(2)+'%';
+
+function parseCSV(text){
+  const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  if(lines.length<2) throw new Error('至少需要表头和一行数据。');
+  const d=lines[0].includes('\t')?'\t':',';
+  const head=lines[0].split(d).map(s=>s.replace(/^\ufeff/,'').trim());
+  const isHead=head.some(h=>ALIAS.code.some(a=>h.toLowerCase().includes(a.toLowerCase())));
+  const idx={};
+  FIELDS.forEach(k=>{
+    let i=head.findIndex(h=>ALIAS[k].some(a=>h.toLowerCase().includes(a.toLowerCase())));
+    idx[k]= i<0 ? FIELDS.indexOf(k) : i;
+  });
+  const out=(isHead?lines.slice(1):lines).map((line,i)=>{
+    const c=line.split(d).map(s=>s.trim());
+    const o={id:i};
+    FIELDS.forEach(k=>o[k]=c[idx[k]]==null?'':c[idx[k]].trim());
+    ['qty','buyPrice','sellPrice'].forEach(k=>o[k]=num(o[k]));
+    o.grade0=o.grade0.replace(/级/g,'').toUpperCase()||'—';
+    if(!o.code) o.code='单品'+(i+1);
+    return o;
+  }).filter(o=>o.qty>0||o.sellPrice>0);
+  if(!out.length) throw new Error('未识别到有效数据行，请检查列格式。');
+  return out;
+}
+
+/* ============ 计算核心：严格按 CSV 口径 ============ */
+function compute(){
+  state.rows.forEach(r=>{
+    r.revenue=r.qty*r.sellPrice;
+    r.profit=r.qty*(r.sellPrice-r.buyPrice);
+    r.margin=r.sellPrice>0?(r.sellPrice-r.buyPrice)/r.sellPrice*100:0;
+  });
+  state.total=state.rows.reduce((s,r)=>s+r.revenue,0)||1;
+  const sorted=[...state.rows].sort((a,b)=>b.revenue-a.revenue);
+  let cum=0;
+  sorted.forEach((r,i)=>{
+    cum+=r.revenue;
+    r.rank=i+1;
+    r.share=r.revenue/state.total*100;
+    r.cumPct=cum/state.total*100;
+    r.abc=r.cumPct<=state.abcA?'A':(r.cumPct<=state.abcB?'B':'C');
+  });
+  state.sorted=sorted;
+  const map={};
+  state.rows.forEach(r=>{
+    const k=r.supplier||'未指定';
+    if(!map[k]) map[k]={name:k,items:0,qty:0,revenue:0,profit:0,buySum:0,sellSum:0,abc:{A:0,B:0,C:0}};
+    const s=map[k];
+    s.items++;s.qty+=r.qty;s.revenue+=r.revenue;s.profit+=r.profit;
+    s.buySum+=r.buyPrice;s.sellSum+=r.sellPrice;s.abc[r.abc]++;
+  });
+  const sups=Object.values(map);
+  sups.forEach(s=>{
+    s.share=s.revenue/state.total*100;
+    s.margin=s.revenue>0?s.profit/s.revenue*100:0;
+    s.avgBuy=s.buySum/s.items;s.avgSell=s.sellSum/s.items;
+    s.mainAbc=Object.keys(s.abc).sort((a,b)=>s.abc[b]-s.abc[a])[0];
+    s.advice=s.share>=25?'核心供方 · 优先保供 + 锁定产能':(s.margin>=45?'高价差供方 · 可争取扩大份额':'常规供方 · 按量采购 + 定期复盘');
+  });
+  state.suppliers=sups.sort((a,b)=>b.revenue-a.revenue);
+  if(!state.suppliers.find(s=>s.name===state.selectedSup)) state.selectedSup=state.suppliers[0]?state.suppliers[0].name:null;
+  if(!state.rows.find(r=>r.code===state.selectedSku)) state.selectedSku=state.sorted[0]?state.sorted[0].code:null;
+}
+
+/* ============ 渲染：概览 ============ */
+function renderKpis(){
+  const a=state.sorted.filter(r=>r.abc==='A');
+  const av=a.reduce((s,r)=>s+r.revenue,0)/state.total*100;
+  const top=state.suppliers[0];
+  const k=[
+    ['单品数量',state.sorted.length+' 个','按销售收入排序',''],
+    ['销售收入合计',money(state.total),'产量 × 销售单价','red'],
+    ['A 类收入占比',pct(av),'A 类 '+a.length+' 个单品','amber'],
+    ['A 类单品',a.length+' 个','累计占比 ≤ '+state.abcA+'%','purple'],
+    ['最大供方占比',top?pct(top.share):'—',top?esc(top.name):'—','green'],
+    ['合作供方',state.suppliers.length+' 家','按供方字段汇总','green']
+  ];
+  $('#kpis').innerHTML=k.map(x=>`<div class="kpi ${x[3]}"><div class="lb">${x[0]}</div><b>${x[1]}</b><div class="sb">${x[2]}</div></div>`).join('');
+}
+
+/* ============ 渲染：数据工作台 ============ */
+function renderTable(){
+  const h='<tr><th>单品编号</th><th>供应商</th><th>初判等级</th><th>产量kg</th><th>收购单价</th><th>销售单价</th><th>销售收入</th><th>累计占比</th><th>物流ABC</th><th>毛利空间</th></tr>';
+  $('#dataTable').innerHTML=h+state.rows.map((r,i)=>`<tr><td><input data-i="${i}" data-f="code" value="${esc(r.code)}"></td><td><input data-i="${i}" data-f="supplier" value="${esc(r.supplier)}"></td><td><input data-i="${i}" data-f="grade0" value="${esc(r.grade0)}" style="width:48px"></td><td><input data-i="${i}" data-f="qty" value="${r.qty}"></td><td><input data-i="${i}" data-f="buyPrice" value="${r.buyPrice}"></td><td><input data-i="${i}" data-f="sellPrice" value="${r.sellPrice}"></td><td class="calc-rev" style="font-weight:700;color:#1f5fd6">${money(r.revenue)}</td><td class="calc-cum">${r.cumPct==null?'—':pct(r.cumPct)}</td><td class="calc-abc">${r.abc?'<span class="pill p'+r.abc+'">'+r.abc+'</span>':'—'}</td><td class="calc-margin">${pct(r.margin)}</td></tr>`).join('');
+}
+function bindTable(){
+  $('#dataTable').addEventListener('input',e=>{
+    const t=e.target; if(!t.dataset||t.dataset.i==null) return;
+    const r=state.rows[+t.dataset.i], f=t.dataset.f;
+    if(['qty','buyPrice','sellPrice'].includes(f)) r[f]=num(t.value);
+    else if(f==='grade0') r[f]=t.value.replace(/级/g,'').toUpperCase();
+    else r[f]=t.value;
+    compute(); renderAnalysis();
+    const tr=t.closest('tr');
+    if(tr){
+      const set=(c,v)=>{const el=tr.querySelector(c);if(el)el.innerHTML=v;};
+      set('.calc-rev',money(r.revenue));
+      set('.calc-cum',pct(r.cumPct));
+      set('.calc-abc','<span class="pill p'+r.abc+'">'+r.abc+'</span>');
+      set('.calc-margin',pct(r.margin));
+    }
+    $('#csvBox').value=toCSV(state.rows);
+  });
+}
+function toCSV(rows){
+  return '单品编号,供应商,初判等级,产量(kg),收购单价(元/kg),销售单价(元/kg)\n'+
+    rows.map(r=>[r.code,r.supplier,r.grade0,r.qty,r.buyPrice,r.sellPrice].join(',')).join('\n');
+}
+
+/* ============ 渲染：ABC 分类 ============ */
+function renderPareto(){
+  const items=state.sorted, W=940,H=400,pl=58,pr=58,pt=22,pb=104, iw=W-pl-pr, ih=H-pt-pb;
+  const maxV=Math.max(...items.map(i=>i.revenue),1);
+  const bw=Math.max(6,iw/items.length*.6);
+  let bars='',labels='',dots='',lines='';
+  const pts=[];
+  items.forEach((it,i)=>{
+    const x=pl+iw*(i+.5)/items.length, h=ih*it.revenue/maxV;
+    const col=it.abc==='A'?'#d93a3a':it.abc==='B'?'#e58a15':'#2f9979';
+    bars+=`<rect class="pbar" data-i="${i}" x="${(x-bw/2).toFixed(1)}" y="${(pt+ih-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${col}" style="animation-delay:${i*60}ms"><title>${esc(it.code)}｜${esc(it.supplier)}｜销售收入 ${money(it.revenue)}｜累计 ${pct(it.cumPct)}</title></rect>`;
+    labels+=`<text x="${x.toFixed(1)}" y="${pt+ih+18}" transform="rotate(-40 ${x.toFixed(1)} ${pt+ih+18})" text-anchor="end" font-size="11" fill="#657087">${esc(it.code)}</text>`;
+    pts.push([x,pt+ih-ih*it.cumPct/100]);
+  });
+  const line=pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  dots=pts.map((p,i)=>`<circle class="pdot" data-i="${i}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.6" fill="#fff" stroke="#1f5fd6" stroke-width="2" style="animation-delay:${300+i*60}ms"><title>${esc(items[i].code)}｜累计 ${pct(items[i].cumPct)}</title></circle>`).join('');
+  [0,25,50,75,100].forEach(v=>{
+    const y=pt+ih-ih*v/100;
+    lines+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="#e8edf5" stroke-dasharray="4 4"/><text x="${pl+iw+8}" y="${y+4}" font-size="10" fill="#98a3b5">${v}%</text>`;
+  });
+  const bi=items.findIndex(r=>r.abc==='B'), ci=items.findIndex(r=>r.abc==='C');
+  let zones='';
+  if(bi>0){const x=pl+iw*bi/items.length;zones+=`<rect x="${pl}" y="${pt}" width="${x-pl}" height="${ih}" fill="#d93a3a" opacity=".045"/><line x1="${x}" y1="${pt}" x2="${x}" y2="${pt+ih}" stroke="#d93a3a" stroke-dasharray="5 5" opacity=".55"/><text x="${pl+8}" y="${pt-6}" font-size="11" fill="#d93a3a" font-weight="700">A 类区（≤${state.abcA}%）</text>`;}
+  if(ci>0&&bi>0){const x1=pl+iw*bi/items.length,x2=pl+iw*ci/items.length;zones+=`<rect x="${x1}" y="${pt}" width="${x2-x1}" height="${ih}" fill="#e58a15" opacity=".05"/><line x1="${x2}" y1="${pt}" x2="${x2}" y2="${pt+ih}" stroke="#e58a15" stroke-dasharray="5 5" opacity=".55"/><text x="${x1+8}" y="${pt-6}" font-size="11" fill="#e58a15" font-weight="700">B 类区</text><text x="${x2+8}" y="${pt-6}" font-size="11" fill="#2f9979" font-weight="700">C 类区</text>`;}
+  $('#pareto').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${lines}${zones}${bars}<polyline class="pline" points="${line}"/>${dots}${labels}<line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="#cbd5e6"/><text x="${pl}" y="${H-6}" font-size="10" fill="#98a3b5">单品（按销售收入降序）</text></svg>`;
+}
+function renderDonut(){
+  const g=[['A',0],['B',0],['C',0]], map={A:'#d93a3a',B:'#e58a15',C:'#2f9979'};
+  state.sorted.forEach(r=>{const x=g.find(v=>v[0]===r.abc); if(x)x[1]+=r.revenue;});
+  const r=52,c=2*Math.PI*r;let off=0,parts='';
+  g.forEach(v=>{const len=c*v[1]/state.total;parts+=`<circle cx="70" cy="70" r="${r}" fill="none" stroke="${map[v[0]]}" stroke-width="23" stroke-dasharray="${len.toFixed(2)} ${(c-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 70 70)"/>`;off+=len;});
+  const legend=g.map(v=>`<div style="font-size:12px;line-height:2"><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${map[v[0]]};margin-right:7px"></i>${v[0]} 类　<b>${pct(v[1]/state.total*100)}</b><br><span style="color:#8b95a6;font-size:11px">${money(v[1])} · ${state.sorted.filter(x=>x.abc===v[0]).length} 个单品</span></div>`).join('');
+  $('#donut').innerHTML=`<svg viewBox="0 0 140 140" style="width:150px;flex:none">${parts}<text x="70" y="67" text-anchor="middle" font-size="14" font-weight="700" fill="#1b2738">${pct(g[0][1]/state.total*100)}</text><text x="70" y="84" text-anchor="middle" font-size="10" fill="#8b95a6">A 类占比</text></svg><div>${legend}</div>`;
+}
+function renderAbcTable(){
+  $('#abcTable').innerHTML='<tr><th>排名</th><th>单品编号</th><th>供应商</th><th>初判等级</th><th>产量kg</th><th>销售收入</th><th>占比</th><th>累计占比</th><th>物流ABC</th><th>毛利空间</th></tr>'+state.sorted.map(r=>`<tr class="rowsel" data-code="${esc(r.code)}"><td>${r.rank}</td><td><b>${esc(r.code)}</b></td><td>${esc(r.supplier)}</td><td>${esc(r.grade0)}</td><td>${r.qty.toLocaleString('zh-CN')}</td><td>${money(r.revenue)}</td><td>${pct(r.share)}</td><td>${pct(r.cumPct)}</td><td><span class="pill p${r.abc}">${r.abc}</span></td><td>${pct(r.margin)}</td></tr>`).join('');
+  $$('#abcTable .rowsel').forEach(tr=>tr.onclick=()=>{state.selectedSku=tr.dataset.code;renderWorkcard();goStep(5);});
+}
+function renderAbcInsight(){
+  const a=state.sorted.filter(r=>r.abc==='A'),b=state.sorted.filter(r=>r.abc==='B'),c=state.sorted.filter(r=>r.abc==='C');
+  const sum=arr=>arr.reduce((s,r)=>s+r.revenue,0);
+  $('#abcInsight').innerHTML=`<ul class="rules">
+    <li><b>A 类（${a.length} 个 / ${pct(sum(a)/state.total*100)}）</b>：${a.map(r=>esc(r.code)).join('、')||'—'}，优先保供、锁产能和运力。</li>
+    <li><b>B 类（${b.length} 个 / ${pct(sum(b)/state.total*100)}）</b>：按需采购、定期复盘，保持供方稳定。</li>
+    <li><b>C 类（${c.length} 个 / ${pct(sum(c)/state.total*100)}）</b>：简化作业、控制库存，别占太多管理精力。</li>
+    <li><b>集中度</b>：前 ${a.length} 个单品就贡献了 ${pct(sum(a)/state.total*100)} 的销售收入，符合“关键少数”。</li></ul>`;
+}
+
+/* ============ 渲染：等级对照 ============ */
+function renderCross(){
+  const gs=['A','B','C'], cs=['A','B','C'];
+  const cell=(g,c)=>state.sorted.filter(r=>r.grade0===g&&r.abc===c);
+  let html='<table class="cross" style="max-width:720px"><tr><th style="width:120px">初判等级 ＼ 物流ABC</th><th>A 类</th><th>B 类</th><th>C 类</th></tr>';
+  gs.forEach(g=>{
+    html+=`<tr><th>${g} 级</th>`;
+    cs.forEach(c=>{
+      const arr=cell(g,c);
+      html+=`<td>${arr.length?arr.map(r=>`<span class="xcell ${c}">${esc(r.code)}</span>`).join(''):'<span style="color:#c3ccda">—</span>'}<br><span style="font-size:10px;color:#98a3b5">${arr.length} 个</span></td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</table>';
+  $('#crossMatrix').innerHTML=html;
+
+  const hiLow=state.sorted.filter(r=>r.grade0==='A'&&r.abc==='C');
+  const lowHi=state.sorted.filter(r=>(r.grade0==='B'||r.grade0==='C')&&r.abc==='A');
+  const agree=state.sorted.filter(r=>r.grade0===r.abc);
+  $('#crossInsight').innerHTML=`<ul class="rules">
+    <li><b>初判 A 级却落在物流 C 类</b>：${hiLow.length?hiLow.map(r=>`${esc(r.code)}（${money(r.revenue)}）`).join('、'):'无'}。品质初判高但销售贡献小，别按 A 类投入过多作业资源。</li>
+    <li><b>初判 B / C 级却是物流 A 类</b>：${lowHi.length?lowHi.map(r=>`${esc(r.code)}（${money(r.revenue)}）`).join('、'):'无'}。销售贡献大但初判一般，保供和到货核验要跟上。</li>
+    <li><b>两口径一致</b>：${agree.length} / ${state.sorted.length} 个，占 ${pct(agree.length/state.sorted.length*100)}。一致的多，说明初判等级和销售贡献基本同向。</li>
+    <li><b>怎么用</b>：初判等级管品质预期，物流 ABC 管作业投入，两张表分开看，错位单品单独议。</li></ul>`;
+}
+
+/* ============ 渲染：供应商 ============ */
+const SCOLOR=['#1f5fd6','#2f9979','#e58a15','#8b5cf6','#d93a3a','#5b8ff9'];
+function renderSuppliers(){
+  const maxS=Math.max(...state.suppliers.map(s=>s.revenue),1);
+  $('#supBars').innerHTML=state.suppliers.map((s,i)=>`<div class="barrow"><span class="nm" title="${esc(s.name)}">${esc(s.name)}</span><div class="track"><div class="fillv" style="width:${(s.revenue/maxS*100).toFixed(1)}%;background:${SCOLOR[i%SCOLOR.length]};animation-delay:${i*70}ms"></div></div><span class="sc">${pct(s.share)}</span></div>`).join('');
+  const cr1=state.suppliers[0]?state.suppliers[0].share:0;
+  const cr3=state.suppliers.slice(0,3).reduce((s,x)=>s+x.share,0);
+  const bestMargin=[...state.suppliers].sort((a,b)=>b.margin-a.margin)[0];
+  $('#concentration').innerHTML=`<ul class="rules">
+    <li><b>第一大供方</b>：${state.suppliers[0]?esc(state.suppliers[0].name):'—'}，占销售收入 <b>${pct(cr1)}</b>。</li>
+    <li><b>前三供方集中度 CR3</b>：<b>${pct(cr3)}</b>。${cr3>=70?'集中度偏高，供方波动会直接传到销售收入，建议备好替代。':'集中度适中，供方之间有一定分散度。'}</li>
+    <li><b>价差最高</b>：${bestMargin?esc(bestMargin.name):'—'}，毛利空间 <b>${bestMargin?pct(bestMargin.margin):'—'}</b>。</li>
+    <li><b>看数口径</b>：毛利空间按（销售单价 − 收购单价）÷ 销售单价计算，只反映表内两个价格字段的差。</li></ul>`;
+  $('#supTable').innerHTML='<tr><th>排名</th><th>供应商</th><th>供货单品</th><th>主要ABC</th><th>产量kg</th><th>销售收入</th><th>收入占比</th><th>平均收购价</th><th>平均销售价</th><th>毛利空间</th><th>建议</th></tr>'+state.suppliers.map((s,i)=>`<tr class="rowsel" data-sup="${esc(s.name)}"><td>${i+1}</td><td><b>${esc(s.name)}</b></td><td>${s.items} 个</td><td><span class="pill p${s.mainAbc}">${s.mainAbc}</span></td><td>${s.qty.toLocaleString('zh-CN')}</td><td>${money(s.revenue)}</td><td>${pct(s.share)}</td><td>${s.avgBuy.toFixed(2)}</td><td>${s.avgSell.toFixed(2)}</td><td><b>${pct(s.margin)}</b></td><td>${s.advice}</td></tr>`).join('');
+  $$('#supTable .rowsel').forEach(tr=>tr.onclick=()=>{state.selectedSup=tr.dataset.sup;});
+}
+
+/* ============ 渲染：作业规范 ============ */
+const WORK = {
+  'A':{
+    items:['到货前 24 小时预报，优先安排卸货月台','送货单与单品编号、批次信息逐项核对','到货数量全数清点，差异当场记录','重点抽样复核（产量与初判等级）','优先入库上架，单独区域存放','每日盘点，异常 4 小时内反馈供方'],
+    flow:['到货预报','单证核对','全数清点','重点抽检','优先入库','每日盘点'],
+    check:['送货单、单品编号与批次信息齐全一致','数量全数清点，差异已当场记录并签字','供货方资质与该批次初判等级可追溯','抽样复核记录留档，结果与单据一致','优先入库区域已预留，批次卡已挂','每日盘点执行，异常 4 小时内反馈']},
+  'B':{
+    items:['到货预报与单证核对','数量清点与外包装检查','按批次抽样复核','入库上架，常规区域存放','每周盘点，异常 24 小时内反馈'],
+    flow:['到货预报','单证核对','数量清点','抽样复核','入库上架','每周盘点'],
+    check:['送货单与单品编号一致','数量清点完成，差异已记录','按批次抽样复核并留档','入库上架完成，批次卡已挂','每周盘点执行，异常 24 小时内反馈']},
+  'C':{
+    items:['到货单证核对','数量清点','简易抽样','按批次入库','按需补货，月度盘点'],
+    flow:['单证核对','数量清点','简易抽样','按批入库','月度盘点'],
+    check:['送货单与单品编号核对一致','数量清点完成','抽样结果留档','批次信息录入台账','月度盘点执行，异常及时反馈']}
+};
+function renderWorkcard(){
+  const sel=$('#skuSelect');
+  sel.innerHTML=state.sorted.map(r=>`<option value="${esc(r.code)}" ${r.code===state.selectedSku?'selected':''}>${esc(r.code)} · ${esc(r.supplier)}｜${r.abc} 类 / ${r.grade0} 级</option>`).join('');
+  const r=state.sorted.find(x=>x.code===state.selectedSku)||state.sorted[0];
+  if(!r)return;
+  const p=POLICY[r.abc], w=WORK[r.abc];
+  $('#workcard').innerHTML=`<div style="margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:16px;background:linear-gradient(120deg,#fbfdff,#f5f9ff)">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><b style="font-size:16px">${esc(r.code)}</b><span class="pill p${r.abc}">${r.abc} 类 · ${p.label}</span><span class="lv" style="background:${p.color}">初判 ${esc(r.grade0)} 级</span><span class="badge">占销售收入 ${pct(r.share)}</span></div>
+    <div class="grid g4">
+      <div><div style="font-size:11px;color:#8b95a6">销售收入 / 产量</div><b style="color:#1f5fd6">${money(r.revenue)} / ${r.qty.toLocaleString('zh-CN')} kg</b></div>
+      <div><div style="font-size:11px;color:#8b95a6">收购价 / 销售价</div><b>${r.buyPrice.toFixed(2)} / ${r.sellPrice.toFixed(2)}</b></div>
+      <div><div style="font-size:11px;color:#8b95a6">备货 / 盘点</div><b>${p.safety}</b></div>
+      <div><div style="font-size:11px;color:#8b95a6">复盘频率</div><b>${p.review}</b></div>
+    </div>
+    <div style="margin-top:14px"><b style="font-size:12px">作业清单（${r.abc} 类 · ${p.label}）</b><ul class="check">${w.items.map(x=>`<li class="done">${esc(x)}</li>`).join('')}</ul></div>
+    <div><b style="font-size:12px">到货流程</b><div class="flow">${w.flow.map((f,i)=>`<span>${i+1}. ${f}</span>${i<w.flow.length-1?'<em>→</em>':''}`).join('')}</div></div>
+    <div class="note" style="margin-top:12px">${p.focus}。初判等级管品质预期，物流 ABC 管作业投入，两张表分开用；异常批次隔离标识，24 小时内反馈供方。</div>
+  </div>`;
+  $('#seedCheck').innerHTML=w.check.map(x=>`<li>${x}</li>`).join('');
+}
+
+/* ============ 渲染：结论 ============ */
+function renderConclusion(){
+  const a=state.sorted.filter(r=>r.abc==='A');
+  const av=a.reduce((s,r)=>s+r.revenue,0)/state.total*100;
+  const best=state.suppliers[0], worst=state.suppliers[state.suppliers.length-1];
+  const hiLow=state.sorted.filter(r=>r.grade0==='A'&&r.abc==='C');
+  const lowHi=state.sorted.filter(r=>(r.grade0==='B'||r.grade0==='C')&&r.abc==='A');
+  const cr3=state.suppliers.slice(0,3).reduce((s,x)=>s+x.share,0);
+  $('#conclusion').innerHTML=[
+    `<b>分类结论：</b>A 类 ${a.length} 个单品（${a.map(r=>esc(r.code)).join('、')}），合计销售收入 ${money(a.reduce((s,r)=>s+r.revenue,0))}，占总收入 ${pct(av)}，按累计占比 ${state.abcA}% 划线得出。`,
+    `<b>等级对照：</b>初判 A 级但落在物流 C 类的有 ${hiLow.length} 个，初判 B / C 级却是物流 A 类的有 ${lowHi.length} 个；这两类错位单品要分开定作业投入。`,
+    `<b>供方结论：</b>${best?esc(best.name):'—'} 贡献销售收入 ${best?pct(best.share):'—'}，居首位；前三供方集中度 ${pct(cr3)}。${worst?esc(worst.name)+' 占比 '+pct(worst.share)+'，按量采购即可。':''}`,
+    `<b>环节落地：</b>物流 ABC 已映射到作业卡，A 类重点保障、B 类常规管理、C 类简化流程，清点、抽检、盘点和反馈时效都跟着变。`,
+    `<b>补充：</b>产量、两个单价和分类阈值都能现改，改完这一页跟着重算。`
+  ].map(x=>`<li>${x}</li>`).join('');
+  $('#finalCards').innerHTML=[
+    ['A 类收入占比',pct(av),'重点单品集中度'],
+    ['物流 A 类单品',a.length+' 个','优先保障'],
+    ['供方集中度 CR3',pct(cr3),'前三供方合计']
+  ].map(x=>`<div class="kpi"><div class="lb">${x[0]}</div><b>${x[1]}</b><div class="sb">${x[2]}</div></div>`).join('');
+}
+
+/* ============ 导航与演讲 ============ */
+function goStep(i){
+  state.step=clamp(i,0,STEPS.length-1);
+  $$('.view').forEach((v,k)=>v.classList.toggle('active',k===state.step));
+  $$('.step').forEach((v,k)=>v.classList.toggle('active',k===state.step));
+  $('#pnum').textContent=(state.step+1)+' / '+STEPS.length;
+  $('#progress').style.width=((state.step+1)/STEPS.length*100)+'%';
+  $('#notesText').textContent=NOTES[state.step];
+  if(state.step===2) renderPareto();
+  if(state.step===3) renderCross();
+  if(state.step===4) renderSuppliers();
+  if(state.step===5) renderWorkcard();
+  applyOverlay();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderAnalysis(){renderKpis();renderPareto();renderDonut();renderAbcTable();renderAbcInsight();renderCross();renderSuppliers();renderWorkcard();renderConclusion();applyOverlay();}
+function renderAll(){renderTable();renderAnalysis();goStep(state.step);}
+
+/* ============ 交互绑定 ============ */
+function bind(){
+  $('#stepNav').innerHTML=STEPS.map((s,i)=>`<button class="step ${i===0?'active':''}" data-i="${i}"><span class="num">${i+1}</span><span class="tx">${s[0]}<small>${s[1]}</small></span></button>`).join('');
+  $$('.step').forEach(b=>b.onclick=()=>goStep(+b.dataset.i));
+  $('#btnLoad').onclick=loadSample;
+  $('#btnSample2').onclick=loadSample;
+  function loadSample(){state.rows=parseCSV(SAMPLE);state.selectedSku=null;state.selectedSup=null;$('#csvBox').value=SAMPLE;$('#err').textContent='';compute();renderAll();}
+  $('#btnApply').onclick=()=>{try{state.rows=parseCSV($('#csvBox').value);state.selectedSku=null;state.selectedSup=null;$('#err').textContent='';compute();renderAll();}catch(e){$('#err').textContent='导入失败：'+e.message;}};
+  $('#btnClear').onclick=()=>{$('#csvBox').value='';$('#err').textContent='';};
+  $('#btnFile').onclick=()=>$('#fileInput').click();
+  $('#fileInput').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$('#csvBox').value=rd.result;$('#btnApply').click();};rd.readAsText(f,'UTF-8');};
+  $('#btnExport').onclick=()=>{
+    const header='单品编号,供应商,初判等级,产量(kg),收购单价(元/kg),销售单价(元/kg),销售收入(元),占比%,累计占比%,物流ABC,毛利空间%';
+    const body=state.sorted.map(r=>[r.code,r.supplier,r.grade0,r.qty,r.buyPrice.toFixed(2),r.sellPrice.toFixed(2),r.revenue.toFixed(2),r.share.toFixed(2),r.cumPct.toFixed(2),r.abc,r.margin.toFixed(2)].join(',')).join('\n');
+    const sup='\n\n供应商,供货单品数,产量kg,销售收入,收入占比%,平均收购价,平均销售价,毛利空间%\n'+state.suppliers.map(s=>[s.name,s.items,s.qty,s.revenue.toFixed(2),s.share.toFixed(2),s.avgBuy.toFixed(2),s.avgSell.toFixed(2),s.margin.toFixed(2)].join(',')).join('\n');
+    const blob=new Blob(['\ufeff'+header+'\n'+body+sup],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='兰州鲜百合物流ABC分析结果.csv';a.click();URL.revokeObjectURL(a.href);
+  };
+  const bindSlider=(id,key,out,fmt)=>{$(id).oninput=e=>{state[key]=+e.target.value;$(out).textContent=fmt(state[key]);compute();renderTable();renderAnalysis();};};
+  bindSlider('#sA','abcA','#oA',v=>v+'%');
+  bindSlider('#sB','abcB','#oB',v=>v+'%');
+  $('#skuSelect').onchange=e=>{state.selectedSku=e.target.value;renderWorkcard();};
+  $('#btnDemo').onclick=demoPareto;
+  $('#btnPresent').onclick=togglePresent;
+  $('#prevBtn').onclick=()=>goStep(state.step-1);
+  $('#nextBtn').onclick=()=>goStep(state.step+1);
+  $('#notesBtn').onclick=()=>{state.notes=!state.notes;document.body.classList.toggle('notes-on',state.notes);};
+  $('#exitBtn').onclick=togglePresent;
+  $('#autoBtn').onclick=()=>{
+    if(state.auto){clearInterval(state.auto);state.auto=null;$('#autoBtn').textContent='自动播放';return;}
+    state.auto=setInterval(()=>{goStep(state.step>=STEPS.length-1?0:state.step+1);},9000);
+    $('#autoBtn').textContent='暂停播放';
+  };
+  document.addEventListener('keydown',e=>{
+    if(!state.presenting)return;
+    if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();goStep(state.step+1);}
+    if(e.key==='ArrowLeft'){e.preventDefault();goStep(state.step-1);}
+    if(e.key.toLowerCase()==='n')$('#notesBtn').click();
+    if(e.key==='Escape')togglePresent();
+  });
+  $('#btnEdit').onclick=toggleEdit;
+  $('#btnEditDone').onclick=toggleEdit;
+  $('#btnEditExport').onclick=exportTextChanges;
+  $('#btnEditImport').onclick=()=>$('#editFile').click();
+  $('#editFile').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const rd=new FileReader();
+    rd.onload=()=>{
+      const lines=String(rd.result).replace(/^\ufeff/,'').split(/\r?\n/).slice(1);
+      overlay={};
+      lines.forEach(l=>{const i=l.indexOf(' ｜ ');if(i>0)overlay[l.slice(0,i)]=l.slice(i+3);});
+      try{localStorage.setItem(EDIT_KEY,JSON.stringify(overlay));}catch(err){}
+      location.reload();
+    };
+    rd.readAsText(f,'UTF-8');
+  };
+  $('#btnEditReset').onclick=()=>{if(confirm('清除本机保存的文字修改，恢复默认？')){localStorage.removeItem(EDIT_KEY);location.reload();}};
+}
+function togglePresent(){
+  state.presenting=!state.presenting;
+  document.body.classList.toggle('presenting',state.presenting);
+  $('#btnPresent').textContent=state.presenting?'退出演讲':'▶ 演讲模式';
+  if(!state.presenting&&state.auto){clearInterval(state.auto);state.auto=null;$('#autoBtn').textContent='自动播放';}
+}
+function demoPareto(){
+  const bars=$$('#pareto .pbar'),dots=$$('#pareto .pdot'),cap=$('#paretoCaption');
+  bars.forEach(b=>b.classList.add('dim'));dots.forEach(d=>d.classList.add('dim'));
+  let i=0;cap.textContent='开始逐项演示：按销售收入从高到低累计…';
+  const timer=setInterval(()=>{
+    if(i>=bars.length){clearInterval(timer);cap.textContent=`演示完成：累计占比依次越过 ${state.abcA}% 与 ${state.abcB}%，形成 A / B / C 三类。`;return;}
+    bars[i].classList.remove('dim');if(dots[i])dots[i].classList.remove('dim');
+    const r=state.sorted[i];cap.textContent=`第 ${i+1} 个｜${esc(r.code)}｜销售收入 ${money(r.revenue)}｜累计 ${pct(r.cumPct)}｜${r.abc} 类`;
+    i++;
+  },650);
+}
+
+/* ============ 文字编辑 ============ */
+const EDIT_KEY='lily_abc_data_text_v2';
+let overlay={};
+try{overlay=JSON.parse(localStorage.getItem(EDIT_KEY)||'{}')||{}}catch(e){overlay={}}
+const SKIP_SEL='#csvBox,#dataTable,#abcTable,#crossMatrix,#crossInsight,#supTable,#supBars,#concentration,#skuSelect,#editbar,.present-controls,#kpis,#pareto,#donut,#abcInsight,#workcard,#seedCheck,#conclusion,#finalCards,#stepNav,#notesText';
+const SKIP_TAG=['SCRIPT','STYLE','INPUT','TEXTAREA','SELECT','BUTTON','SVG','OPTION'];
+const INLINE_TAG=['B','SPAN','EM','I','STRONG','SMALL','A','CODE'];
+function pathOf(el){
+  const a=[];
+  while(el&&el!==document.body){a.unshift(Array.prototype.indexOf.call(el.parentNode.children,el));el=el.parentNode;}
+  return a.join('-');
+}
+function elAt(p){
+  let el=document.body;
+  for(const i of String(p).split('-')){el=el.children[+i];if(!el)return null;}
+  return el;
+}
+function isTextEditable(el){
+  if(SKIP_TAG.includes(el.tagName))return false;
+  if(!el.textContent.trim())return false;
+  if(el.closest(SKIP_SEL))return false;
+  return Array.from(el.children).every(c=>INLINE_TAG.includes(c.tagName));
+}
+function applyOverlay(){
+  Object.keys(overlay).forEach(p=>{
+    if(p==='__skip__')return;
+    const el=elAt(p);
+    if(el&&el.textContent!==overlay[p].replace(/<[^>]+>/g,'')) el.innerHTML=overlay[p];
+  });
+}
+let editListenerOn=false;
+function bindEditSave(){
+  if(editListenerOn)return;editListenerOn=true;
+  document.addEventListener('focusout',e=>{
+    const el=e.target;
+    if(!el.isContentEditable||!el.classList.contains('editing'))return;
+    const p=pathOf(el);
+    overlay[p]=el.innerHTML;
+    try{localStorage.setItem(EDIT_KEY,JSON.stringify(overlay));}catch(err){}
+  });
+}
+function toggleEdit(){
+  state.editing=!state.editing;
+  document.body.classList.toggle('editing-mode',state.editing);
+  if(state.editing){
+    bindEditSave();
+    $$('body *').forEach(el=>{if(isTextEditable(el)){el.contentEditable='true';el.classList.add('editing');}});
+    $('#btnEdit').textContent='✎ 编辑中';
+  }else{
+    $$('.editing').forEach(el=>{el.contentEditable='false';el.classList.remove('editing');});
+    applyOverlay();
+    $('#btnEdit').textContent='✎ 编辑文字';
+  }
+}
+function exportTextChanges(){
+  const lines=Object.keys(overlay).map(p=>p+' ｜ '+overlay[p]);
+  const blob=new Blob(['\ufeff文字修改记录\n'+lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='页面文字修改记录.txt';a.click();URL.revokeObjectURL(a.href);
+}
+
+/* ============ 启动 ============ */
+bind();bindTable();
+state.rows=parseCSV(SAMPLE);$('#csvBox').value=SAMPLE;
+compute();renderAll();goStep(0);
+</script>
+</body>
+</html>
