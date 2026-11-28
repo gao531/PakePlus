@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>兰州百合 · 供应链优化动态模组沙盘</title>
+<style>
+  :root{
+    --bg:#f4f7f6; --panel:#ffffff; --ink:#1c2b2a; --sub:#607470;
+    --teal:#2e8b8b; --teal-d:#1f6b6b; --teal-l:#e6f2f1;
+    --gold:#c8912a; --gold-l:#fbf3e2; --red:#c0392b; --red-l:#fbeceb;
+    --green:#2f8f5b; --line:#dfe8e6; --shadow:0 2px 10px rgba(31,107,107,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Microsoft YaHei","PingFang SC",-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1600px;margin:0 auto;padding:16px}
+
+  header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(100deg,#1f6b6b,#2e8b8b);color:#fff;border-radius:12px;padding:14px 20px;box-shadow:var(--shadow)}
+  header .brand{display:flex;flex-direction:column;gap:2px;margin-right:auto}
+  header h1{font-size:19px;font-weight:700;letter-spacing:.5px}
+  header .tag{font-size:11.5px;opacity:.85}
+  header .ctrls{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{border:0;border-radius:7px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.18s;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.28)}
+  .btn:hover{background:rgba(255,255,255,.28)}
+  .btn.solid{background:#fff;color:var(--teal-d);border-color:#fff}
+  .btn.solid:hover{background:var(--teal-l)}
+  .btn.play{background:var(--gold);border-color:var(--gold);color:#fff}
+  .btn.play:hover{background:#b07d1f}
+
+  .layout{display:grid;grid-template-columns:290px 1fr 310px;gap:14px;margin-top:14px;align-items:start}
+  @media(max-width:1200px){.layout{grid-template-columns:1fr 1fr}.center{grid-column:1/-1;order:3}}
+  @media(max-width:760px){.layout{grid-template-columns:1fr}}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .panel h2{font-size:13px;color:var(--teal-d);padding:11px 14px;background:var(--teal-l);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px}
+  .panel h2 .n{width:18px;height:18px;border-radius:5px;background:var(--teal);color:#fff;font-size:11px;display:grid;place-items:center;font-weight:700}
+  .pbody{padding:12px 14px}
+
+  /* module toggles */
+  .mods{display:flex;flex-direction:column;gap:8px}
+  .mod{display:flex;align-items:center;gap:9px;padding:8px 9px;border:1px solid var(--line);border-radius:9px;cursor:pointer;transition:.18s;background:#fcfdfd}
+  .mod:hover{border-color:var(--teal)}
+  .mod.on{background:var(--teal-l);border-color:var(--teal)}
+  .mod .ic{width:28px;height:28px;border-radius:7px;background:#eef3f2;display:grid;place-items:center;flex:none;font-size:14px}
+  .mod.on .ic{background:var(--teal);color:#fff}
+  .mod .tx{flex:1;min-width:0}
+  .mod .tx b{display:block;font-size:12.5px}
+  .mod .tx small{color:var(--sub);font-size:10.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sw{width:34px;height:19px;border-radius:20px;background:#cdd8d6;position:relative;flex:none;transition:.2s}
+  .sw:after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .mod.on .sw{background:var(--teal)}
+  .mod.on .sw:after{left:17px}
+
+  .sect-t{font-size:11px;color:var(--sub);font-weight:700;letter-spacing:.5px;margin:16px 0 8px;padding-top:12px;border-top:1px dashed var(--line)}
+  .slider{margin-bottom:12px}
+  .slider label{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px}
+  .slider label b{color:var(--teal-d);font-size:12px}
+  input[type=range]{width:100%;height:5px;border-radius:5px;background:#dce7e5;outline:0;appearance:none;-webkit-appearance:none}
+  input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 2px 10px}
+  .stage{flex:1;min-width:120px;background:#fcfdfd;border:1px solid var(--line);border-radius:10px;padding:10px 8px;position:relative;cursor:pointer;transition:.2s;text-align:center}
+  .stage:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .stage.fix{background:var(--teal-l);border-color:var(--teal)}
+  .stage .st-ic{width:30px;height:30px;border-radius:8px;background:#eef3f2;margin:0 auto 6px;display:grid;place-items:center;font-size:15px}
+  .stage.fix .st-ic{background:var(--teal);color:#fff}
+  .stage .st-n{font-size:12px;font-weight:700}
+  .stage .st-v{font-size:13px;color:var(--teal-d);font-weight:700;margin:5px 0 2px;min-height:20px}
+  .stage .st-p{font-size:10px;color:var(--red);line-height:1.35}
+  .stage.fix .st-p{color:var(--green)}
+  .arrow{display:grid;place-items:center;color:#b9cbc8;font-size:16px;flex:none;padding:0 2px}
+
+  .pain-box{margin-top:12px;background:var(--red-l);border:1px solid #f0c9c4;border-radius:10px;padding:10px 13px;min-height:64px}
+  .pain-box.good{background:var(--teal-l);border-color:#bcdedb}
+  .pain-box h3{font-size:12px;color:var(--red);margin-bottom:4px}
+  .pain-box.good h3{color:var(--teal-d)}
+  .pain-box p{font-size:11.5px;color:#4a4a4a}
+
+  .narr{margin-top:12px;background:#fbfaf6;border:1px solid #e8dfc7;border-radius:10px;padding:10px 13px}
+  .narr h3{font-size:12px;color:var(--gold);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+  .narr ol{margin-left:16px}
+  .narr li{font-size:11.5px;margin-bottom:5px;color:#444;line-height:1.55}
+  .narr .live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .kpi{background:#fcfdfd;border:1px solid var(--line);border-radius:9px;padding:9px 10px}
+  .kpi .k-l{font-size:10.5px;color:var(--sub);margin-bottom:3px}
+  .kpi .k-v{font-size:19px;font-weight:700;color:var(--teal-d);line-height:1.15}
+  .kpi .k-v small{font-size:11px;font-weight:600;color:var(--sub)}
+  .kpi .k-d{font-size:10px;margin-top:3px;color:var(--sub)}
+  .kpi .k-d.up{color:var(--green)} .kpi .k-d.down{color:var(--red)}
+  .kpi.hero{grid-column:1/-1;background:linear-gradient(100deg,#1f6b6b,#2e8b8b);border-color:transparent;color:#fff}
+  .kpi.hero .k-l,.kpi.hero .k-d{color:rgba(255,255,255,.82)}
+  .kpi.hero .k-v{color:#fff;font-size:24px}
+
+  .chart{margin-top:10px}
+  .bar-row{margin-bottom:9px}
+  .bar-row .bl{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px}
+  .bar-track{height:9px;background:#eef2f1;border-radius:6px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:6px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+  .bar-fill.base{background:#b9cbc8}
+  .bar-fill.now{background:linear-gradient(90deg,#2e8b8b,#4bb3a6)}
+  .bar-fill.loss.now{background:linear-gradient(90deg,#c0392b,#e07b5e)}
+  .legend{display:flex;gap:14px;font-size:10.5px;color:var(--sub);margin:2px 0 10px}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
+  .grade{display:flex;height:22px;border-radius:6px;overflow:hidden;margin:6px 0;font-size:10px;color:#fff;font-weight:600}
+  .grade div{display:grid;place-items:center;transition:width .5s}
+  .g-a{background:var(--gold)} .g-b{background:var(--teal)} .g-c{background:#9aa7a5}
+  .grade-legend{display:flex;justify-content:space-between;font-size:10.5px;color:var(--sub)}
+
+  .foot{margin-top:12px;font-size:10.5px;color:#8a9a97;text-align:center}
+  .hint{font-size:10.5px;color:var(--sub);background:#f7faf9;border-radius:7px;padding:7px 9px;margin-top:10px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <h1>兰州百合 · 供应链优化动态模组沙盘</h1>
+      <div class="tag">高原天百合项目 · 从田间地头到供应链终端 · 实时数据推演与讲解</div>
+    </div>
+    <div class="ctrls">
+      <button class="btn" id="btnBase">现状基线</button>
+      <button class="btn" id="btnAll">全面优化</button>
+      <button class="btn solid" id="btnReset">重置</button>
+      <button class="btn play" id="btnPlay">▶ 自动演示讲解</button>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="panel">
+        <h2><span class="n">1</span>优化模组开关</h2>
+        <div class="pbody">
+          <div class="mods" id="mods"></div>
+          <div class="hint">逐个开启模组，观察右侧 KPI 与全链路指标如何联动变化；点击「自动演示讲解」可按顺序自动推演。</div>
+
+          <div class="sect-t">核心参数调节</div>
+          <div class="slider"><label>百合总产量 <b id="lb-q">6.73 万吨</b></label><input type="range" id="sl-q" min="4" max="10" step="0.01" value="6.73"></div>
+          <div class="slider"><label>田头预冷覆盖率 <b id="lb-pc">20%</b></label><input type="range" id="sl-pc" min="0" max="100" step="1" value="20"></div>
+          <div class="slider"><label>冷链流通率 <b id="lb-cc">35%</b></label><input type="range" id="sl-cc" min="0" max="100" step="1" value="35"></div>
+          <div class="slider"><label>农户收益分成 <b id="lb-sh">55%</b></label><input type="range" id="sl-sh" min="30" max="75" step="1" value="55"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="center">
+      <div class="panel">
+        <h2><span class="n">2</span>供应链全链路 · 痛点实时推演</h2>
+        <div class="pbody">
+          <div class="flow" id="flow"></div>
+          <div class="pain-box" id="painBox">
+            <h3 id="painTitle">痛点聚焦</h3>
+            <p id="painDesc">点击上方任一环节，查看该环节的具体痛点与优化效果；开启对应优化模组可看到痛点被消除。</p>
+          </div>
+          <div class="narr">
+            <h3><span class="live"></span>实时讲解词（随数据自动生成）</h3>
+            <ol id="narrList"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="panel">
+        <h2><span class="n">3</span>实时结果看板</h2>
+        <div class="pbody">
+          <div class="kpis" id="kpis"></div>
+          <div class="chart">
+            <div class="legend"><span><i style="background:#b9cbc8"></i>现状基线</span><span><i style="background:#2e8b8b"></i>当前方案</span></div>
+            <div id="cmp"></div>
+          </div>
+          <div style="font-size:11px;color:var(--sub);margin:12px 0 2px;font-weight:700">分级销售构成</div>
+          <div class="grade" id="grade"></div>
+          <div class="grade-legend" id="gradeLegend"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">数据来源：新华网、人民网、中国甘肃网、兰州新闻网、《"十四五"冷链物流发展规划》等公开资料 · 本沙盘为教学演示模型，参数为模拟推演值</div>
+</div>
+
+<script>
+/* ============ 数据模型 ============ */
+const AREA = 15.8; // 万亩
+const MODULES = [
+  {id:'precool',   name:'田头预冷',     ic:'❄', desc:'采后40分钟预冷，覆盖率20%→90%'},
+  {id:'grading',   name:'智能分级',     ic:'◇', desc:'优品/中品/瑕疵分级，优质优价'},
+  {id:'coldchain', name:'全程冷链',     ic:'▣', desc:'冷链流通率35%→90%，不断链'},
+  {id:'warehouse', name:'产地仓配',     ic:'▤', desc:'产地冷链集配中心，错峰上市'},
+  {id:'processing',name:'精深加工',     ic:'⚙', desc:'加工率12%→35%，副产物利用'},
+  {id:'trace',     name:'数字溯源',     ic:'◎', desc:'全程温控溯源，品牌溢价+10%'},
+  {id:'contract',  name:'订单农业',     ic:'✿', desc:'保底收购+分红，收益留在产地'},
+];
+const STAGES = [
+  {id:'precool',   n:'田间地头', ic:'❀', pain:'预冷缺位，采后损耗高'},
+  {id:'grading',   n:'分拣分级', ic:'◇', pain:'混装出售，优质不优价'},
+  {id:'coldchain', n:'冷链干线', ic:'▣', pain:'断链频发，温控中断3次+'},
+  {id:'warehouse', n:'产地仓储', ic:'▤', pain:'贮藏缺口，精深加工率仅12%'},
+  {id:'processing',n:'终端销售', ic:'▧', pain:'溢价流失，渠道受制'},
+  {id:'contract',  n:'农户收益', ic:'✿', pain:'分成低，增收不稳定'},
+];
+const PAIN_DETAIL = {
+  precool:'鲜百合采后田间热与呼吸热持续累积，偏远产区预冷设施覆盖率不足 20%，果蔬采后损耗率高达 20%—30%。开启「田头预冷」后覆盖率提升至 90%，损耗率显著下降。',
+  grading:'缺乏统一品级标准，地头价约 31 元/斤、精品超 50 元/斤，却常混装出售，优质不优价。开启「智能分级」后优品享溢价、瑕疵进入加工，整体价值提升。',
+  coldchain:'95% 以上产品经加工后远销外埠，冷链断链频发，跨省运输平均 3 次以上温控中断；果蔬冷链流通率仅约 35%。开启「全程冷链」后流通率提升至 90%，货损大幅降低。',
+  warehouse:'全市年保鲜贮藏能力 4.4 万吨，对比 6.73 万吨产量仍有缺口，难以错峰上市。开启「产地仓配」后构建集配中心，实现分级、预冷、仓储一体化。',
+  processing:'精深加工率仅 12%，鲜百合集中在短周期上市，价格波动大、副产物浪费。开启「精深加工」后加工率提升至 35%，百合干/粉/即食产品延长货架期与价值链。',
+  contract:'农户多为零散种植、议价能力弱，务工年均收入约 2.1 万元。开启「订单农业」后「党支部+合作社+农户」保底收购+订单分红，让增值收益留在产地。',
+};
+
+const state = {
+  modules:{precool:false,grading:false,coldchain:false,warehouse:false,processing:false,trace:false,contract:false},
+  q:6.73, pc:20, cc:35, share:55,
+};
+
+/* ============ 计算引擎 ============ */
+function calc(s){
+  const m=s.modules;
+  const pc = m.precool ? Math.min(95, s.pc+70) : s.pc;
+  const cc = m.coldchain ? Math.min(98, s.cc+55) : s.cc;
+  const wh = m.warehouse?1:0;
+  const gr = m.grading?1:0;
+  const dp = m.processing?35:12;
+  const tr = m.trace?1:0;
+  const ct = m.contract?1:0;
+  const q=s.q;
+
+  // 采后损耗率：基础28%，预冷最多降12pp、冷链最多降10pp、仓配降4pp
+  const loss = Math.max(0.03, 0.28 - 0.12*(pc/100) - 0.10*(cc/100) - 0.04*wh);
+  const commodity = q*2000*(1-loss); // 万斤
+  const priceA = 50*(1+0.10*tr);
+  const priceB = 31;
+  const priceC = 8*(0.5+0.5*(dp/35));
+  let sales;
+  if(gr){
+    sales = commodity*(0.25*priceA+0.50*priceB+0.25*priceC)/10000; // 亿元
+  }else{
+    sales = commodity*28/10000;
+  }
+  const lossValue = q*2000*loss*28/10000;
+  const plantIncome = sales*s.share/100;
+  const workIncome = 12.39 + (wh?2.5:0) + (m.processing?2.9:0);
+  const dividend = ct? sales*0.05:0;
+  const farmerTotal = plantIncome+workIncome+dividend;
+  const muValue = sales/AREA;
+  return {pc,cc,wh,gr,dp,tr,ct,loss,commodity,priceA,priceB,priceC,sales,lossValue,plantIncome,workIncome,dividend,farmerTotal,muValue};
+}
+const BASE = calc({modules:{precool:false,grading:false,coldchain:false,warehouse:false,processing:false,trace:false,contract:false},q:6.73,pc:20,cc:35,share:55});
+
+/* ============ 渲染 ============ */
+function fmt(v,d=1){return v.toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});}
+const animCache={};
+function anim(id,target,renderer){
+  const el=document.getElementById(id); if(!el)return;
+  const from=animCache[id]!==undefined?animCache[id]:target;
+  const t0=performance.now(), dur=550;
+  function step(t){
+    const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
+    el.innerHTML=renderer(from+(target-from)*e);
+    if(p<1)requestAnimationFrame(step); else animCache[id]=target;
+  }
+  requestAnimationFrame(step);
+}
+
+function renderMods(){
+  const box=document.getElementById('mods');
+  box.innerHTML=MODULES.map(m=>`
+    <div class="mod ${state.modules[m.id]?'on':''}" data-id="${m.id}">
+      <div class="ic">${m.ic}</div>
+      <div class="tx"><b>${m.name}</b><small>${m.desc}</small></div>
+      <div class="sw"></div>
+    </div>`).join('');
+  box.querySelectorAll('.mod').forEach(el=>el.onclick=()=>{
+    const id=el.dataset.id; state.modules[id]=!state.modules[id];
+    if(id==='precool'){ state.pc=state.modules.precool?20:20; }
+    renderAll();
+  });
+}
+
+function renderFlow(r){
+  const flow=document.getElementById('flow');
+  flow.innerHTML=STAGES.map((s,i)=>{
+    const on=state.modules[s.id];
+    let val='';
+    if(s.id==='precool') val=`预冷 ${Math.round(r.pc)}%`;
+    if(s.id==='grading') val=r.gr?`优品 ${fmt(r.priceA,0)}元/斤`:'混装均价';
+    if(s.id==='coldchain') val=`冷链 ${Math.round(r.cc)}%`;
+    if(s.id==='warehouse') val=r.wh?'集配中心已建':'贮藏 4.4万吨';
+    if(s.id==='processing') val=`加工率 ${r.dp}%`;
+    if(s.id==='contract') val=`农户 ${fmt(r.farmerTotal,1)}亿`;
+    const painOn = s.id==='precool' ? r.loss<0.15 : (s.id==='coldchain'? r.cc>70 : (s.id==='processing'? r.dp>20 : on));
+    return `${i?'<div class="arrow">➜</div>':''}
+      <div class="stage ${painOn?'fix':''}" data-id="${s.id}">
+        <div class="st-ic">${s.ic}</div><div class="st-n">${s.n}</div>
+        <div class="st-v">${val}</div>
+        <div class="st-p">${painOn?'✓ '+s.n+'已优化':'⚠ '+s.pain}</div>
+      </div>`;
+  }).join('');
+  flow.querySelectorAll('.stage').forEach(el=>el.onclick=()=>{
+    const id=el.dataset.id, good=el.classList.contains('fix');
+    const box=document.getElementById('painBox');
+    box.className='pain-box'+(good?' good':'');
+    document.getElementById('painTitle').textContent=(good?'✓ 优化效果 · ':'⚠ 痛点聚焦 · ')+STAGES.find(s=>s.id===id).n;
+    document.getElementById('painDesc').textContent=PAIN_DETAIL[id];
+  });
+}
+
+function renderKPI(r){
+  const wrap=document.getElementById('kpis');
+  const dl=(now,base,lowerBetter=false)=>{
+    const d=now-base, pct=Math.abs(base)>0.001?d/base*100:0;
+    const good=lowerBetter?d<0:d>0;
+    return `<div class="k-d ${good?'up':'down'}">${d>=0?'▲':'▼'} ${fmt(Math.abs(pct),1)}% vs 现状</div>`;
+  };
+  const html=`
+    <div class="kpi hero"><div class="k-l">田间销售额（分级后）</div>
+      <div class="k-v" id="kv-sales">${fmt(r.sales,1)}<small> 亿元</small></div>
+      <div class="k-d">现状基线 ${fmt(BASE.sales,1)} 亿元 ${dl(r.sales,BASE.sales)}</div></div>
+    <div class="kpi"><div class="k-l">采后损耗率</div><div class="k-v" id="kv-loss">${fmt(r.loss*100,1)}<small>%</small></div>${dl(r.loss,BASE.loss,true)}</div>
+    <div class="kpi"><div class="k-l">损耗金额</div><div class="k-v" id="kv-lv">${fmt(r.lossValue,2)}<small> 亿</small></div>${dl(r.lossValue,BASE.lossValue,true)}</div>
+    <div class="kpi"><div class="k-l">农户综合收益</div><div class="k-v" id="kv-farmer">${fmt(r.farmerTotal,1)}<small> 亿</small></div>${dl(r.farmerTotal,BASE.farmerTotal)}</div>
+    <div class="kpi"><div class="k-l">亩均产值</div><div class="k-v" id="kv-mu">${fmt(r.muValue,2)}<small> 万/亩</small></div>${dl(r.muValue,BASE.muValue)}</div>
+  `;
+  wrap.innerHTML=html;
+  anim('kv-sales',r.sales,v=>`${fmt(v,1)}<small> 亿元</small>`);
+  anim('kv-loss',r.loss*100,v=>`${fmt(v,1)}<small>%</small>`);
+  anim('kv-lv',r.lossValue,v=>`${fmt(v,2)}<small> 亿</small>`);
+  anim('kv-farmer',r.farmerTotal,v=>`${fmt(v,1)}<small> 亿</small>`);
+  anim('kv-mu',r.muValue,v=>`${fmt(v,2)}<small> 万/亩</small>`);
+}
+
+function renderChart(r){
+  const groups=[
+    {l:'田间销售额',b:BASE.sales,n:r.sales,max:Math.max(BASE.sales,r.sales)*1.15,unit:'亿'},
+    {l:'农户综合收益',b:BASE.farmerTotal,n:r.farmerTotal,max:Math.max(BASE.farmerTotal,r.farmerTotal)*1.15,unit:'亿'},
+    {l:'采后损耗率',b:BASE.loss*100,n:r.loss*100,max:35,unit:'%',loss:true},
+  ];
+  document.getElementById('cmp').innerHTML=groups.map(g=>`
+    <div class="bar-row">
+      <div class="bl"><span>${g.l}</span><b style="color:${g.loss?'var(--red)':'var(--teal-d)'}">${fmt(g.n,1)}${g.unit} <span style="color:var(--sub);font-weight:400">(现状 ${fmt(g.b,1)})</span></b></div>
+      <div class="bar-track">
+        <div class="bar-fill base" style="width:${g.b/g.max*100}%"></div>
+        <div class="bar-fill now ${g.loss?'loss':''}" style="position:absolute;top:0;width:${g.n/g.max*100}%;opacity:.9"></div>
+      </div>
+    </div>`).join('');
+
+  const g=document.getElementById('grade'), gl=document.getElementById('gradeLegend');
+  if(r.gr){
+    const a=r.commodity*0.25, b=r.commodity*0.50, c=r.commodity*0.25;
+    g.innerHTML=`<div class="g-a" style="width:25%">优品 25%</div><div class="g-b" style="width:50%">中品 50%</div><div class="g-c" style="width:25%">瑕疵 25%</div>`;
+    gl.innerHTML=`<span style="color:var(--gold)">优品 ${fmt(a,0)}万斤·${fmt(r.priceA,0)}元</span><span>中品 ${fmt(b,0)}万斤·31元</span><span style="color:#7d8a88">瑕疵 ${fmt(c,0)}万斤·${fmt(r.priceC,0)}元</span>`;
+  }else{
+    g.innerHTML=`<div class="g-c" style="width:100%">混装销售（优劣同价）</div>`;
+    gl.innerHTML=`<span>未启用智能分级，全部按均价 28 元/斤出售，优品价值被稀释</span>`;
+  }
+}
+
+function renderNarr(r){
+  const m=state.modules, li=[];
+  const changed=['precool','grading','coldchain','warehouse','processing','trace','contract'].filter(k=>m[k]).length;
+  li.push(`<b>当前方案：</b>已启用 ${changed} 项优化模组，采后损耗率 <b style="color:var(--teal-d)">${fmt(r.loss*100,1)}%</b>（现状 ${fmt(BASE.loss*100,1)}%），田间销售额 <b style="color:var(--teal-d)">${fmt(r.sales,1)} 亿元</b>。`);
+  if(!m.precool) li.push('痛点：田头预冷覆盖率不足 20%，鲜百合采后损耗高达 22% 以上——建议优先开启「田头预冷」。');
+  else li.push('已建田头预冷：覆盖率提升至 '+Math.round(r.pc)+'%，田间热快速散除，货损从源头得到控制。');
+  if(!m.grading) li.push('痛点：优品（50 元/斤）与瑕疵混装按 28 元/斤出售，优质优价无法实现——开启「智能分级」解锁溢价。');
+  else li.push('智能分级落地：优品按 '+fmt(r.priceA,0)+' 元/斤溢价销售，瑕疵进入加工渠道，等级价值充分释放。');
+  if(!m.coldchain) li.push('痛点：冷链流通率仅 35%，跨省运输平均 3 次以上温控中断——开启「全程冷链」保障品质。');
+  else li.push('全程冷链贯通：流通率提升至 '+Math.round(r.cc)+'%，货损与货架期风险同步下降。');
+  if(!m.contract) li.push('关键落点：农户收益是项目终点——开启「订单农业」，用保底收购+分红把增值收益留在产地。');
+  else li.push('回到农民一线：农户综合收益 '+fmt(r.farmerTotal,1)+' 亿元，较现状提升 '+fmt((r.farmerTotal/BASE.farmerTotal-1)*100,1)+'%，真正实现"种在土里、富在手里"。');
+  document.getElementById('narrList').innerHTML=li.map(x=>'<li>'+x+'</li>').join('');
+}
+
+function renderAll(){
+  renderMods();
+  const r=calc(state);
+  renderFlow(r); renderKPI(r); renderChart(r); renderNarr(r);
+  document.getElementById('lb-q').textContent=fmt(state.q,2)+' 万吨';
+  document.getElementById('lb-pc').textContent=state.pc+'%';
+  document.getElementById('lb-cc').textContent=state.cc+'%';
+  document.getElementById('lb-sh').textContent=state.share+'%';
+}
+
+/* ============ 交互 ============ */
+function setAll(on){MODULES.forEach(m=>state.modules[m.id]=on);renderAll();}
+document.getElementById('btnBase').onclick=()=>{setAll(false);state.q=6.73;state.pc=20;state.cc=35;state.share=55;syncSliders();renderAll();};
+document.getElementById('btnAll').onclick=()=>{setAll(true);renderAll();};
+document.getElementById('btnReset').onclick=()=>{
+  setAll(false);state.q=6.73;state.pc=20;state.cc=35;state.share=55;syncSliders();
+  document.getElementById('painBox').className='pain-box';
+  document.getElementById('painTitle').textContent='痛点聚焦';
+  document.getElementById('painDesc').textContent='点击上方任一环节，查看该环节的具体痛点与优化效果；开启对应优化模组可看到痛点被消除。';
+  renderAll();
+};
+function syncSliders(){
+  document.getElementById('sl-q').value=state.q;
+  document.getElementById('sl-pc').value=state.pc;
+  document.getElementById('sl-cc').value=state.cc;
+  document.getElementById('sl-sh').value=state.share;
+}
+['q','pc','cc','sh'].forEach((k,i)=>{
+  const ids=['sl-q','sl-pc','sl-cc','sl-sh'];
+  document.getElementById(ids[i]).oninput=e=>{
+    const v=parseFloat(e.target.value);
+    if(k==='sh')state.share=v;else state[k]=v;
+    renderAll();
+  };
+});
+
+/* 自动演示讲解 */
+let playTimer=null;
+document.getElementById('btnPlay').onclick=function(){
+  const btn=this;
+  if(playTimer){clearInterval(playTimer);playTimer=null;btn.textContent='▶ 自动演示讲解';btn.classList.remove('solid');return;}
+  setAll(false);renderAll();
+  btn.textContent='⏸ 停止演示';btn.classList.add('solid');
+  const seq=['precool','grading','coldchain','warehouse','processing','trace','contract'];
+  let i=0;
+  const step=()=>{
+    if(i>=seq.length){clearInterval(playTimer);playTimer=null;btn.textContent='▶ 重新演示讲解';btn.classList.remove('solid');return;}
+    const id=seq[i];
+    state.modules[id]=true;
+    // 讲解卡高亮对应痛点
+    const st=document.querySelector('.stage[data-id="'+id+'"]');
+    if(st){const box=document.getElementById('painBox');box.className='pain-box'+(state.modules[id]?' good':'');
+      document.getElementById('painTitle').textContent='✓ 优化效果 · '+STAGES.find(s=>s.id===id).n;
+      document.getElementById('painDesc').textContent=PAIN_DETAIL[id];}
+    renderAll();i++;
+  };
+  playTimer=setInterval(step,1700);
+  step();
+};
+
+renderAll();
+</script>
+</body>
+</html>
