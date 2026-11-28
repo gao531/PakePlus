@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<!-- saved from url=(0196)file:///C:/Users/Administrator/Desktop/%E4%BE%9B%E5%BA%94%E9%93%BE%E6%95%B0%E6%8D%AE_%E5%93%81%E7%B1%BB%E5%88%86%E6%9E%90%E5%B8%88_%E5%8F%AF%E7%BC%96%E8%BE%91%E5%A2%9E%E5%BC%BA%E7%89%88%20(1).html -->
+<html lang="zh-CN" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>兰州鲜百合 · 供应链品类分析工作台（可编辑增强版）</title>
+<style>
+:root{
+  --bg:#f3f6fc; --surface:#ffffff; --surface2:#f7f9fd; --line:#e4eaf4; --grid:#e9eef7;
+  --ink:#17253c; --ink2:#4a5871; --muted:#8794a9; --faint:#aeb9ca;
+  --brand:#1f5fd6; --brand2:#4b8bff; --accent:#7c5cff; --brand-l:#eaf1ff;
+  --a:#e0484d; --b:#f0a022; --c:#17a37b;
+  --warn:#e58a15; --ok:#17a37b;
+  --shadow:0 6px 22px rgba(24,48,92,.06); --shadow2:0 18px 50px rgba(24,48,92,.14);
+  --grad:linear-gradient(115deg,#0f2f76 0%,#1f5fd6 52%,#4b8bff 100%);
+}
+html[data-theme="dark"]{
+  --bg:#0c1421; --surface:#141f31; --surface2:#1a273c; --line:#26344b; --grid:#26344b;
+  --ink:#e8eefb; --ink2:#b3c0d6; --muted:#8393ac; --faint:#66768f;
+  --brand:#5b93ff; --brand2:#82b1ff; --accent:#a68cff; --brand-l:#1c3054;
+  --a:#ff6b6f; --b:#ffbb52; --c:#3ecfa2;
+  --shadow:0 6px 22px rgba(0,0,0,.22); --shadow2:0 18px 50px rgba(0,0,0,.45);
+  --grad:linear-gradient(115deg,#0a1c40 0%,#173d84 52%,#2b62b8 100%);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Inter","SF Pro Display","PingFang SC","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(var(--grid) .8px,transparent .8px);background-size:22px 22px;opacity:.55}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+input,select,textarea{outline:none}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#c8d3e6;border-radius:8px}::-webkit-scrollbar-track{background:transparent}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#33435e}
+.num{font-variant-numeric:tabular-nums}
+
+/* ===== 顶栏 ===== */
+.topbar{height:66px;background:var(--grad);color:#fff;display:flex;align-items:center;gap:16px;padding:0 24px;position:sticky;top:0;z-index:60;box-shadow:0 6px 24px rgba(12,40,100,.22)}
+.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:38px;height:38px;flex:none;border-radius:11px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.brand h1{font-size:16.5px;margin:0;font-weight:750;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{margin:2px 0 0;font-size:11px;color:#c9dcff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-badge{font-size:9.5px;letter-spacing:1.6px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);padding:3px 8px;border-radius:20px;color:#dbe8ff;white-space:nowrap}
+.top-actions{margin-left:auto;display:flex;gap:7px;align-items:center;flex-wrap:nowrap}
+.btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);color:#fff;border:1px solid rgba(255,255,255,.26);border-radius:9px;padding:8px 12px;transition:.18s;white-space:nowrap;font-size:12.5px}
+.btn:hover{background:rgba(255,255,255,.26);transform:translateY(-1px)}
+.btn.primary{background:#fff;color:#143f92;border-color:#fff;font-weight:750;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.btn.primary:hover{background:#eaf1ff}
+.btn.icon{padding:8px 10px;font-size:14px}
+.btn.on{background:rgba(255,255,255,.32);border-color:rgba(255,255,255,.55)}
+.save-state{display:flex;align-items:center;gap:6px;font-size:11px;color:#cfe0ff;white-space:nowrap;padding:0 4px}
+.save-state i{width:7px;height:7px;border-radius:50%;background:#57e2a5;box-shadow:0 0 8px #57e2a5;display:inline-block}
+.save-state.flash i{background:#fff;box-shadow:0 0 10px #fff}
+.dd{position:relative}
+.dd-menu{display:none;position:absolute;right:0;top:calc(100% + 9px);min-width:190px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow2);padding:6px;z-index:70;color:var(--ink)}
+.dd.open .dd-menu{display:block;animation:fadeUp .2s ease both}
+.dd-menu button{display:flex;width:100%;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;font-size:12.5px;color:var(--ink2);text-align:left}
+.dd-menu button:hover{background:var(--brand-l);color:var(--brand)}
+.dd-menu .sep{height:1px;background:var(--line);margin:5px 4px}
+.dd-menu small{display:block;color:var(--muted);font-size:10.5px}
+kbd{font-family:inherit;font-size:10px;background:var(--surface2);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 5px;color:var(--muted)}
+
+/* ===== 筛选条 ===== */
+.filterbar{position:sticky;top:66px;z-index:45;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:9px 26px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 3px 14px rgba(24,48,92,.04)}
+.fb-label{font-size:10.5px;letter-spacing:1.6px;font-weight:800;color:var(--faint);margin-right:2px}
+.filterbar select,.filterbar input[type=text]{border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--ink2);min-width:104px}
+.filterbar input[type=text]{min-width:150px}
+.filterbar select:focus,.filterbar input:focus{border-color:var(--brand);background:var(--surface)}
+.chip{border:1px solid var(--line);background:var(--surface2);color:var(--ink2);border-radius:20px;padding:5px 11px;font-size:11.5px;transition:.18s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.fb-count{font-size:11.5px;color:var(--muted);margin-left:2px}
+.fb-count b{color:var(--brand)}
+.fb-right{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.switch{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{accent-color:var(--brand);width:14px;height:14px}
+.thr-badge{font-size:11px;background:var(--brand-l);color:var(--brand);border:1px solid color-mix(in srgb,var(--brand) 22%,transparent);border-radius:8px;padding:5px 10px;font-weight:700}
+
+/* ===== 布局 ===== */
+.shell{display:flex;min-height:calc(100vh - 66px);position:relative;z-index:1}
+.sidebar{width:238px;flex:none;background:var(--surface);border-right:1px solid var(--line);padding:20px 13px;position:sticky;top:66px;height:calc(100vh - 66px);overflow:auto}
+.side-title{font-size:10.5px;letter-spacing:2px;color:var(--faint);font-weight:800;margin:4px 10px 14px}
+#stepNav{position:relative}
+#stepNav::before{content:"";position:absolute;left:24px;top:22px;bottom:22px;width:2px;background:var(--line)}
+.step{position:relative;display:flex;gap:11px;align-items:center;padding:10px 11px;border-radius:11px;margin-bottom:4px;color:var(--ink2);transition:.18s;text-align:left;width:100%;z-index:1}
+.step:hover{background:var(--surface2);color:var(--brand)}
+.step.active{background:var(--brand-l);color:var(--brand);font-weight:750;box-shadow:inset 3px 0 0 var(--brand)}
+.step .num{width:26px;height:26px;flex:none;border-radius:9px;background:var(--surface2);border:1px solid var(--line);display:grid;place-items:center;font-size:11.5px;font-weight:800;color:var(--faint)}
+.step.active .num{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 3px 10px color-mix(in srgb,var(--brand) 40%,transparent)}
+.step.done .num{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+.step .tx{font-size:12.8px;line-height:1.25}
+.step .tx small{display:block;font-size:10.5px;font-weight:400;color:var(--muted);margin-top:3px}
+.role-card{margin-top:20px;background:linear-gradient(150deg,var(--brand-l),var(--surface2));border:1px solid var(--line);border-radius:13px;padding:14px}
+.role-card b{font-size:12px;color:var(--brand)}
+.role-card p{margin:8px 0 0;font-size:11.5px;color:var(--ink2);line-height:1.8}
+.side-foot{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px;font-size:11px;color:var(--muted);line-height:1.9}
+.side-foot b{color:var(--ink2)}
+.stage{flex:1;min-width:0;padding:22px 26px 90px}
+.view{display:none;animation:fadeUp .42s cubic-bezier(.2,.8,.2,1) both}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.vhead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.vhead h2{font-size:23px;margin:0;letter-spacing:.2px;font-weight:780}
+.vhead h2 span{color:var(--brand)}
+.vhead p{margin:6px 0 0;color:var(--muted);font-size:12.5px}
+.tagline{font-size:11px;background:var(--brand-l);color:var(--brand);padding:6px 12px;border-radius:20px;border:1px solid color-mix(in srgb,var(--brand) 20%,transparent);font-weight:700}
+
+/* ===== 卡片 ===== */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:18px 19px;box-shadow:var(--shadow);margin-bottom:16px;transition:box-shadow .25s,transform .25s;position:relative;overflow:hidden}
+.card:hover{box-shadow:0 12px 32px rgba(24,48,92,.10)}
+.card h3{margin:0 0 4px;font-size:14.5px;display:flex;align-items:center;gap:9px;font-weight:750}
+.card h3::before{content:"";width:4px;height:15px;background:linear-gradient(var(--brand),var(--accent));border-radius:3px}
+.card h3 .h-opt{margin-left:auto;display:flex;gap:6px}
+.mini{font-size:11px;color:var(--brand);border:1px solid var(--line);background:var(--surface2);border-radius:7px;padding:4px 9px;font-weight:650}
+.mini:hover{background:var(--brand-l);border-color:var(--brand)}
+.card .desc{color:var(--muted);font-size:12px;margin:0 0 14px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g21{grid-template-columns:1.35fr 1fr}
+@media(max-width:1180px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g21{grid-template-columns:1fr}}
+@media(max-width:820px){.g2,.g3,.g4,.g21{grid-template-columns:1fr}.sidebar{display:none}.filterbar{top:66px}.brand-badge,.save-state{display:none}}
+.rules{margin:0;padding-left:19px;color:var(--ink2);font-size:12.5px;line-height:1.95}
+.rules li{margin-bottom:7px}.rules b{color:var(--brand)}
+.notice{font-size:12.5px;line-height:1.9;color:var(--ink2);background:var(--surface2);border-left:3px solid var(--brand);padding:11px 14px;border-radius:0 9px 9px 0}
+.notice b{color:var(--brand)}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11.5px}
+.flow span{background:var(--brand-l);color:var(--brand);border:1px solid color-mix(in srgb,var(--brand) 18%,transparent);padding:5px 10px;border-radius:8px;font-weight:650}
+.flow em{color:var(--faint);font-style:normal}
+.note{font-size:11.5px;color:var(--ink2);line-height:1.85;background:var(--surface2);border-left:3px solid var(--brand2);padding:9px 12px;border-radius:0 8px 8px 0}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:9px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.caption{margin-top:9px;font-size:12px;color:var(--brand);background:var(--brand-l);border-radius:9px;padding:9px 13px;min-height:36px;font-weight:600}
+.badge{font-size:10px;background:var(--surface2);color:var(--muted);border-radius:5px;padding:2px 7px;margin-left:6px;border:1px solid var(--line)}
+.err{color:var(--a);font-size:12px;margin-top:8px;min-height:16px}
+
+/* ===== KPI ===== */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:13px;margin-bottom:16px}
+@media(max-width:1300px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:820px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:.25s}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(24,48,92,.11)}
+.kpi .top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.kpi .lb{font-size:11.5px;color:var(--muted)}
+.kpi .ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:13px;background:var(--brand-l);color:var(--brand)}
+.kpi b{display:block;font-size:23px;line-height:1.25;margin-top:5px;letter-spacing:-.4px}
+.kpi .sb{font-size:10.5px;color:var(--faint);margin-top:3px}
+.kpi .spark{position:absolute;right:0;bottom:0;left:0;height:30px;opacity:.75;pointer-events:none}
+.kpi.red b{color:var(--a)}.kpi.amber b{color:var(--b)}.kpi.green b{color:var(--c)}.kpi.purple b{color:var(--accent)}.kpi.blue b{color:var(--brand)}
+.kpi.red .ico{background:color-mix(in srgb,var(--a) 12%,transparent);color:var(--a)}
+.kpi.amber .ico{background:color-mix(in srgb,var(--b) 14%,transparent);color:var(--b)}
+.kpi.green .ico{background:color-mix(in srgb,var(--c) 12%,transparent);color:var(--c)}
+.kpi.purple .ico{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent)}
+
+/* ===== 表格 / 输入 ===== */
+textarea{width:100%;min-height:146px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-family:Consolas,"SFMono-Regular","Microsoft YaHei",monospace;font-size:12px;line-height:1.65;resize:vertical;background:var(--surface2);color:var(--ink)}
+textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 12%,transparent)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:11px 0 3px;align-items:center}
+.tools .btn{background:var(--surface);color:var(--brand);border:1px solid var(--line);box-shadow:none}
+.tools .btn:hover{background:var(--brand-l);transform:none;border-color:var(--brand)}
+.tools .btn.fill{background:var(--brand);color:#fff;border-color:var(--brand)}
+.tools .btn.fill:hover{background:var(--brand2)}
+.tools .btn.danger{color:var(--a)}
+.tools .btn.danger:hover{background:color-mix(in srgb,var(--a) 10%,transparent);border-color:var(--a)}
+.tools .btn:disabled{opacity:.45;cursor:not-allowed}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--surface2);color:var(--ink2);font-weight:750;text-align:left;padding:10px 11px;white-space:nowrap;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2;font-size:11.5px}
+td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap;color:var(--ink2)}
+tr:hover td{background:color-mix(in srgb,var(--brand) 4%,var(--surface))}
+td input{width:100%;min-width:56px;border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;color:var(--ink)}
+td input:hover{border-color:var(--line);background:var(--surface2)}
+td input:focus{border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 2px color-mix(in srgb,var(--brand) 12%,transparent)}
+.tablewrap{max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:11px}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:800;color:#fff}
+.pA{background:var(--a)}.pB{background:var(--b)}.pC{background:var(--c)}
+.lv{font-weight:750;border-radius:6px;padding:3px 9px;font-size:11px;display:inline-block;color:#fff}
+.rowsel{cursor:pointer}
+.rowsel:hover td{background:var(--brand-l)!important}
+.rowdel{color:var(--faint);font-size:14px;padding:2px 6px;border-radius:5px}
+.rowdel:hover{color:var(--a);background:color-mix(in srgb,var(--a) 10%,transparent)}
+.slider-row{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:12px}
+.slider-row label{width:96px;flex:none;color:var(--ink2);font-size:11.5px}
+.slider-row input[type=range]{flex:1;min-width:60px;accent-color:var(--brand)}
+.slider-row .numin{width:66px;border:1px solid var(--line);background:var(--surface2);border-radius:7px;padding:5px 7px;text-align:center;font-weight:750;color:var(--brand);font-size:12px}
+.preset-wrap{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.preset{font-size:11px;border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:6px 10px;color:var(--ink2)}
+.preset:hover,.preset.active{border-color:var(--brand);color:var(--brand);background:var(--brand-l)}
+
+/* ===== 图表 ===== */
+svg{display:block;width:100%;height:auto;overflow:visible}
+.chartbox{position:relative}
+.chartbox svg text{font-family:"Inter","PingFang SC","Microsoft YaHei",sans-serif}
+.pbar{transform-box:fill-box;transform-origin:bottom;animation:growBar .75s cubic-bezier(.2,.8,.2,1) both;transition:opacity .2s,filter .2s}
+@keyframes growBar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.pline{fill:none;stroke:var(--brand);stroke-width:2.6;stroke-dasharray:3000;stroke-dashoffset:3000;animation:drawLine 1.5s .3s ease forwards}
+@keyframes drawLine{to{stroke-dashoffset:0}}
+.pdot{animation:popIn .4s both;cursor:pointer}
+@keyframes popIn{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+.dim{opacity:.12!important;filter:grayscale(.6)}
+.hit{cursor:pointer;transition:opacity .2s}
+.hit:hover{opacity:.82}
+#tooltip{display:none;position:fixed;z-index:120;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow2);padding:10px 13px;font-size:12px;color:var(--ink2);max-width:250px;line-height:1.75}
+#tooltip b{color:var(--ink);font-size:12.5px}
+#tooltip .tt-row{display:flex;justify-content:space-between;gap:16px}
+#tooltip .tt-row span:last-child{font-weight:750;color:var(--ink)}
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
+.dseg{cursor:pointer;transition:stroke-width .2s,opacity .2s}
+.dseg:hover{stroke-width:27;opacity:.88}
+.dleg{font-size:12px;line-height:2.05;cursor:pointer;border-radius:8px;padding:3px 8px;transition:.18s}
+.dleg:hover{background:var(--surface2)}
+.dleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px}
+.dleg b{font-variant-numeric:tabular-nums}
+.barrow{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:12px}
+.barrow .nm{width:112px;flex:none;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.barrow .track{flex:1;height:18px;background:var(--surface2);border-radius:10px;overflow:hidden;display:flex}
+.barrow .fillv{height:100%;animation:growWidth .9s ease both;transition:filter .2s}
+.barrow .fillv:hover{filter:brightness(1.12)}
+@keyframes growWidth{from{width:0}}
+.barrow .sc{width:50px;text-align:right;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums}
+.stackrow{display:flex;align-items:center;gap:11px;margin:12px 0;font-size:12px}
+.stackrow .nm{width:118px;flex:none;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stackrow .bar{flex:1;height:22px;background:var(--surface2);border-radius:7px;overflow:hidden;display:flex}
+.stackrow .seg{height:100%;transition:filter .2s;animation:growWidth .9s ease both}
+.stackrow .seg:hover{filter:brightness(1.15)}
+.stackrow .val{width:88px;text-align:right;font-weight:750;font-variant-numeric:tabular-nums;color:var(--ink)}
+.cross{width:100%;max-width:760px}
+.cross th,.cross td{text-align:center;border:1px solid var(--line)}
+.cross td{white-space:normal;line-height:1.9;min-width:118px;cursor:pointer;transition:.18s}
+.cross td:hover{filter:brightness(.96)}
+.cross .cnt{font-size:10px;color:var(--muted);display:block;margin-top:4px}
+.xcell{display:inline-block;background:var(--surface2);color:var(--ink2);border-radius:6px;padding:2px 7px;margin:2px;font-size:11px;font-weight:750}
+.xcell.A{background:color-mix(in srgb,var(--a) 15%,transparent);color:var(--a)}
+.xcell.B{background:color-mix(in srgb,var(--b) 18%,transparent);color:var(--b)}
+.xcell.C{background:color-mix(in srgb,var(--c) 15%,transparent);color:var(--c)}
+.insight-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+@media(max-width:820px){.insight-grid{grid-template-columns:1fr}}
+.ins{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);background:var(--surface2);border-radius:11px;padding:11px 13px;cursor:pointer;transition:.18s}
+.ins:hover{border-color:var(--brand);transform:translateX(2px)}
+.ins .ii{width:30px;height:30px;flex:none;border-radius:9px;background:var(--brand-l);color:var(--brand);display:grid;place-items:center;font-size:14px}
+.ins .it{font-size:11px;color:var(--muted)}
+.ins .iv{font-size:12.5px;font-weight:700;color:var(--ink);margin-top:2px;line-height:1.5}
+.ins .iv b{color:var(--brand)}
+.progressbar{height:9px;background:var(--surface2);border-radius:10px;overflow:hidden;margin:8px 0}
+.progressbar i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--brand),var(--accent));animation:growWidth .9s ease both}
+
+/* ===== 作业卡 ===== */
+.wc{border:1px solid var(--line);border-radius:13px;padding:17px;background:linear-gradient(125deg,var(--surface2),var(--surface))}
+.wc-head{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.wc-head b{font-size:17px}
+.wc-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:820px){.wc-kpis{grid-template-columns:repeat(2,1fr)}}
+.wc-kpis>div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.wc-kpis span{font-size:10.5px;color:var(--muted);display:block}
+.wc-kpis b{font-size:13px;color:var(--brand)}
+.timeline{list-style:none;display:flex;padding:0;margin:12px 0 4px;gap:0;overflow-x:auto}
+.timeline li{flex:1;min-width:88px;position:relative;text-align:center;font-size:11px;color:var(--ink2);padding-top:26px}
+.timeline li::before{content:"";position:absolute;left:0;right:0;top:9px;height:2px;background:var(--line)}
+.timeline li:first-child::before{left:50%}.timeline li:last-child::before{right:50%}
+.timeline .dot{position:absolute;left:50%;top:0;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;background:var(--surface);border:2px solid var(--brand);color:var(--brand);font-size:10px;font-weight:800;display:grid;place-items:center;z-index:1}
+.check{list-style:none;padding:0;margin:8px 0}
+.check li{display:flex;gap:9px;align-items:flex-start;padding:7px 9px;border-radius:8px;font-size:12.2px;color:var(--ink2);transition:.18s}
+.check li:hover{background:var(--surface2)}
+.check li::before{content:"✓";flex:none;width:17px;height:17px;border-radius:5px;border:1px solid var(--line);display:grid;place-items:center;font-size:10px;color:transparent;margin-top:2px}
+.check li.done{color:var(--muted);text-decoration:line-through}
+.check li.done::before{background:var(--ok);border-color:var(--ok);color:#fff}
+.check li.clickable{cursor:pointer}
+.concl{background:linear-gradient(135deg,var(--brand-l),var(--surface));border:1px solid color-mix(in srgb,var(--brand) 20%,transparent)}
+.concl li{margin-bottom:10px;line-height:1.85;color:var(--ink2)}
+.concl b{color:var(--brand)}
+
+/* ===== 抽屉 / 编辑 ===== */
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(480px,94vw);background:var(--surface);border-left:1px solid var(--line);box-shadow:-18px 0 50px rgba(15,35,75,.16);z-index:110;transform:translateX(103%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.drawer-head h3{margin:0;font-size:15.5px;font-weight:780}
+.drawer-head p{margin:3px 0 0;font-size:11px;color:var(--muted)}
+.drawer-head .x{margin-left:auto;font-size:19px;color:var(--muted);width:30px;height:30px;border-radius:8px}
+.drawer-head .x:hover{background:var(--surface2);color:var(--ink)}
+.drawer-tools{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.drawer-tools input[type=text]{flex:1;min-width:150px;border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:7px 11px;font-size:12px}
+.drawer-tools .gbtn{font-size:11px;border:1px solid var(--line);border-radius:7px;padding:6px 9px;color:var(--ink2)}
+.drawer-tools .gbtn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.drawer-body{flex:1;overflow:auto;padding:14px 20px 24px}
+.titem{border:1px solid var(--line);border-radius:11px;padding:11px 12px;margin-bottom:10px;background:var(--surface2)}
+.titem .th{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.titem .th b{font-size:12px;color:var(--ink)}
+.titem .th code{font-size:10px;color:var(--faint);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.titem .th .rs{margin-left:auto;font-size:10.5px;color:var(--muted);cursor:pointer}
+.titem .th .rs:hover{color:var(--a)}
+.titem textarea{width:100%;min-height:52px;max-height:150px;font-size:11.5px;line-height:1.6;padding:8px 10px;background:var(--surface);font-family:Consolas,"Microsoft YaHei",monospace}
+.titem .hint{font-size:10px;color:var(--faint);margin-top:5px;line-height:1.6}
+.drawer-foot{padding:13px 20px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;background:var(--surface2)}
+.drawer-foot .btn{background:var(--surface);color:var(--brand);border:1px solid var(--line);font-size:11.5px;padding:7px 10px}
+.drawer-foot .btn:hover{background:var(--brand-l);transform:none}
+.mask{display:none;position:fixed;inset:0;background:rgba(10,22,45,.36);z-index:105;backdrop-filter:blur(2px)}
+.mask.on{display:block}
+body.edit-mode [data-t]{outline:1px dashed color-mix(in srgb,var(--warn) 70%,transparent);outline-offset:3px;border-radius:4px;cursor:text;transition:background .2s}
+body.edit-mode [data-t]:hover{background:color-mix(in srgb,var(--warn) 9%,transparent)}
+body.edit-mode [data-t]:focus{outline:2px solid var(--warn);background:var(--surface)}
+.editbar{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:100;background:var(--surface);border:1px solid color-mix(in srgb,var(--warn) 55%,var(--line));box-shadow:var(--shadow2);border-radius:14px;padding:10px 14px;gap:9px;align-items:center;font-size:12px}
+body.edit-mode .editbar{display:flex}
+.editbar .hint{color:var(--ink2);max-width:430px;line-height:1.6}
+.editbar .btn{background:color-mix(in srgb,var(--warn) 12%,var(--surface));color:#8a5a11;border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);font-size:11.5px;padding:7px 10px}
+.editbar .btn:hover{background:color-mix(in srgb,var(--warn) 22%,var(--surface));transform:none}
+#toast{position:fixed;right:22px;bottom:22px;z-index:130;background:var(--ink);color:#fff;padding:11px 16px;border-radius:11px;font-size:12.5px;box-shadow:var(--shadow2);opacity:0;transform:translateY(12px);pointer-events:none;transition:.28s}
+#toast.on{opacity:1;transform:none}
+
+/* ===== 演讲模式 ===== */
+.progress{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--brand),var(--accent));z-index:95;transition:width .4s;display:none}
+body.presenting .progress{display:block}
+.present-controls{display:none;position:fixed;right:24px;bottom:22px;z-index:100;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow2);border-radius:14px;padding:9px 12px;gap:8px;align-items:center}
+.present-controls button{border:1px solid var(--line);background:var(--surface2);color:var(--brand);border-radius:8px;padding:7px 12px;font-size:12px}
+.present-controls button:hover{background:var(--brand-l)}
+.present-controls .pnum{font-size:12px;color:var(--muted);min-width:66px;text-align:center;font-variant-numeric:tabular-nums}
+body.presenting .sidebar,body.presenting .filterbar{display:none}
+body.presenting .stage{padding:28px clamp(20px,5vw,86px) 110px}
+body.presenting .topbar{height:58px}
+body.presenting .vhead h2{font-size:clamp(25px,3vw,36px)}
+body.presenting .card{padding:22px 25px}
+body.presenting .present-controls{display:flex}
+.notes{display:none;position:fixed;left:24px;bottom:22px;width:min(430px,40vw);background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow2);z-index:100;font-size:12.5px;line-height:1.85;color:var(--ink2)}
+.notes h4{margin:0 0 6px;font-size:11px;color:var(--brand);letter-spacing:1.4px}
+body.presenting.notes-on .notes{display:block}
+</style>
+</head>
+<body class="">
+<div class="progress" id="progress" style="width: 57.1429%;"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">🌿</div>
+    <div style="min-width:0">
+      <h1 data-t="brandTitle" data-label="品牌标题" contenteditable="false" spellcheck="false">陇原<span style="letter-spacing: 0.3px;">鲜百合 · 供应链品类分析</span></h1>
+      <p data-t="brandSub" data-label="品牌副标题" contenteditable="false" spellcheck="false">销售收入 · 累计占比 · 物流 ABC 分类 · 等级对照 · 供应商贡献</p>
+    </div>
+    <span class="brand-badge" data-t="brandBadge" data-label="品牌徽标" contenteditable="false" spellcheck="false"><br></span>
+  </div>
+  <div class="top-actions">
+    <span class="save-state" id="saveState"><i></i><span id="saveTxt">已保存 10:44</span></span>
+    <button class="btn icon" id="btnUndo" title="撤销 Ctrl+Z">↶</button>
+    <button class="btn icon" id="btnRedo" title="重做 Ctrl+Shift+Z">↷</button>
+    <button class="btn icon" id="btnTheme" title="切换浅色 / 深色主题">🌓</button>
+    <button class="btn" id="btnEdit">✎ 编辑文字</button>
+    <button class="btn" id="btnDrawer">⚙ 内容管理</button>
+    <div class="dd" id="ddData">
+      <button class="btn" id="btnDataMenu">⇅ 数据 / 导出 ▾</button>
+      <div class="dd-menu">
+        <button data-act="importCsv">📥 导入 CSV / Excel 粘贴区<small data-t="mMenu1" data-label="菜单说明·导入 CSV" data-plain="" contenteditable="false" spellcheck="false">六列原始数据，带表头可识别</small></button>
+        <button data-act="loadSample">⟲ 恢复初始示例数据<small data-t="mMenu2" data-label="菜单说明·恢复示例" data-plain="" contenteditable="false" spellcheck="false">重置为 6 条示例单品</small></button>
+        <div class="sep"></div>
+        <button data-act="exportCsv">⬇ 导出分析结果 CSV<small data-t="mMenu3" data-label="菜单说明·导出 CSV" data-plain="" contenteditable="false" spellcheck="false">明细 + 供方汇总，结果随参数</small></button>
+        <button data-act="exportReport">📄 导出分析报告 (.md)<small data-t="mMenu4" data-label="菜单说明·导出报告" data-plain="" contenteditable="false" spellcheck="false">结论、图表口径、明细全量文本</small></button>
+        <button data-act="exportProject">💾 导出工程文件 (.json)<small data-t="mMenu5" data-label="菜单说明·导出工程" data-plain="" contenteditable="false" spellcheck="false">数据 + 全部文案 + 阈值 + 主题</small></button>
+        <button data-act="importProject">📂 导入工程文件<small data-t="mMenu6" data-label="菜单说明·导入工程" data-plain="" contenteditable="false" spellcheck="false">一键还原整个工作台</small></button>
+        <div class="sep"></div>
+        <button data-act="exportPng">🖼 导出帕累托图 PNG<small data-t="mMenu7" data-label="菜单说明·导出图片" data-plain="" contenteditable="false" spellcheck="false">当前图表高清图片</small></button>
+      </div>
+    </div>
+    <button class="btn primary" id="btnPresent">▶ 演讲模式</button>
+  </div>
+</header>
+
+<div class="filterbar" id="filterbar">
+  <span class="fb-label" data-t="mFbLabel" data-label="筛选条·分组名" data-plain="" contenteditable="false" spellcheck="false">数据筛选</span>
+  <select id="fAbc"><option value="ALL">全部 ABC</option><option value="A">仅 A 类</option><option value="B">仅 B 类</option><option value="C">仅 C 类</option></select>
+  <select id="fSup"><option value="ALL">全部供方</option><option value="合作社.甲">合作社.甲</option><option value="合作社.乙">合作社.乙</option><option value="经纪人.丙">经纪人.丙</option><option value="加工厂.丁">加工厂.丁</option><option value="餐饮供应链">餐饮供应链</option><option value="加工.百合干原料">加工.百合干原料</option><option value="经纪人.A">经纪人.A</option><option value="加工厂.B">加工厂.B</option><option value="商超配送.C">商超配送.C</option><option value="电商渠道.D">电商渠道.D</option></select>
+  <select id="fGrade"><option value="ALL">全部初判等级</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>
+  <input type="text" id="fQ" placeholder="🔍 搜索单品 / 供方">
+  <button class="chip" id="fClear">清除筛选</button>
+  <span class="fb-count" id="fCount">筛选中 <b>3</b> / 10 条</span>
+  <div class="fb-right">
+    <label class="switch"><input type="checkbox" id="showLabels"><span data-t="mSwLabels" data-label="筛选条·柱图开关" data-plain="" contenteditable="false" spellcheck="false">柱图金额标签</span></label>
+    <span class="thr-badge" id="thrBadge">A ≤ 70% · B ≤ 90%</span>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-title" data-t="sideTitle" data-label="侧栏分组标题" contenteditable="false" spellcheck="false">分析流程 · 7 步</div>
+    <div id="stepNav"><button class="step done" data-i="0"><span class="num">1</span><span class="tx">数据总览<small>分类口径 · KPI</small></span></button><button class="step done" data-i="1"><span class="num">2</span><span class="tx">数据工作台<small>数据与阈值</small></span></button><button class="step done" data-i="2"><span class="num">3</span><span class="tx">ABC 分类<small>帕累托 · 集中度</small></span></button><button class="step active" data-i="3"><span class="num">4</span><span class="tx">等级对照<small>热力矩阵</small></span></button><button class="step" data-i="4"><span class="num">5</span><span class="tx">供应商贡献<small>构成 · CR3</small></span></button><button class="step" data-i="5"><span class="num">6</span><span class="tx">分类作业规范<small>作业卡 · 留痕</small></span></button><button class="step" data-i="6"><span class="num">7</span><span class="tx">结论建议<small>模板变量</small></span></button></div>
+    <div class="role-card">
+      <b data-t="roleTitle" data-label="口径卡标题" contenteditable="false" spellcheck="false">分类标准</b>
+      <p data-t="roleBody" data-label="口径卡正文" contenteditable="false" spellcheck="false">销售收入 = 产量 × 销售单价<br>降序累计占比 ≤70% 为 A、≤90% 为 B<br></p>
+    </div>
+    <div class="side-foot">
+      <div><span data-t="mSideStatus" data-label="侧栏·数据状态" data-plain="" contenteditable="false" spellcheck="false">数据状态：</span><b id="sideRows">10 条单品</b></div>
+      <div><span data-t="mSideThr" data-label="侧栏·当前阈值" data-plain="" contenteditable="false" spellcheck="false">当前阈值：</span><b id="sideThr">70% / 90%</b></div>
+      <div><span data-t="mSideStore" data-label="侧栏·存储说明" data-plain="" contenteditable="false" spellcheck="false">存储：</span><b data-t="mSideStoreVal" data-label="侧栏·存储值" data-plain="" contenteditable="false" spellcheck="false">本机自动保存</b></div>
+      <div style="margin-top:8px;color:var(--faint)" data-t="mSideKeys" data-label="侧栏·快捷键提示" contenteditable="false" spellcheck="false">快捷键 <kbd>E</kbd> 编辑 · <kbd>←</kbd><kbd>→</kbd> 翻页 · <kbd>Ctrl+Z</kbd> 撤销</div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <!-- 0 概览 -->
+    <section class="view" data-step="0">
+      <div class="vhead">
+        <div><h2 data-t="t0" data-label="总览-标题" contenteditable="false" spellcheck="false">数据<span>总览</span></h2><p data-t="d0" data-label="总览-说明" contenteditable="false" spellcheck="false">按销售收入给单品分 A / B / C，再看等级和供方是否匹配，最后落到各自的作业动作</p></div>
+        <div class="tagline" data-t="g0" data-label="总览-角标" contenteditable="false" spellcheck="false">实时重算</div>
+      </div>
+      <div class="kpi-grid" id="kpis"><div class="kpi blue"><div class="top"><span class="lb" data-t="mKpi1" data-plain="" contenteditable="false" spellcheck="false">单品数量</span><span class="ico">▦</span></div><b><span data-num="10" data-raw="10">10</span>个</b><div class="sb">按销售收入排序</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8" fill="none" stroke="#1f5fd6" stroke-width="1.8" opacity=".8"></polyline><polygon points="0,30 0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8 100,30" fill="#1f5fd6" opacity=".08"></polygon></svg></div><div class="kpi red"><div class="top"><span class="lb" data-t="mKpi2" data-plain="" contenteditable="false" spellcheck="false">销售收入合计</span><span class="ico">¥</span></div><b><span data-num="0" data-raw="¥462,400">¥462,400</span></b><div class="sb">产量 × 销售单价</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8" fill="none" stroke="#e0484d" stroke-width="1.8" opacity=".8"></polyline><polygon points="0,30 0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8 100,30" fill="#e0484d" opacity=".08"></polygon></svg></div><div class="kpi amber"><div class="top"><span class="lb" data-t="mKpi3" data-plain="" contenteditable="false" spellcheck="false">A 类收入占比</span><span class="ico">◔</span></div><b><span data-num="0" data-raw="63.32">63.32</span>%</b><div class="sb">A 类 5 个单品</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8" fill="none" stroke="#f0a022" stroke-width="1.8" opacity=".8"></polyline><polygon points="0,30 0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8 100,30" fill="#f0a022" opacity=".08"></polygon></svg></div><div class="kpi purple"><div class="top"><span class="lb" data-t="mKpi4" data-plain="" contenteditable="false" spellcheck="false">A 类单品</span><span class="ico">A</span></div><b><span data-num="5" data-raw="5">5</span>个</b><div class="sb">累计占比 ≤ 70%</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8" fill="none" stroke="#7c5cff" stroke-width="1.8" opacity=".8"></polyline><polygon points="0,30 0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8 100,30" fill="#7c5cff" opacity=".08"></polygon></svg></div><div class="kpi green"><div class="top"><span class="lb" data-t="mKpi5" data-plain="" contenteditable="false" spellcheck="false">最大供方占比</span><span class="ico">⚑</span></div><b><span data-num="0" data-raw="17.30">17.30</span>%</b><div class="sb">合作社.甲</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8" fill="none" stroke="#17a37b" stroke-width="1.8" opacity=".8"></polyline><polygon points="0,30 0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8 100,30" fill="#17a37b" opacity=".08"></polygon></svg></div><div class="kpi green"><div class="top"><span class="lb" data-t="mKpi6" data-plain="" contenteditable="false" spellcheck="false">合作供方</span><span class="ico">⚙</span></div><b><span data-num="10" data-raw="10">10</span>家</b><div class="sb">按供方字段汇总</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8" fill="none" stroke="#17a37b" stroke-width="1.8" opacity=".8"></polyline><polygon points="0,30 0.0,3.0 11.1,10.0 22.2,11.0 33.3,11.5 44.4,13.0 55.6,14.5 66.7,16.0 77.8,16.8 88.9,17.0 100.0,22.8 100,30" fill="#17a37b" opacity=".08"></polygon></svg></div></div>
+      <div class="grid g21">
+        <div class="card">
+          <h3 data-t="h0a" data-label="总览-树图标题" contenteditable="false" spellcheck="false">销售收入结构（树图）<span class="h-opt"><button class="mini" data-png="treemap">下载图片</button></span></h3>
+          <p class="desc" data-t="p0a" data-label="总览-树图说明" contenteditable="false" spellcheck="false">矩形面积 = 单品销售收入，颜色 = 物流 ABC 类别</p>
+          <div class="chartbox" id="treemap"><svg viewBox="0 0 620 310" xmlns="http://www.w3.org/2000/svg" font-family="Inter, PingFang SC, sans-serif"><g class="hit" data-i="0"><rect x="3.0" y="3.0" width="286.5" height="304.0" rx="7" fill="#e0484d" opacity="0.95"></rect><text x="12.0" y="23.0" font-size="12" font-weight="700" fill="#fff">PB-01</text><text x="12.0" y="40.0" font-size="10" fill="#fff" opacity=".9">¥80,000 · 17.30%</text></g><g class="hit" data-i="1"><rect x="295.5" y="3.0" width="192.9" height="304.0" rx="7" fill="#e0484d" opacity="0.82"></rect><text x="304.5" y="23.0" font-size="12" font-weight="700" fill="#fff">PB-04</text><text x="304.5" y="40.0" font-size="10" fill="#fff" opacity=".9">¥54,400 · 11.76%</text></g><g class="hit" data-i="2"><rect x="494.3" y="3.0" width="122.7" height="304.0" rx="7" fill="#17a37b" opacity="0.73"></rect><text x="503.3" y="23.0" font-size="12" font-weight="700" fill="#fff">PA-03</text><text x="503.3" y="40.0" font-size="10" fill="#fff" opacity=".9">¥35,200 · 7.61%</text></g></svg></div>
+          <div class="legend"><span><i style="background:var(--a)"></i><span data-t="mLgA" data-label="图例·A 类" data-plain="" contenteditable="false" spellcheck="false">A 类</span></span><span><i style="background:var(--b)"></i><span data-t="mLgB" data-label="图例·B 类" data-plain="" contenteditable="false" spellcheck="false">B 类</span></span><span><i style="background:var(--c)"></i><span data-t="mLgC" data-label="图例·C 类" data-plain="" contenteditable="false" spellcheck="false">C 类</span></span><span><i style="background:var(--line)"></i><span data-t="mLgArea" data-label="图例·面积说明" data-plain="" contenteditable="false" spellcheck="false">面积 = 收入</span></span></div>
+        </div>
+        <div class="card">
+          <h3 data-t="h0b" data-label="总览-洞察标题" contenteditable="false" spellcheck="false">自动洞察</h3>
+          <p class="desc" data-t="p0b" data-label="总览-洞察说明" contenteditable="false" spellcheck="false"><br></p>
+          <div class="insight-grid" id="insights"><div class="ins" data-go="2"><div class="ii">▣</div><div><div class="it" data-t="mIns1" data-plain="" contenteditable="false" spellcheck="false">收入冠军</div><div class="iv"><b>PB-01</b> 贡献 17.30% 销售收入</div></div></div><div class="ins" data-go="2"><div class="ii">◔</div><div><div class="it" data-t="mIns2" data-plain="" contenteditable="false" spellcheck="false">关键少数</div><div class="iv">A 类 <b>5</b> 个单品撑起 <b>63.32%</b> 收入</div></div></div><div class="ins" data-go="3"><div class="ii">⚖</div><div><div class="it" data-t="mIns3" data-plain="" contenteditable="false" spellcheck="false">等级错位</div><div class="iv">共 <b>3</b> 个单品两口径错位，需单独定作业投入</div></div></div><div class="ins" data-go="4"><div class="ii">⚑</div><div><div class="it" data-t="mIns4" data-plain="" contenteditable="false" spellcheck="false">供方集中</div><div class="iv"><b>合作社.甲</b> 占 17.30%，CR3 41.52%</div></div></div><div class="ins" data-go="2"><div class="ii">↗</div><div><div class="it" data-t="mIns5" data-plain="" contenteditable="false" spellcheck="false">毛利最高</div><div class="iv"><b>PA-02</b> 毛利空间 <b>50.00%</b></div></div></div><div class="ins" data-go="4"><div class="ii">¥</div><div><div class="it" data-t="mIns6" data-plain="" contenteditable="false" spellcheck="false">单公斤价差</div><div class="iv"><b>PA-02</b> 价差 ¥24/kg</div></div></div></div>
+        </div>
+      </div>
+      <div class="grid g2">
+        <div class="card">
+          <h3 data-t="h0c" data-label="总览-算法标题" contenteditable="false" spellcheck="false">这张表怎么算的</h3>
+          <p class="desc" data-t="p0c" data-label="总览-算法说明" contenteditable="false" spellcheck="false">从原始六列走到分类结果，一步一步看</p>
+          <ul class="rules" data-t="r0c" data-label="总览-算法规则" contenteditable="false" spellcheck="false"><li><b>销售收入</b>：产量 × 销售单价，按金额从高到低排队。</li><li><b>累计占比</b>：逐个累加销售收入并除以总收入，累计到 A 线以内划 A，B 线以内划 B，其余为 C。</li><li><b>初判等级</b>：表内自带的 A / B / C 初判，与按金额算出的物流 ABC 交叉对照，找错位单品。</li></ul>
+        </div>
+        <div class="card">
+          <h3 data-t="h0d" data-label="总览-重点标题" contenteditable="false" spellcheck="false">分析重点</h3>
+          <p class="desc" data-t="p0d" data-label="总览-重点说明" contenteditable="false" spellcheck="false">分类不是目的</p>
+          <div class="notice" data-t="n0d" data-label="总览-重点正文" contenteditable="false" spellcheck="false">销售额集中在一两个单品上，就把保供和作业精力压在它们身上。<b>初判等级高但销售占比低的单品</b>，以及<b>销售占比高但初判等级一般的单品</b>，是最值得拿出来讲的两类错位。</div>
+          <div class="flow" style="margin-top:14px" data-t="f0d" data-label="总览-流程条" contenteditable="false" spellcheck="false"><span>数据工作台</span><em>→</em><span>ABC 分类</span><em>→</em><span>等级对照</span><em>→</em><span>供应商贡献</span><em>→</em><span>作业规范</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 数据工作台 -->
+    <section class="view" data-step="1">
+      <div class="vhead">
+        <div><h2 data-t="t1" data-label="工作台-标题" contenteditable="false" spellcheck="false">数据<span>工作台</span></h2><p data-t="d1" data-label="工作台-说明" contenteditable="false" spellcheck="false">粘贴 Excel 区域或导入 CSV</p></div>
+        <div class="tagline" data-t="g1" data-label="工作台-角标" contenteditable="false" spellcheck="false">全字段可编辑 · 自动保存</div>
+      </div>
+      <div class="card">
+        <h3 data-t="h1a" data-label="工作台-输入标题" contenteditable="false" spellcheck="false">原始数据输入<span class="h-opt"><button class="mini" id="btnAddRow">＋ 新增单品</button></span></h3>
+        <p class="desc" data-t="p1a" data-label="工作台-输入说明" contenteditable="false" spellcheck="false">列顺序：单品编号, 供应商, 初判等级, 产量(kg), 收购单价(元/kg), 销售单价(元/kg)</p>
+        <textarea id="csvBox" spellcheck="false"></textarea>
+        <div class="tools">
+          <button class="btn fill" id="btnApply">✓ 应用数据</button>
+          <button class="btn" id="btnSample2">⟲ 重置数据</button>
+          <button class="btn" id="btnClear">清空输入</button>
+          <span class="note" style="margin-left:auto;padding:5px 10px" data-t="mPasteTip" data-label="工作台·粘贴提示" data-plain="" contenteditable="false" spellcheck="false">可直接从 Excel 复制整块区域粘贴，带表头也能识别</span>
+        </div>
+        <div class="err" id="err"></div>
+      </div>
+      <div class="card">
+        <h3 data-t="h1b" data-label="工作台-明细标题" contenteditable="false" spellcheck="false">数据明细（单元格可直接修改）</h3>
+        <p class="desc" data-t="p1b" data-label="工作台-明细说明" contenteditable="false" spellcheck="false"><br></p>
+        <div class="tablewrap"><table id="dataTable"><tbody><tr><th data-t="mTh_d1" data-plain="" contenteditable="false" spellcheck="false">#</th><th data-t="mTh_d2" data-plain="" contenteditable="false" spellcheck="false">单品编号</th><th data-t="mTh_d3" data-plain="" contenteditable="false" spellcheck="false">供应商</th><th data-t="mTh_d4" data-plain="" contenteditable="false" spellcheck="false">初判等级</th><th data-t="mTh_d5" data-plain="" contenteditable="false" spellcheck="false">产量 kg</th><th data-t="mTh_d6" data-plain="" contenteditable="false" spellcheck="false">收购单价</th><th data-t="mTh_d7" data-plain="" contenteditable="false" spellcheck="false">销售单价</th><th data-t="mTh_d8" data-plain="" contenteditable="false" spellcheck="false">销售收入</th><th data-t="mTh_d9" data-plain="" contenteditable="false" spellcheck="false">累计占比</th><th data-t="mTh_d10" data-plain="" contenteditable="false" spellcheck="false">物流 ABC</th><th data-t="mTh_d11" data-plain="" contenteditable="false" spellcheck="false">毛利空间</th><th></th></tr><tr>
+    <td style="color:var(--faint)">1</td>
+    <td><input data-i="0" data-f="code" value="PB-01"></td>
+    <td><input data-i="0" data-f="supplier" value="合作社.甲"></td>
+    <td><input data-i="0" data-f="grade0" value="B" style="width:52px"></td>
+    <td><input data-i="0" data-f="qty" value="2500"></td>
+    <td><input data-i="0" data-f="buyPrice" value="20"></td>
+    <td><input data-i="0" data-f="sellPrice" value="32"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥80,000</td>
+    <td class="calc-cum">17.30%</td>
+    <td class="calc-abc"><span class="pill pA">A</span></td>
+    <td class="calc-margin">37.50%</td>
+    <td><button class="rowdel" data-del="0" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">2</td>
+    <td><input data-i="1" data-f="code" value="PA-02"></td>
+    <td><input data-i="1" data-f="supplier" value="合作社.乙"></td>
+    <td><input data-i="1" data-f="grade0" value="A" style="width:52px"></td>
+    <td><input data-i="1" data-f="qty" value="1200"></td>
+    <td><input data-i="1" data-f="buyPrice" value="24"></td>
+    <td><input data-i="1" data-f="sellPrice" value="48"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥57,600</td>
+    <td class="calc-cum">29.76%</td>
+    <td class="calc-abc"><span class="pill pA">A</span></td>
+    <td class="calc-margin">50.00%</td>
+    <td><button class="rowdel" data-del="1" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">3</td>
+    <td><input data-i="2" data-f="code" value="PA-01"></td>
+    <td><input data-i="2" data-f="supplier" value="经纪人.丙"></td>
+    <td><input data-i="2" data-f="grade0" value="A" style="width:52px"></td>
+    <td><input data-i="2" data-f="qty" value="900"></td>
+    <td><input data-i="2" data-f="buyPrice" value="24"></td>
+    <td><input data-i="2" data-f="sellPrice" value="48"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥43,200</td>
+    <td class="calc-cum">72.66%</td>
+    <td class="calc-abc"><span class="pill pB">B</span></td>
+    <td class="calc-margin">50.00%</td>
+    <td><button class="rowdel" data-del="2" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">4</td>
+    <td><input data-i="3" data-f="code" value="PB-02"></td>
+    <td><input data-i="3" data-f="supplier" value="加工厂.丁"></td>
+    <td><input data-i="3" data-f="grade0" value="C" style="width:52px"></td>
+    <td><input data-i="3" data-f="qty" value="1500"></td>
+    <td><input data-i="3" data-f="buyPrice" value="16"></td>
+    <td><input data-i="3" data-f="sellPrice" value="24"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥36,000</td>
+    <td class="calc-cum">88.75%</td>
+    <td class="calc-abc"><span class="pill pB">B</span></td>
+    <td class="calc-margin">33.33%</td>
+    <td><button class="rowdel" data-del="3" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">5</td>
+    <td><input data-i="4" data-f="code" value="PA-03"></td>
+    <td><input data-i="4" data-f="supplier" value="餐饮供应链"></td>
+    <td><input data-i="4" data-f="grade0" value="B" style="width:52px"></td>
+    <td><input data-i="4" data-f="qty" value="1100"></td>
+    <td><input data-i="4" data-f="buyPrice" value="20"></td>
+    <td><input data-i="4" data-f="sellPrice" value="32"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥35,200</td>
+    <td class="calc-cum">96.37%</td>
+    <td class="calc-abc"><span class="pill pC">C</span></td>
+    <td class="calc-margin">37.50%</td>
+    <td><button class="rowdel" data-del="4" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">6</td>
+    <td><input data-i="5" data-f="code" value="PB-03"></td>
+    <td><input data-i="5" data-f="supplier" value="加工.百合干原料"></td>
+    <td><input data-i="5" data-f="grade0" value="C" style="width:52px"></td>
+    <td><input data-i="5" data-f="qty" value="700"></td>
+    <td><input data-i="5" data-f="buyPrice" value="16"></td>
+    <td><input data-i="5" data-f="sellPrice" value="24"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥16,800</td>
+    <td class="calc-cum">100.00%</td>
+    <td class="calc-abc"><span class="pill pC">C</span></td>
+    <td class="calc-margin">33.33%</td>
+    <td><button class="rowdel" data-del="5" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">7</td>
+    <td><input data-i="6" data-f="code" value="PA-04"></td>
+    <td><input data-i="6" data-f="supplier" value="经纪人.A"></td>
+    <td><input data-i="6" data-f="grade0" value="A" style="width:52px"></td>
+    <td><input data-i="6" data-f="qty" value="1000"></td>
+    <td><input data-i="6" data-f="buyPrice" value="24"></td>
+    <td><input data-i="6" data-f="sellPrice" value="48"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥48,000</td>
+    <td class="calc-cum">63.32%</td>
+    <td class="calc-abc"><span class="pill pA">A</span></td>
+    <td class="calc-margin">50.00%</td>
+    <td><button class="rowdel" data-del="6" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">8</td>
+    <td><input data-i="7" data-f="code" value="PB-04"></td>
+    <td><input data-i="7" data-f="supplier" value="加工厂.B"></td>
+    <td><input data-i="7" data-f="grade0" value="B" style="width:52px"></td>
+    <td><input data-i="7" data-f="qty" value="1700"></td>
+    <td><input data-i="7" data-f="buyPrice" value="20"></td>
+    <td><input data-i="7" data-f="sellPrice" value="32"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥54,400</td>
+    <td class="calc-cum">41.52%</td>
+    <td class="calc-abc"><span class="pill pA">A</span></td>
+    <td class="calc-margin">37.50%</td>
+    <td><button class="rowdel" data-del="7" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">9</td>
+    <td><input data-i="8" data-f="code" value="PA-05"></td>
+    <td><input data-i="8" data-f="supplier" value="商超配送.C"></td>
+    <td><input data-i="8" data-f="grade0" value="C" style="width:52px"></td>
+    <td><input data-i="8" data-f="qty" value="2200"></td>
+    <td><input data-i="8" data-f="buyPrice" value="16"></td>
+    <td><input data-i="8" data-f="sellPrice" value="24"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥52,800</td>
+    <td class="calc-cum">52.94%</td>
+    <td class="calc-abc"><span class="pill pA">A</span></td>
+    <td class="calc-margin">33.33%</td>
+    <td><button class="rowdel" data-del="8" title="删除该行">✕</button></td></tr><tr>
+    <td style="color:var(--faint)">10</td>
+    <td><input data-i="9" data-f="code" value="PB-05"></td>
+    <td><input data-i="9" data-f="supplier" value="电商渠道.D"></td>
+    <td><input data-i="9" data-f="grade0" value="A" style="width:52px"></td>
+    <td><input data-i="9" data-f="qty" value="800"></td>
+    <td><input data-i="9" data-f="buyPrice" value="24"></td>
+    <td><input data-i="9" data-f="sellPrice" value="48"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">¥38,400</td>
+    <td class="calc-cum">80.97%</td>
+    <td class="calc-abc"><span class="pill pB">B</span></td>
+    <td class="calc-margin">50.00%</td>
+    <td><button class="rowdel" data-del="9" title="删除该行">✕</button></td></tr></tbody></table></div>
+      </div>
+      <div class="grid g2">
+        <div class="card">
+          <h3 data-t="h1c" data-label="工作台-阈值标题" contenteditable="false" spellcheck="false">分类阈值</h3>
+          <p class="desc" data-t="p1c" data-label="工作台-阈值说明" contenteditable="false" spellcheck="false">销售收入累计占比的分界线，拖动或输入数字</p>
+          <div class="slider-row"><label data-t="mSliderA" data-label="阈值·A 类名称" data-plain="" contenteditable="false" spellcheck="false">A 类累计上限</label><input type="range" id="sA" min="40" max="90" value="70"><input type="number" class="numin" id="nA" min="40" max="90" value="70"></div>
+          <div class="slider-row"><label data-t="mSliderB" data-label="阈值·B 类名称" data-plain="" contenteditable="false" spellcheck="false">B 类累计上限</label><input type="range" id="sB" min="55" max="99" value="90"><input type="number" class="numin" id="nB" min="55" max="99" value="90"></div>
+          <div class="preset-wrap" id="presets"><button class="preset active" data-a="70" data-b="90">标准 70 / 90</button><button class="preset " data-a="60" data-b="85">收紧 60 / 85</button><button class="preset " data-a="80" data-b="95">放宽 80 / 95</button><button class="preset " data-a="75" data-b="92">均衡 75 / 92</button></div>
+        </div>
+        <div class="card">
+          <h3 data-t="h1d" data-label="工作台-口径标题" contenteditable="false" spellcheck="false">字段与口径</h3>
+          <div class="note" data-t="n1d" data-label="工作台-口径正文" contenteditable="false" spellcheck="false">累计占比 ≤ A 线归 A 类，≤ B 线归 B 类，超过 B 线归 C 类。B 线会自动保持在 A 线之上。<br></div>
+          <div class="note" style="margin-top:10px;border-left-color:var(--accent)" data-t="n1e" data-label="工作台-编辑说明" contenteditable="false" spellcheck="false">销售收入 = 产量 × 销售单价；毛利空间 =（销售单价 − 收购单价）÷ 销售单价</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 ABC -->
+    <section class="view" data-step="2">
+      <div class="vhead">
+        <div><h2 data-t="t2" data-label="ABC-标题" contenteditable="false" spellcheck="false">ABC <span>分类分析</span></h2><p data-t="d2" data-label="ABC-说明" contenteditable="false" spellcheck="false">按销售收入做帕累托图</p></div>
+        <div class="tagline" data-t="g2" data-label="ABC-角标" contenteditable="false" spellcheck="false">收入降序 · 累计占比 · 交互联动</div>
+      </div>
+      <div class="card">
+        <h3 data-t="h2a" data-label="ABC-帕累托标题" contenteditable="false" spellcheck="false">销售收入帕累托图<span class="h-opt"><button class="mini" id="btnDemo">▶ 演示分类</button><button class="mini" data-png="pareto">下载图片</button></span></h3>
+        <p class="desc" data-t="p2a" data-label="ABC-帕累托说明" contenteditable="false" spellcheck="false">柱子是单品销售收入（左轴），折线是累计占比（右轴），阴影区对应 A / B / C 三段</p>
+        <div class="chartbox" id="pareto"><svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">
+    <defs><lineargradient id="areaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1f5fd6" stop-opacity=".20"></stop><stop offset="100%" stop-color="#1f5fd6" stop-opacity="0"></stop></lineargradient></defs>
+    <line x1="66" y1="308" x2="894" y2="308" stroke="#e9eef7" stroke-dasharray="4 5"></line><text x="56" y="312" text-anchor="end" font-size="10" fill="#8794a9">0</text><text x="904" y="312" font-size="10" fill="#8794a9">0%</text><line x1="66" y1="240.5" x2="894" y2="240.5" stroke="#e9eef7" stroke-dasharray="4 5"></line><text x="56" y="244.5" text-anchor="end" font-size="10" fill="#8794a9">20,000</text><text x="904" y="244.5" font-size="10" fill="#8794a9">25%</text><line x1="66" y1="173" x2="894" y2="173" stroke="#e9eef7" stroke-dasharray="4 5"></line><text x="56" y="177" text-anchor="end" font-size="10" fill="#8794a9">40,000</text><text x="904" y="177" font-size="10" fill="#8794a9">50%</text><line x1="66" y1="105.5" x2="894" y2="105.5" stroke="#e9eef7" stroke-dasharray="4 5"></line><text x="56" y="109.5" text-anchor="end" font-size="10" fill="#8794a9">60,000</text><text x="904" y="109.5" font-size="10" fill="#8794a9">75%</text><line x1="66" y1="38" x2="894" y2="38" stroke="#e9eef7" stroke-dasharray="4 5"></line><text x="56" y="42" text-anchor="end" font-size="10" fill="#8794a9">80,000</text><text x="904" y="42" font-size="10" fill="#8794a9">100%</text><rect x="66" y="38" width="414.0" height="270" fill="#e0484d" opacity=".05"></rect><line x1="480" y1="38" x2="480" y2="308" stroke="#e0484d" stroke-dasharray="6 5" opacity=".6"></line><text x="74" y="29" font-size="11" font-weight="700" fill="#e0484d">A 类区 ≤ 70%</text><rect x="480" y="38" width="248.4" height="270" fill="#f0a022" opacity=".06"></rect><line x1="728.4" y1="38" x2="728.4" y2="308" stroke="#f0a022" stroke-dasharray="6 5" opacity=".6"></line><text x="488" y="29" font-size="11" font-weight="700" fill="#f0a022">B 类区 ≤ 90%</text><text x="736.4" y="29" font-size="11" font-weight="700" fill="#17a37b">C 类区</text><line x1="66" y1="119" x2="894" y2="119" stroke="#e0484d" stroke-width="1" stroke-dasharray="2 6" opacity=".55"></line><line x1="66" y1="65" x2="894" y2="65" stroke="#f0a022" stroke-width="1" stroke-dasharray="2 6" opacity=".55"></line><polygon points="66,308 107.4,261.3 190.2,227.7 273.0,195.9 355.8,165.1 438.6,137.0 521.4,111.8 604.2,89.4 687.0,68.4 769.8,47.8 852.6,38.0 894.0,308" fill="url(#areaG)"></polygon><rect class="pbar hit " data-i="0" x="83.4" y="38.0" width="48.0" height="270.0" rx="4" fill="#e0484d" style="animation-delay:0ms"></rect><rect class="pbar hit dim" data-i="1" x="166.2" y="113.6" width="48.0" height="194.4" rx="4" fill="#e0484d" style="animation-delay:55ms"></rect><rect class="pbar hit " data-i="2" x="249.0" y="124.4" width="48.0" height="183.6" rx="4" fill="#e0484d" style="animation-delay:110ms"></rect><rect class="pbar hit dim" data-i="3" x="331.8" y="129.8" width="48.0" height="178.2" rx="4" fill="#e0484d" style="animation-delay:165ms"></rect><rect class="pbar hit dim" data-i="4" x="414.6" y="146.0" width="48.0" height="162.0" rx="4" fill="#e0484d" style="animation-delay:220ms"></rect><rect class="pbar hit dim" data-i="5" x="497.4" y="162.2" width="48.0" height="145.8" rx="4" fill="#f0a022" style="animation-delay:275ms"></rect><rect class="pbar hit dim" data-i="6" x="580.2" y="178.4" width="48.0" height="129.6" rx="4" fill="#f0a022" style="animation-delay:330ms"></rect><rect class="pbar hit dim" data-i="7" x="663.0" y="186.5" width="48.0" height="121.5" rx="4" fill="#f0a022" style="animation-delay:385ms"></rect><rect class="pbar hit " data-i="8" x="745.8" y="189.2" width="48.0" height="118.8" rx="4" fill="#17a37b" style="animation-delay:440ms"></rect><rect class="pbar hit dim" data-i="9" x="828.6" y="251.3" width="48.0" height="56.7" rx="4" fill="#17a37b" style="animation-delay:495ms"></rect>
+    <polyline class="pline" points="107.4,261.3 190.2,227.7 273.0,195.9 355.8,165.1 438.6,137.0 521.4,111.8 604.2,89.4 687.0,68.4 769.8,47.8 852.6,38.0" stroke="#1f5fd6"></polyline><circle class="pdot hit" data-i="0" cx="107.4" cy="261.3" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:320ms"></circle><circle class="pdot hit" data-i="1" cx="190.2" cy="227.7" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:375ms"></circle><circle class="pdot hit" data-i="2" cx="273.0" cy="195.9" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:430ms"></circle><circle class="pdot hit" data-i="3" cx="355.8" cy="165.1" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:485ms"></circle><circle class="pdot hit" data-i="4" cx="438.6" cy="137.0" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:540ms"></circle><circle class="pdot hit" data-i="5" cx="521.4" cy="111.8" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:595ms"></circle><circle class="pdot hit" data-i="6" cx="604.2" cy="89.4" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:650ms"></circle><circle class="pdot hit" data-i="7" cx="687.0" cy="68.4" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:705ms"></circle><circle class="pdot hit" data-i="8" cx="769.8" cy="47.8" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:760ms"></circle><circle class="pdot hit" data-i="9" cx="852.6" cy="38.0" r="4" fill="#ffffff" stroke="#1f5fd6" stroke-width="2.2" style="animation-delay:815ms"></circle><text x="107.4" y="31.0" text-anchor="middle" font-size="9.5" fill="#4a5871">80k</text><text x="190.2" y="106.6" text-anchor="middle" font-size="9.5" fill="#4a5871">58k</text><text x="273.0" y="117.4" text-anchor="middle" font-size="9.5" fill="#4a5871">54k</text><text x="355.8" y="122.8" text-anchor="middle" font-size="9.5" fill="#4a5871">53k</text><text x="438.6" y="139.0" text-anchor="middle" font-size="9.5" fill="#4a5871">48k</text><text x="521.4" y="155.2" text-anchor="middle" font-size="9.5" fill="#4a5871">43k</text><text x="604.2" y="171.4" text-anchor="middle" font-size="9.5" fill="#4a5871">38k</text><text x="687.0" y="179.5" text-anchor="middle" font-size="9.5" fill="#4a5871">36k</text><text x="769.8" y="182.2" text-anchor="middle" font-size="9.5" fill="#4a5871">35k</text><text x="852.6" y="244.3" text-anchor="middle" font-size="9.5" fill="#4a5871">17k</text><text x="107.4" y="327" transform="rotate(-38 107.4 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PB-01</text><text x="190.2" y="327" transform="rotate(-38 190.2 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PA-02</text><text x="273.0" y="327" transform="rotate(-38 273.0 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PB-04</text><text x="355.8" y="327" transform="rotate(-38 355.8 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PA-05</text><text x="438.6" y="327" transform="rotate(-38 438.6 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PA-04</text><text x="521.4" y="327" transform="rotate(-38 521.4 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PA-01</text><text x="604.2" y="327" transform="rotate(-38 604.2 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PB-05</text><text x="687.0" y="327" transform="rotate(-38 687.0 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PB-02</text><text x="769.8" y="327" transform="rotate(-38 769.8 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PA-03</text><text x="852.6" y="327" transform="rotate(-38 852.6 327)" text-anchor="end" font-size="10.5" fill="#8794a9">PB-03</text>
+    <line x1="66" y1="308" x2="894" y2="308" stroke="#e4eaf4"></line>
+    <text x="66" y="412" font-size="10" fill="#aeb9ca">单品（按销售收入降序） · 左轴：销售收入 / 右轴：累计占比</text></svg></div>
+        <div class="caption" id="paretoCaption">当前筛选 3 / 10 个单品，其余柱子已淡化；累计占比仍按全量口径计算。</div>
+        <div class="legend"><span><i style="background:var(--a)"></i><span data-t="mLgA" data-label="图例·A 类" data-plain="" contenteditable="false" spellcheck="false">A 类</span></span><span><i style="background:var(--b)"></i><span data-t="mLgB" data-label="图例·B 类" data-plain="" contenteditable="false" spellcheck="false">B 类</span></span><span><i style="background:var(--c)"></i><span data-t="mLgC" data-label="图例·C 类" data-plain="" contenteditable="false" spellcheck="false">C 类</span></span><span><i style="background:var(--brand)"></i><span data-t="mLgCum" data-label="图例·累计占比" data-plain="" contenteditable="false" spellcheck="false">累计占比</span></span><span id="selHint"><b style="color:var(--brand)">已选 PA-03</b> · <button class="mini" id="gotoWork" style="padding:2px 7px">查看作业卡 →</button></span></div>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h3 data-t="h2b" data-label="ABC-环形标题" contenteditable="false" spellcheck="false">销售收入结构</h3><p class="desc" data-t="p2b" data-label="ABC-环形说明" contenteditable="false" spellcheck="false">点图例或扇区可筛选 ABC 类别</p><div class="donut-wrap" id="donut"><svg viewBox="0 0 152 152" style="width:158px;flex:none" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif"><circle class="dseg" data-abc="A" cx="76" cy="76" r="54" fill="none" stroke="#e0484d" stroke-width="22" stroke-dasharray="265.87 73.42" stroke-dashoffset="0.00" transform="rotate(-90 76 76)" stroke-linecap="butt"></circle><circle class="dseg" data-abc="B" cx="76" cy="76" r="54" fill="none" stroke="#f0a022" stroke-width="22" stroke-dasharray="0.00 339.29" stroke-dashoffset="-268.87" transform="rotate(-90 76 76)" stroke-linecap="butt"></circle><circle class="dseg" data-abc="C" cx="76" cy="76" r="54" fill="none" stroke="#17a37b" stroke-width="22" stroke-dasharray="67.42 271.87" stroke-dashoffset="-268.87" transform="rotate(-90 76 76)" stroke-linecap="butt"></circle><text x="76" y="73" text-anchor="middle" font-size="13" font-weight="700" fill="#17253c">¥169,600</text><text x="76" y="90" text-anchor="middle" font-size="9.5" fill="#8794a9">筛选后收入</text></svg><div><div class="dleg" data-abc="A"><i style="background:#e0484d"></i>A 类　<b>79.25%</b><br><span style="color:var(--muted);font-size:10.5px">¥134,400 · 2 个单品</span></div><div class="dleg" data-abc="B"><i style="background:#f0a022"></i>B 类　<b>0.00%</b><br><span style="color:var(--muted);font-size:10.5px">¥0 · 0 个单品</span></div><div class="dleg" data-abc="C"><i style="background:#17a37b"></i>C 类　<b>20.75%</b><br><span style="color:var(--muted);font-size:10.5px">¥35,200 · 1 个单品</span></div></div></div></div>
+        <div class="card"><h3 data-t="h2c" data-label="ABC-基尼标题" contenteditable="false" spellcheck="false">集中度 ·曲线</h3><p class="desc" data-t="p2c" data-label="ABC-基尼说明" contenteditable="false" spellcheck="false">越偏离对角平等线，收入越集中在少数单品</p><div class="chartbox" id="lorenz"><svg viewBox="0 0 440 250" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+    <line x1="44" y1="212" x2="422" y2="212" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="37" y="216" text-anchor="end" font-size="9.5" fill="#8794a9">0</text><text x="44" y="228" text-anchor="middle" font-size="9.5" fill="#8794a9">0%</text><line x1="44" y1="163.5" x2="422" y2="163.5" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="37" y="167.5" text-anchor="end" font-size="9.5" fill="#8794a9">25</text><text x="138.5" y="228" text-anchor="middle" font-size="9.5" fill="#8794a9">25%</text><line x1="44" y1="115" x2="422" y2="115" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="37" y="119" text-anchor="end" font-size="9.5" fill="#8794a9">50</text><text x="233" y="228" text-anchor="middle" font-size="9.5" fill="#8794a9">50%</text><line x1="44" y1="66.5" x2="422" y2="66.5" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="37" y="70.5" text-anchor="end" font-size="9.5" fill="#8794a9">75</text><text x="327.5" y="228" text-anchor="middle" font-size="9.5" fill="#8794a9">75%</text><line x1="44" y1="18" x2="422" y2="18" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="37" y="22" text-anchor="end" font-size="9.5" fill="#8794a9">100</text><text x="422" y="228" text-anchor="middle" font-size="9.5" fill="#8794a9">100%</text><line x1="44" y1="212" x2="422" y2="18" stroke="#aeb9ca" stroke-width="1.5" stroke-dasharray="6 5"></line>
+    <polygon points="44,212 44.0,212.0 170.0,120.5 296.0,58.3 422.0,18.0 422,212" fill="#1f5fd6" opacity=".10"></polygon><polyline points="44.0,212.0 170.0,120.5 296.0,58.3 422.0,18.0" fill="none" stroke="#1f5fd6" stroke-width="2.6"></polyline>
+    <circle cx="170.0" cy="120.5" r="2.8" fill="#ffffff" stroke="#1f5fd6" stroke-width="1.6"></circle><circle cx="296.0" cy="58.3" r="2.8" fill="#ffffff" stroke="#1f5fd6" stroke-width="1.6"></circle><circle cx="422.0" cy="18.0" r="2.8" fill="#ffffff" stroke="#1f5fd6" stroke-width="1.6"></circle>
+    <text x="418" y="204" text-anchor="end" font-size="10" fill="#8794a9">绝对平等线</text></svg>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px">
+      <div style="font-size:12px;color:var(--ink2)">基尼系数 <b style="font-size:20px;color:var(--brand)">0.000</b> <span class="pill" style="background:var(--c)">收入较均衡</span></div>
+      <div style="flex:1;min-width:130px"><div class="progressbar"><i style="width:0.0%"></i></div><div style="font-size:10.5px;color:var(--muted)">0 = 完全平均 · 1 = 完全集中</div></div>
+    </div></div></div>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h3 data-t="h2d" data-label="ABC-气泡标题" contenteditable="false" spellcheck="false">产量 × 单价 四象限</h3><p class="desc" data-t="p2d" data-label="ABC-气泡说明" contenteditable="false" spellcheck="false">气泡大小 = 销售收入，虚线为均值分界，颜色为 ABC 类别</p><div class="chartbox" id="bubble"><svg viewBox="0 0 440 290" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif"><line x1="52" y1="20" x2="52" y2="246" stroke="#e9eef7" stroke-dasharray="3 5"></line><line x1="52" y1="246" x2="420" y2="246" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="52" y="262" text-anchor="middle" font-size="9.5" fill="#8794a9">0</text><text x="45" y="250" text-anchor="end" font-size="9.5" fill="#8794a9">0</text><line x1="144" y1="20" x2="144" y2="246" stroke="#e9eef7" stroke-dasharray="3 5"></line><line x1="52" y1="189.5" x2="420" y2="189.5" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="144" y="262" text-anchor="middle" font-size="9.5" fill="#8794a9">719</text><text x="45" y="193.5" text-anchor="end" font-size="9.5" fill="#8794a9">9</text><line x1="236" y1="20" x2="236" y2="246" stroke="#e9eef7" stroke-dasharray="3 5"></line><line x1="52" y1="133" x2="420" y2="133" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="236" y="262" text-anchor="middle" font-size="9.5" fill="#8794a9">1438</text><text x="45" y="137" text-anchor="end" font-size="9.5" fill="#8794a9">18</text><line x1="328" y1="20" x2="328" y2="246" stroke="#e9eef7" stroke-dasharray="3 5"></line><line x1="52" y1="76.5" x2="420" y2="76.5" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="328" y="262" text-anchor="middle" font-size="9.5" fill="#8794a9">2156</text><text x="45" y="80.5" text-anchor="end" font-size="9.5" fill="#8794a9">28</text><line x1="420" y1="20" x2="420" y2="246" stroke="#e9eef7" stroke-dasharray="3 5"></line><line x1="52" y1="20" x2="420" y2="20" stroke="#e9eef7" stroke-dasharray="3 5"></line><text x="420" y="262" text-anchor="middle" font-size="9.5" fill="#8794a9">2875</text><text x="45" y="24" text-anchor="end" font-size="9.5" fill="#8794a9">37</text><line x1="278.1333333333333" y1="20" x2="278.1333333333333" y2="246" stroke="#7c5cff" stroke-dasharray="6 5" opacity=".65"></line><line x1="52" y1="49.47826086956519" x2="420" y2="49.47826086956519" stroke="#7c5cff" stroke-dasharray="6 5" opacity=".65"></line><text x="415" y="33" text-anchor="end" font-size="10" fill="#7c5cff">高产 · 高价</text><text x="57" y="239" font-size="10" fill="#8794a9">低产 · 低价</text><g class="hit" data-i="0"><circle cx="372.0" cy="49.5" r="32.0" fill="#e0484d" opacity=".62" stroke="#e0484d" stroke-width="1.5"></circle><text x="372.0" y="52.5" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">PB-01</text></g><g class="hit" data-i="1"><circle cx="269.6" cy="49.5" r="27.6" fill="#e0484d" opacity=".62" stroke="#e0484d" stroke-width="1.5"></circle><text x="269.6" y="52.5" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">PB-04</text></g><g class="hit" data-i="2"><circle cx="192.8" cy="49.5" r="23.6" fill="#17a37b" opacity=".62" stroke="#17a37b" stroke-width="1.5"></circle><text x="192.8" y="52.5" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">PA-03</text></g>
+    <line x1="52" y1="246" x2="420" y2="246" stroke="#e4eaf4"></line><text x="236" y="286" text-anchor="middle" font-size="10" fill="#8794a9">产量 (kg) →</text><text x="12" y="133" text-anchor="middle" font-size="10" fill="#8794a9" transform="rotate(-90 12 133)">销售单价 (元/kg) →</text></svg></div></div>
+        <div class="card"><h3 data-t="h2e" data-label="ABC-策略标题" contenteditable="false" spellcheck="false">分类策略解读</h3><p class="desc" data-t="p2e" data-label="ABC-策略说明" contenteditable="false" spellcheck="false">结论随阈值与数据实时重算</p><div id="abcInsight"><ul class="rules">
+    <li><b>A 类（5 个 / 63.32%）</b>：PB-01、PA-02、PB-04、PA-05、PA-04，优先锁定产能与运力，到货全数清点。</li>
+    <li><b>B 类（3 个 / 25.43%）</b>：按量采购，抽样复核，保持供方稳定。</li>
+    <li><b>C 类（2 个 / 11.25%）</b>：简化作业，控制库存，避免占用过多精力。</li>
+    <li><b>关键少数</b>：前 5 个单品贡献 63.32% 销售收入；基尼系数 0.000（收入较均衡）。</li></ul></div></div>
+      </div>
+      <div class="card"><h3 data-t="h2f" data-label="ABC-明细标题" contenteditable="false" spellcheck="false">ABC 分类明细</h3><p class="desc" data-t="p2f" data-label="ABC-明细说明" contenteditable="false" spellcheck="false">点任意行跳到该单品的作业卡；初判等级和物流 ABC 并排看</p><div class="tablewrap" style="max-height:420px"><table id="abcTable"><tbody><tr><th data-t="mTh_a1" data-plain="" contenteditable="false" spellcheck="false">排名</th><th data-t="mTh_a2" data-plain="" contenteditable="false" spellcheck="false">单品编号</th><th data-t="mTh_a3" data-plain="" contenteditable="false" spellcheck="false">供应商</th><th data-t="mTh_a4" data-plain="" contenteditable="false" spellcheck="false">初判等级</th><th data-t="mTh_a5" data-plain="" contenteditable="false" spellcheck="false">产量 kg</th><th data-t="mTh_a6" data-plain="" contenteditable="false" spellcheck="false">销售收入</th><th data-t="mTh_a7" data-plain="" contenteditable="false" spellcheck="false">占比</th><th data-t="mTh_a8" data-plain="" contenteditable="false" spellcheck="false">累计占比</th><th data-t="mTh_a9" data-plain="" contenteditable="false" spellcheck="false">物流 ABC</th><th data-t="mTh_a10" data-plain="" contenteditable="false" spellcheck="false">毛利空间</th></tr><tr class="rowsel" data-code="PB-01"><td>1</td><td><b>PB-01</b></td><td>合作社.甲</td><td>B</td><td>2,500</td><td>¥80,000</td><td>17.30%</td><td>17.30%</td><td><span class="pill pA">A</span></td><td>37.50%</td></tr><tr class="rowsel" data-code="PB-04"><td>3</td><td><b>PB-04</b></td><td>加工厂.B</td><td>B</td><td>1,700</td><td>¥54,400</td><td>11.76%</td><td>41.52%</td><td><span class="pill pA">A</span></td><td>37.50%</td></tr><tr class="rowsel" data-code="PA-03"><td>9</td><td><b>PA-03</b></td><td>餐饮供应链</td><td>B</td><td>1,100</td><td>¥35,200</td><td>7.61%</td><td>96.37%</td><td><span class="pill pC">C</span></td><td>37.50%</td></tr></tbody></table></div></div>
+    </section>
+
+    <!-- 3 等级对照 -->
+    <section class="view active" data-step="3">
+      <div class="vhead">
+        <div><h2 data-t="t3" data-label="对照-标题" contenteditable="false" spellcheck="false">初判等级与<span>物流 ABC 对照</span></h2><p data-t="d3" data-label="对照-说明" contenteditable="false" spellcheck="false">同一个单品，初判等级和物流分类落在哪两格，错位的才是要重点讲的</p></div>
+        <div class="tagline" data-t="g3" data-label="对照-角标" contenteditable="false" spellcheck="false">热力矩阵 · 点击筛选</div>
+      </div>
+      <div class="card"><h3 data-t="h3a" data-label="对照-矩阵标题" contenteditable="false" spellcheck="false">等级 × 分类 交叉分布（热力）</h3><p class="desc" data-t="p3a" data-label="对照-矩阵说明" contenteditable="false" spellcheck="false">行是初判等级，列是物流 ABC；底色越深，该格收入越高；点击格子可筛选</p><div id="crossMatrix"><table class="cross"><tbody><tr><th style="width:130px" data-t="mTh_c1" data-plain="" contenteditable="false" spellcheck="false">初判等级 ＼ 物流 ABC</th><th data-t="mTh_c2" data-plain="" contenteditable="false" spellcheck="false">A 类</th><th data-t="mTh_c3" data-plain="" contenteditable="false" spellcheck="false">B 类</th><th data-t="mTh_c4" data-plain="" contenteditable="false" spellcheck="false">C 类</th></tr><tr><th>A 级</th><td data-g="A" data-k="A" style="background:color-mix(in srgb, #e0484d 44%, var(--surface))"><span class="xcell A">PA-02</span><span class="xcell A">PA-04</span><span class="cnt">2 个 · ¥105,600</span></td><td data-g="A" data-k="B" style="background:color-mix(in srgb, #f0a022 35%, var(--surface))"><span class="xcell B">PA-01</span><span class="xcell B">PB-05</span><span class="cnt">2 个 · ¥81,600</span></td><td data-g="A" data-k="C" style="background:color-mix(in srgb, #17a37b 5%, var(--surface))"><span style="color:var(--faint)">—</span><span class="cnt">0 个 · ¥0</span></td></tr><tr><th>B 级</th><td data-g="B" data-k="A" style="background:color-mix(in srgb, #e0484d 55%, var(--surface))"><span class="xcell A">PB-01</span><span class="xcell A">PB-04</span><span class="cnt">2 个 · ¥134,400</span></td><td data-g="B" data-k="B" style="background:color-mix(in srgb, #f0a022 5%, var(--surface))"><span style="color:var(--faint)">—</span><span class="cnt">0 个 · ¥0</span></td><td data-g="B" data-k="C" style="background:color-mix(in srgb, #17a37b 18%, var(--surface))"><span class="xcell C">PA-03</span><span class="cnt">1 个 · ¥35,200</span></td></tr><tr><th>C 级</th><td data-g="C" data-k="A" style="background:color-mix(in srgb, #e0484d 25%, var(--surface))"><span class="xcell A">PA-05</span><span class="cnt">1 个 · ¥52,800</span></td><td data-g="C" data-k="B" style="background:color-mix(in srgb, #f0a022 18%, var(--surface))"><span class="xcell B">PB-02</span><span class="cnt">1 个 · ¥36,000</span></td><td data-g="C" data-k="C" style="background:color-mix(in srgb, #17a37b 11%, var(--surface))"><span class="xcell C">PB-03</span><span class="cnt">1 个 · ¥16,800</span></td></tr></tbody></table><div class="legend" style="margin-top:10px"><span data-t="mCrossLegend" data-plain="" contenteditable="false" spellcheck="false">底色越深 = 该格销售收入越高；点击格子筛选（再点一次取消）</span></div></div></div>
+      <div class="grid g2">
+        <div class="card"><h3 data-t="h3b" data-label="对照-错位标题" contenteditable="false" spellcheck="false">错位单品</h3><div id="crossInsight"><ul class="rules">
+    <li><b>初判 A 级却落在物流 C 类</b>：无。品质初判高但销售贡献小，别按 A 类投入过多作业资源。</li>
+    <li><b>初判 B / C 级却是物流 A 类</b>：PB-01（¥80,000）、PB-04（¥54,400）、PA-05（¥52,800）。销售贡献大但初判一般，保供和到货核验要跟上。</li>
+    <li><b>两口径一致</b>：3 / 10 个，占 30.00%。一致率高说明初判等级和销售贡献基本同向。</li>
+    <li><b>怎么用</b>：初判等级管品质预期，物流 ABC 管作业投入，两张表分开看，错位单品单独议。</li></ul></div></div>
+        <div class="card"><h3 data-t="h3c" data-label="对照-一致标题" contenteditable="false" spellcheck="false">两口径一致性</h3><p class="desc" data-t="p3c" data-label="对照-一致说明" contenteditable="false" spellcheck="false">初判等级与物流 ABC 完全一致的占比</p><div id="agreeBox"><div style="font-size:34px;font-weight:800;color:var(--brand);letter-spacing:-1px">30.00%</div>
+    <div class="progressbar"><i style="width:30.0%"></i></div>
+    <div class="note">一致性偏低，初判等级与销售贡献明显脱节，应以物流 ABC 为主安排作业。<br>一致 3 个 · 错位 7 个</div></div></div>
+      </div>
+    </section>
+
+    <!-- 4 供应商 -->
+    <section class="view" data-step="4">
+      <div class="vhead">
+        <div><h2 data-t="t4" data-label="供方-标题" contenteditable="false" spellcheck="false">供应商<span>贡献分析</span></h2><p data-t="d4" data-label="供方-说明" contenteditable="false" spellcheck="false">按供方汇总销售收入、产量和毛利空间，看谁稳定、谁价差高</p></div>
+        <div class="tagline" data-t="g4" data-label="供方-角标" contenteditable="false" spellcheck="false">按表格里的供方字段汇总</div>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h3 data-t="h4a" data-label="供方-堆叠标题" contenteditable="false" spellcheck="false">销售收入贡献（按 ABC 构成）</h3><p class="desc" data-t="p4a" data-label="供方-堆叠说明" contenteditable="false" spellcheck="false">条长 = 收入占比，分段 = 该供方 A / B / C 类收入构成</p><div id="supBars"><div class="stackrow"><span class="nm" title="合作社.甲">合作社.甲</span><div class="bar"><div class="seg" style="width:100.00%;background:#e0484d" title="A 类 ¥80,000"></div><div class="seg" style="width:0.00%;background:#f0a022" title="B 类 ¥0"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">17.30%</span></div><div class="stackrow"><span class="nm" title="合作社.乙">合作社.乙</span><div class="bar"><div class="seg" style="width:72.00%;background:#e0484d" title="A 类 ¥57,600"></div><div class="seg" style="width:0.00%;background:#f0a022" title="B 类 ¥0"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">12.46%</span></div><div class="stackrow"><span class="nm" title="加工厂.B">加工厂.B</span><div class="bar"><div class="seg" style="width:68.00%;background:#e0484d" title="A 类 ¥54,400"></div><div class="seg" style="width:0.00%;background:#f0a022" title="B 类 ¥0"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">11.76%</span></div><div class="stackrow"><span class="nm" title="商超配送.C">商超配送.C</span><div class="bar"><div class="seg" style="width:66.00%;background:#e0484d" title="A 类 ¥52,800"></div><div class="seg" style="width:0.00%;background:#f0a022" title="B 类 ¥0"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">11.42%</span></div><div class="stackrow"><span class="nm" title="经纪人.A">经纪人.A</span><div class="bar"><div class="seg" style="width:60.00%;background:#e0484d" title="A 类 ¥48,000"></div><div class="seg" style="width:0.00%;background:#f0a022" title="B 类 ¥0"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">10.38%</span></div><div class="stackrow"><span class="nm" title="经纪人.丙">经纪人.丙</span><div class="bar"><div class="seg" style="width:0.00%;background:#e0484d" title="A 类 ¥0"></div><div class="seg" style="width:54.00%;background:#f0a022" title="B 类 ¥43,200"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">9.34%</span></div><div class="stackrow"><span class="nm" title="电商渠道.D">电商渠道.D</span><div class="bar"><div class="seg" style="width:0.00%;background:#e0484d" title="A 类 ¥0"></div><div class="seg" style="width:48.00%;background:#f0a022" title="B 类 ¥38,400"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">8.30%</span></div><div class="stackrow"><span class="nm" title="加工厂.丁">加工厂.丁</span><div class="bar"><div class="seg" style="width:0.00%;background:#e0484d" title="A 类 ¥0"></div><div class="seg" style="width:45.00%;background:#f0a022" title="B 类 ¥36,000"></div><div class="seg" style="width:0.00%;background:#17a37b" title="C 类 ¥0"></div></div><span class="val">7.79%</span></div><div class="stackrow"><span class="nm" title="餐饮供应链">餐饮供应链</span><div class="bar"><div class="seg" style="width:0.00%;background:#e0484d" title="A 类 ¥0"></div><div class="seg" style="width:0.00%;background:#f0a022" title="B 类 ¥0"></div><div class="seg" style="width:44.00%;background:#17a37b" title="C 类 ¥35,200"></div></div><span class="val">7.61%</span></div><div class="stackrow"><span class="nm" title="加工.百合干原料">加工.百合干原料</span><div class="bar"><div class="seg" style="width:0.00%;background:#e0484d" title="A 类 ¥0"></div><div class="seg" style="width:0.00%;background:#f0a022" title="B 类 ¥0"></div><div class="seg" style="width:21.00%;background:#17a37b" title="C 类 ¥16,800"></div></div><span class="val">3.63%</span></div><div class="legend"><span><i style="background:var(--a)"></i><span data-t="mLgSupA" data-plain="" contenteditable="false" spellcheck="false">A 类收入</span></span><span><i style="background:var(--b)"></i><span data-t="mLgSupB" data-plain="" contenteditable="false" spellcheck="false">B 类收入</span></span><span><i style="background:var(--c)"></i><span data-t="mLgSupC" data-plain="" contenteditable="false" spellcheck="false">C 类收入</span></span></div></div></div>
+        <div class="card"><h3 data-t="h4b" data-label="供方-仪表标题" contenteditable="false" spellcheck="false">供方集中度 CR3</h3><p class="desc" data-t="p4b" data-label="供方-仪表说明" contenteditable="false" spellcheck="false">前三供方合计收入占比，越高越需要备选供方</p><div class="chartbox" id="gauge"><svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+    <polyline points="38.0,136.0 38.2,130.1 38.6,124.3 39.4,118.5 40.4,112.7 41.8,107.0 43.5,101.4 45.4,95.9 47.7,90.4 50.2,85.2 53.0,80.0 56.1,75.0 59.4,70.2 63.0,65.5 66.8,61.1 70.8,56.8 75.1,52.8 79.5,49.0 84.2,45.4 89.0,42.1 94.0,39.0 99.2,36.2 104.4,33.7 109.9,31.4 115.4,29.5 121.0,27.8 126.7,26.4 132.5,25.4 138.3,24.6 144.1,24.2 150.0,24.0 155.9,24.2 161.7,24.6 167.5,25.4 173.3,26.4 179.0,27.8 184.6,29.5 190.1,31.4 195.6,33.7 200.8,36.2 206.0,39.0 211.0,42.1 215.8,45.4 220.5,49.0 224.9,52.8 229.2,56.8 233.2,61.1 237.0,65.5 240.6,70.2 243.9,75.0 247.0,80.0 249.8,85.2 252.3,90.4 254.6,95.9 256.5,101.4 258.2,107.0 259.6,112.7 260.6,118.5 261.4,124.3 261.8,130.1 262.0,136.0" fill="none" stroke="#e9eef7" stroke-width="15" stroke-linecap="round"></polyline>
+    <polyline points="38.0,136.0 38.2,130.1 38.6,124.3 39.4,118.5 40.4,112.7 41.8,107.0 43.5,101.4 45.4,95.9 47.7,90.4 50.2,85.2 53.0,80.0 56.1,75.0 59.4,70.2 63.0,65.5 66.8,61.1 70.8,56.8 75.1,52.8 79.5,49.0 84.2,45.4 89.0,42.1 94.0,39.0 99.2,36.2 104.4,33.7 109.9,31.4 115.4,29.5" fill="none" stroke="url(#gGrad)" stroke-width="15" stroke-linecap="round"></polyline>
+    <defs><lineargradient id="gGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1f5fd6"></stop><stop offset="100%" stop-color="#7c5cff"></stop></lineargradient></defs>
+    <line x1="150" y1="136" x2="126.8" y2="51.1" stroke="#17253c" stroke-width="2.5" stroke-linecap="round"></line>
+    <circle cx="150" cy="136" r="7" fill="#17253c"></circle>
+    <text x="150" y="106" text-anchor="middle" font-size="28" font-weight="800" fill="#1f5fd6">41.52%</text>
+    <text x="150" y="124" text-anchor="middle" font-size="10" fill="#8794a9">前三供方合计</text>
+    <text x="40" y="152" font-size="9.5" fill="#aeb9ca">0%</text><text x="260" y="152" text-anchor="end" font-size="9.5" fill="#aeb9ca">100%</text></svg>
+    <div class="note" style="margin-top:4px">CR3 较低：供方分散，管理成本略高但抗单一供方波动能力强。</div></div></div>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h3 data-t="h4c" data-label="供方-毛利标题" contenteditable="false" spellcheck="false">毛利空间对比</h3><p class="desc" data-t="p4c" data-label="供方-毛利说明" contenteditable="false" spellcheck="false">（销售单价 − 收购单价）÷ 销售单价，按供方收入加权</p><div id="marginBars"><div class="barrow"><span class="nm" title="合作社.乙">合作社.乙</span><div class="track"><div class="fillv" style="width:100.0%;background:#17a37b;animation-delay:0ms"></div></div><span class="sc">50.00%</span></div><div class="barrow"><span class="nm" title="经纪人.A">经纪人.A</span><div class="track"><div class="fillv" style="width:100.0%;background:#1f5fd6;animation-delay:70ms"></div></div><span class="sc">50.00%</span></div><div class="barrow"><span class="nm" title="经纪人.丙">经纪人.丙</span><div class="track"><div class="fillv" style="width:100.0%;background:#1f5fd6;animation-delay:140ms"></div></div><span class="sc">50.00%</span></div><div class="barrow"><span class="nm" title="电商渠道.D">电商渠道.D</span><div class="track"><div class="fillv" style="width:100.0%;background:#1f5fd6;animation-delay:210ms"></div></div><span class="sc">50.00%</span></div><div class="barrow"><span class="nm" title="合作社.甲">合作社.甲</span><div class="track"><div class="fillv" style="width:75.0%;background:#1f5fd6;animation-delay:280ms"></div></div><span class="sc">37.50%</span></div><div class="barrow"><span class="nm" title="加工厂.B">加工厂.B</span><div class="track"><div class="fillv" style="width:75.0%;background:#1f5fd6;animation-delay:350ms"></div></div><span class="sc">37.50%</span></div><div class="barrow"><span class="nm" title="餐饮供应链">餐饮供应链</span><div class="track"><div class="fillv" style="width:75.0%;background:#1f5fd6;animation-delay:420ms"></div></div><span class="sc">37.50%</span></div><div class="barrow"><span class="nm" title="商超配送.C">商超配送.C</span><div class="track"><div class="fillv" style="width:66.7%;background:#1f5fd6;animation-delay:490ms"></div></div><span class="sc">33.33%</span></div><div class="barrow"><span class="nm" title="加工厂.丁">加工厂.丁</span><div class="track"><div class="fillv" style="width:66.7%;background:#1f5fd6;animation-delay:560ms"></div></div><span class="sc">33.33%</span></div><div class="barrow"><span class="nm" title="加工.百合干原料">加工.百合干原料</span><div class="track"><div class="fillv" style="width:66.7%;background:#1f5fd6;animation-delay:630ms"></div></div><span class="sc">33.33%</span></div></div></div>
+        <div class="card"><h3 data-t="h4d" data-label="供方-解读标题" contenteditable="false" spellcheck="false">供方结论</h3><div id="supInsight"><ul class="rules">
+    <li><b>第一大供方</b>：合作社.甲，占销售收入 <b>17.30%</b>。</li>
+    <li><b>前三集中度 CR3</b>：<b>41.52%</b>。集中度适中，供方之间有一定分散度。</li>
+    <li><b>价差最高</b>：合作社.乙，毛利空间 <b>50.00%</b>，贡献收入 <b>12.46%</b>。</li>
+    <li><b>看数口径</b>：毛利空间按（销售单价 − 收购单价）÷ 销售单价计算，只反映表内两个价格字段的差；供方毛利按收入加权。</li></ul></div></div>
+      </div>
+      <div class="card"><h3 data-t="h4e" data-label="供方-明细标题" contenteditable="false" spellcheck="false">供应商明细</h3><p class="desc" data-t="p4e" data-label="供方-明细说明" contenteditable="false" spellcheck="false">点击行可按该供方筛选全局图表</p><div class="tablewrap" style="max-height:none"><table id="supTable"><tbody><tr><th data-t="mTh_s1" data-plain="" contenteditable="false" spellcheck="false">排名</th><th data-t="mTh_s2" data-plain="" contenteditable="false" spellcheck="false">供应商</th><th data-t="mTh_s3" data-plain="" contenteditable="false" spellcheck="false">供货单品</th><th data-t="mTh_s4" data-plain="" contenteditable="false" spellcheck="false">主要 ABC</th><th data-t="mTh_s5" data-plain="" contenteditable="false" spellcheck="false">产量 kg</th><th data-t="mTh_s6" data-plain="" contenteditable="false" spellcheck="false">销售收入</th><th data-t="mTh_s7" data-plain="" contenteditable="false" spellcheck="false">收入占比</th><th data-t="mTh_s8" data-plain="" contenteditable="false" spellcheck="false">平均收购价</th><th data-t="mTh_s9" data-plain="" contenteditable="false" spellcheck="false">平均销售价</th><th data-t="mTh_s10" data-plain="" contenteditable="false" spellcheck="false">毛利空间</th><th data-t="mTh_s11" data-plain="" contenteditable="false" spellcheck="false">建议</th></tr><tr class="rowsel" data-sup="合作社.甲"><td>1</td><td><b>合作社.甲</b></td><td>1 个</td><td><span class="pill pA">A</span></td><td>2,500</td><td>¥80,000</td><td>17.30%</td><td>20</td><td>32</td><td><b>37.50%</b></td><td>常规供方 · 按量采购 + 定期复盘</td></tr><tr class="rowsel" data-sup="合作社.乙"><td>2</td><td><b>合作社.乙</b></td><td>1 个</td><td><span class="pill pA">A</span></td><td>1,200</td><td>¥57,600</td><td>12.46%</td><td>24</td><td>48</td><td><b>50.00%</b></td><td>高价差供方 · 可争取扩大份额</td></tr><tr class="rowsel" data-sup="加工厂.B"><td>3</td><td><b>加工厂.B</b></td><td>1 个</td><td><span class="pill pA">A</span></td><td>1,700</td><td>¥54,400</td><td>11.76%</td><td>20</td><td>32</td><td><b>37.50%</b></td><td>常规供方 · 按量采购 + 定期复盘</td></tr><tr class="rowsel" data-sup="商超配送.C"><td>4</td><td><b>商超配送.C</b></td><td>1 个</td><td><span class="pill pA">A</span></td><td>2,200</td><td>¥52,800</td><td>11.42%</td><td>16</td><td>24</td><td><b>33.33%</b></td><td>常规供方 · 按量采购 + 定期复盘</td></tr><tr class="rowsel" data-sup="经纪人.A"><td>5</td><td><b>经纪人.A</b></td><td>1 个</td><td><span class="pill pA">A</span></td><td>1,000</td><td>¥48,000</td><td>10.38%</td><td>24</td><td>48</td><td><b>50.00%</b></td><td>高价差供方 · 可争取扩大份额</td></tr><tr class="rowsel" data-sup="经纪人.丙"><td>6</td><td><b>经纪人.丙</b></td><td>1 个</td><td><span class="pill pB">B</span></td><td>900</td><td>¥43,200</td><td>9.34%</td><td>24</td><td>48</td><td><b>50.00%</b></td><td>高价差供方 · 可争取扩大份额</td></tr><tr class="rowsel" data-sup="电商渠道.D"><td>7</td><td><b>电商渠道.D</b></td><td>1 个</td><td><span class="pill pB">B</span></td><td>800</td><td>¥38,400</td><td>8.30%</td><td>24</td><td>48</td><td><b>50.00%</b></td><td>高价差供方 · 可争取扩大份额</td></tr><tr class="rowsel" data-sup="加工厂.丁"><td>8</td><td><b>加工厂.丁</b></td><td>1 个</td><td><span class="pill pB">B</span></td><td>1,500</td><td>¥36,000</td><td>7.79%</td><td>16</td><td>24</td><td><b>33.33%</b></td><td>常规供方 · 按量采购 + 定期复盘</td></tr><tr class="rowsel" data-sup="餐饮供应链"><td>9</td><td><b>餐饮供应链</b></td><td>1 个</td><td><span class="pill pC">C</span></td><td>1,100</td><td>¥35,200</td><td>7.61%</td><td>20</td><td>32</td><td><b>37.50%</b></td><td>常规供方 · 按量采购 + 定期复盘</td></tr><tr class="rowsel" data-sup="加工.百合干原料"><td>10</td><td><b>加工.百合干原料</b></td><td>1 个</td><td><span class="pill pC">C</span></td><td>700</td><td>¥16,800</td><td>3.63%</td><td>16</td><td>24</td><td><b>33.33%</b></td><td>常规供方 · 按量采购 + 定期复盘</td></tr></tbody></table></div></div>
+    </section>
+
+    <!-- 5 作业规范 -->
+    <section class="view" data-step="5">
+      <div class="vhead">
+        <div><h2 data-t="t5" data-label="作业-标题" contenteditable="false" spellcheck="false">分类<span>作业规范</span></h2><p data-t="d5" data-label="作业-说明" contenteditable="false" spellcheck="false">选中单品，直接出这张可勾选的作业卡，动作跟着 ABC 类别走</p></div>
+        <div class="tagline" data-t="g5" data-label="作业-角标" contenteditable="false" spellcheck="false">分类落到动作 · 进度可保存</div>
+      </div>
+      <div class="card">
+        <h3 data-t="h5a" data-label="作业-选择标题" contenteditable="false" spellcheck="false">选择单品</h3>
+        <div class="tools"><select id="skuSelect" style="flex:1;min-width:230px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:var(--surface2)"><option value="PB-01">PB-01 · 合作社.甲｜A 类 / B 级</option><option value="PA-02">PA-02 · 合作社.乙｜A 类 / A 级</option><option value="PB-04">PB-04 · 加工厂.B｜A 类 / B 级</option><option value="PA-05">PA-05 · 商超配送.C｜A 类 / C 级</option><option value="PA-04">PA-04 · 经纪人.A｜A 类 / A 级</option><option value="PA-01">PA-01 · 经纪人.丙｜B 类 / A 级</option><option value="PB-05">PB-05 · 电商渠道.D｜B 类 / A 级</option><option value="PB-02">PB-02 · 加工厂.丁｜B 类 / C 级</option><option value="PA-03" selected="">PA-03 · 餐饮供应链｜C 类 / B 级</option><option value="PB-03">PB-03 · 加工.百合干原料｜C 类 / C 级</option></select></div>
+        <div id="workcard"><div class="wc" style="margin-top:14px">
+    <div class="wc-head"><b>PA-03</b><span class="pill pC">C 类 · 简化流程</span><span class="lv" style="background:#17a37b">初判 B 级</span><span class="badge">占销售收入 7.61%</span><span class="badge">排名 #9</span></div>
+    <div class="wc-kpis">
+      <div><span data-t="mWcK1" data-plain="">销售收入 / 产量</span><b>¥35,200 / 1,100 kg</b></div>
+      <div><span data-t="mWcK2" data-plain="">收购价 / 销售价</span><b>¥20 / ¥32</b></div>
+      <div><span data-t="mWcK3" data-plain="">备货 / 盘点</span><b>按需采购 · 月度盘点</b></div>
+      <div><span data-t="mWcK4" data-plain="">复盘频率</span><b>年度复盘</b></div>
+    </div>
+    <div style="margin-top:15px"><b style="font-size:12.5px" data-t="mWcFlow" data-plain="">到货流程</b><ol class="timeline"><li><span class="dot">1</span>单证核对</li><li><span class="dot">2</span>数量清点</li><li><span class="dot">3</span>简易抽样</li><li><span class="dot">4</span>按批入库</li><li><span class="dot">5</span>月度盘点</li></ol></div>
+    <div style="margin-top:12px"><b style="font-size:12.5px">作业清单（C 类 · 简化流程）</b><ul class="check"><li class="clickable " data-wc="0">到货单证核对</li><li class="clickable " data-wc="1">数量清点</li><li class="clickable " data-wc="2">简易抽样</li><li class="clickable " data-wc="3">按批次入库</li><li class="clickable " data-wc="4">按需补货，月度盘点</li></ul></div>
+    <div class="note" style="margin-top:10px">简化作业，控制库存，避免占用过多精力。初判等级管品质预期，物流 ABC 管作业投入，两张表分开用；异常批次隔离标识，24 小时内反馈供方。</div>
+  </div></div>
+      </div>
+      <div class="card"><h3 data-t="h5b" data-label="作业-专项标题" contenteditable="false" spellcheck="false">到货作业专项要求（可勾选留痕）</h3><p class="desc" data-t="p5b" data-label="作业-专项说明" contenteditable="false" spellcheck="false">勾选状态自动保存到本机，随工程文件一起导出</p><ul class="check" id="seedCheck"><li class="clickable " data-sc="0">送货单与单品编号核对一致</li><li class="clickable " data-sc="1">数量清点完成</li><li class="clickable " data-sc="2">抽样结果留档</li><li class="clickable " data-sc="3">批次信息录入台账</li><li class="clickable " data-sc="4">月度盘点执行，异常及时反馈</li></ul><div id="checkProgress" style="margin-top: 10px;"><div style="font-size:11.5px;color:var(--muted);margin-bottom:4px">完成进度 <b style="color:var(--brand)">0 / 5</b></div><div class="progressbar"><i style="width:0%"></i></div></div></div>
+    </section>
+
+    <!-- 6 结论 -->
+    <section class="view" data-step="6">
+      <div class="vhead">
+        <div><h2 data-t="t6" data-label="结论-标题" contenteditable="false" spellcheck="false">结论与<span>建议</span></h2><p data-t="d6" data-label="结论-说明" contenteditable="false" spellcheck="false">结论跟着当前数据走，改一次参数就重出一版</p></div>
+        <div class="tagline" data-t="g6" data-label="结论-角标" contenteditable="false" spellcheck="false">模板变量 · 自动填数</div>
+      </div>
+      <div class="card concl"><h3 data-t="h6a" data-label="结论-正文标题" contenteditable="false" spellcheck="false">分析结论<span class="h-opt"><button class="mini" id="btnCopyConcl">复制结论</button></span></h3><ol id="conclusion" style="padding-left:20px"><li><b>分类结论：</b>A 类 5 个单品（PB-01、PA-02、PB-04、PA-05、PA-04），合计销售收入 ¥292,800，占总收入 <b>63.32%</b>，按累计占比 70% 划线得出。</li><li><b>等级对照：</b>初判 A 级但落在物流 C 类的有 0 个，初判 B / C 级却是物流 A 类的有 3 个；两口径一致 3 / 10 个，错位单品要分开定作业投入。</li><li><b>供方结论：</b>合作社.甲 贡献销售收入 <b>17.30%</b>，居首位；前三供方集中度 CR3 为 41.52%。加工.百合干原料 占比 3.63%，按量采购即可。</li><li><b>集中度：</b>洛伦兹曲线基尼系数 0.000，前 5 个 A 类单品撑起 63.32% 的收入，符合“关键少数”，保供资源应向其倾斜。</li><li><b>环节落地：</b>物流 ABC 已映射到作业卡，重点保障 / 常规管理 / 简化流程 三级动作，清点、抽检、盘点和反馈时效都跟着分类变。产量、两个单价和分类阈值均可现改，改完本页重算。</li></ol></div>
+      <div class="grid g3" id="finalCards"><div class="kpi red"><div class="top"><span class="lb">A 类收入占比</span><span class="ico">◆</span></div><b>63.32%</b><div class="sb">重点单品集中度</div></div><div class="kpi purple"><div class="top"><span class="lb">物流 A 类单品</span><span class="ico">◆</span></div><b>5 个</b><div class="sb">优先保障</div></div><div class="kpi blue"><div class="top"><span class="lb">供方集中度 CR3</span><span class="ico">◆</span></div><b>41.52%</b><div class="sb">前三供方合计</div></div></div>
+      <div class="card"><h3 data-t="h6b" data-label="结论-交付标题" contenteditable="false" spellcheck="false">交付与复用</h3><p class="desc" data-t="p6b" data-label="结论-交付说明" contenteditable="false" spellcheck="false">最终数据表打包</p><div class="tools"><button class="btn fill" data-act2="exportReport">📄 导出分析报告</button><button class="btn" data-act2="exportProject">💾 导出工程文件</button><button class="btn" data-act2="exportCsv">⬇ 导出结果 CSV</button><button class="btn" data-act2="exportPng">🖼 导出帕累托图</button></div></div>
+    </section>
+  </main>
+</div>
+
+<!-- 内容管理抽屉 -->
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div><h3>内容管理</h3><p data-t="mDrawerSub" data-label="内容管理·副标题" data-plain="" contenteditable="false" spellcheck="false">所有文案集中编辑 · 支持 HTML 与模板变量 · 实时生效</p></div>
+    <button class="x" id="drawerClose">✕</button>
+  </div>
+  <div class="drawer-tools">
+    <input type="text" id="drawerSearch" placeholder="🔍 搜索文案名称或内容…">
+    <div style="width:100%;display:flex;gap:6px;flex-wrap:wrap" id="drawerGroups"><button class="gbtn " data-g="全部">全部</button><button class="gbtn " data-g="品牌与导航">品牌与导航</button><button class="gbtn " data-g="页面文案">页面文案</button><button class="gbtn " data-g="策略与作业">策略与作业</button><button class="gbtn active" data-g="结论与备注">结论与备注</button><button class="gbtn " data-g="小字与标注">小字与标注</button></div>
+  </div>
+  <div class="drawer-body" id="drawerList"><div class="titem" data-k="note0">
+    <div class="th"><b>备注 1</b><code>note0</code><span class="rs" data-reset="note0">恢复默认</span></div>
+    <textarea data-edit="note0" spellcheck="false">先看总览：这份表按销售收入排队，累计占比 A 线以内是 A 类，B 线以内 B 类，剩下 C 类。树图面积就是收入。</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="note1">
+    <div class="th"><b>备注 2</b><code>note1</code><span class="rs" data-reset="note1">恢复默认</span></div>
+    <textarea data-edit="note1" spellcheck="false">底表就是那张 ABC 计算表。六列原始数据都能直接改，还能增删行、调阈值，所有图表跟着重算。</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="note2">
+    <div class="th"><b>备注 3</b><code>note2</code><span class="rs" data-reset="note2">恢复默认</span></div>
+    <textarea data-edit="note2" spellcheck="false">折线是累计占比，柱子是销售收入。点演示分类过程，一项一项看它怎么越过分界线；洛伦兹曲线和基尼系数说明集中度。</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="note3">
+    <div class="th"><b>备注 4</b><code>note3</code><span class="rs" data-reset="note3">恢复默认</span></div>
+    <textarea data-edit="note3" spellcheck="false">行是初判等级，列是物流 ABC。颜色越深收入越高，两边错位的单品值得单独讲：品质好但卖得少、或者反过来。</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="note4">
+    <div class="th"><b>备注 5</b><code>note4</code><span class="rs" data-reset="note4">恢复默认</span></div>
+    <textarea data-edit="note4" spellcheck="false">供应商这页按供方汇总：堆叠条看 ABC 构成，仪表看 CR3 集中度，条形看毛利空间，谁撑盘子一眼看出来。</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="note5">
+    <div class="th"><b>备注 6</b><code>note5</code><span class="rs" data-reset="note5">恢复默认</span></div>
+    <textarea data-edit="note5" spellcheck="false">随手点一个单品，作业卡就出来了。A 类重点保障，C 类简化流程；清单可以勾选留痕，刷新不丢。</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="note6">
+    <div class="th"><b>备注 7</b><code>note6</code><span class="rs" data-reset="note6">恢复默认</span></div>
+    <textarea data-edit="note6" spellcheck="false">最后这页是汇总结论，用模板变量自动填数。改一次数据，这里就重出一版，也能整体导出报告或工程文件。</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="concl1">
+    <div class="th"><b>结论 1 分类</b><code>concl1</code><span class="rs" data-reset="concl1">恢复默认</span></div>
+    <textarea data-edit="concl1" spellcheck="false">&lt;b&gt;分类结论：&lt;/b&gt;A 类 {aCount} 个单品（{aList}），合计销售收入 {aRev}，占总收入 &lt;b&gt;{aPct}&lt;/b&gt;，按累计占比 {aLine}% 划线得出。</textarea>
+    <div class="hint">可用变量：{aCount} {aList} {aRev} {aPct} {aLine} {bLine} {skuCount} {total} {supCount} {hiLow} {lowHi} {agreeCount} {cr1} {cr3} {topSup} {tailSup} {tailPct} {gini} {polA} {polB} {polC}</div></div><div class="titem" data-k="concl2">
+    <div class="th"><b>结论 2 等级对照</b><code>concl2</code><span class="rs" data-reset="concl2">恢复默认</span></div>
+    <textarea data-edit="concl2" spellcheck="false">&lt;b&gt;等级对照：&lt;/b&gt;初判 A 级但落在物流 C 类的有 {hiLow} 个，初判 B / C 级却是物流 A 类的有 {lowHi} 个；两口径一致 {agreeCount} / {skuCount} 个，错位单品要分开定作业投入。</textarea>
+    <div class="hint">可用变量：{aCount} {aList} {aRev} {aPct} {aLine} {bLine} {skuCount} {total} {supCount} {hiLow} {lowHi} {agreeCount} {cr1} {cr3} {topSup} {tailSup} {tailPct} {gini} {polA} {polB} {polC}</div></div><div class="titem" data-k="concl3">
+    <div class="th"><b>结论 3 供方</b><code>concl3</code><span class="rs" data-reset="concl3">恢复默认</span></div>
+    <textarea data-edit="concl3" spellcheck="false">&lt;b&gt;供方结论：&lt;/b&gt;{topSup} 贡献销售收入 &lt;b&gt;{cr1}&lt;/b&gt;，居首位；前三供方集中度 CR3 为 {cr3}。{tailSup} 占比 {tailPct}，按量采购即可。</textarea>
+    <div class="hint">可用变量：{aCount} {aList} {aRev} {aPct} {aLine} {bLine} {skuCount} {total} {supCount} {hiLow} {lowHi} {agreeCount} {cr1} {cr3} {topSup} {tailSup} {tailPct} {gini} {polA} {polB} {polC}</div></div><div class="titem" data-k="concl4">
+    <div class="th"><b>结论 4 集中度</b><code>concl4</code><span class="rs" data-reset="concl4">恢复默认</span></div>
+    <textarea data-edit="concl4" spellcheck="false">&lt;b&gt;集中度：&lt;/b&gt;洛伦兹曲线基尼系数 {gini}，前 {aCount} 个 A 类单品撑起 {aPct} 的收入，符合“关键少数”，保供资源应向其倾斜。</textarea>
+    <div class="hint">可用变量：{aCount} {aList} {aRev} {aPct} {aLine} {bLine} {skuCount} {total} {supCount} {hiLow} {lowHi} {agreeCount} {cr1} {cr3} {topSup} {tailSup} {tailPct} {gini} {polA} {polB} {polC}</div></div><div class="titem" data-k="concl5">
+    <div class="th"><b>结论 5 落地</b><code>concl5</code><span class="rs" data-reset="concl5">恢复默认</span></div>
+    <textarea data-edit="concl5" spellcheck="false">&lt;b&gt;环节落地：&lt;/b&gt;物流 ABC 已映射到作业卡，{polA} / {polB} / {polC} 三级动作，清点、抽检、盘点和反馈时效都跟着分类变。产量、两个单价和分类阈值均可现改，改完本页重算。</textarea>
+    <div class="hint">可用变量：{aCount} {aList} {aRev} {aPct} {aLine} {bLine} {skuCount} {total} {supCount} {hiLow} {lowHi} {agreeCount} {cr1} {cr3} {topSup} {tailSup} {tailPct} {gini} {polA} {polB} {polC}</div></div><div class="titem" data-k="fc1">
+    <div class="th"><b>总结卡 1 标题</b><code>fc1</code><span class="rs" data-reset="fc1">恢复默认</span></div>
+    <textarea data-edit="fc1" spellcheck="false">A 类收入占比</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="fc2">
+    <div class="th"><b>总结卡 2 标题</b><code>fc2</code><span class="rs" data-reset="fc2">恢复默认</span></div>
+    <textarea data-edit="fc2" spellcheck="false">物流 A 类单品</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="fc3">
+    <div class="th"><b>总结卡 3 标题</b><code>fc3</code><span class="rs" data-reset="fc3">恢复默认</span></div>
+    <textarea data-edit="fc3" spellcheck="false">供方集中度 CR3</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="fc1s">
+    <div class="th"><b>总结卡 1 副标题</b><code>fc1s</code><span class="rs" data-reset="fc1s">恢复默认</span></div>
+    <textarea data-edit="fc1s" spellcheck="false">重点单品集中度</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="fc2s">
+    <div class="th"><b>总结卡 2 副标题</b><code>fc2s</code><span class="rs" data-reset="fc2s">恢复默认</span></div>
+    <textarea data-edit="fc2s" spellcheck="false">优先保障</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div><div class="titem" data-k="fc3s">
+    <div class="th"><b>总结卡 3 副标题</b><code>fc3s</code><span class="rs" data-reset="fc3s">恢复默认</span></div>
+    <textarea data-edit="fc3s" spellcheck="false">前三供方合计</textarea>
+    <div class="hint">纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）</div></div></div>
+  <div class="drawer-foot">
+    <button class="btn" data-act="exportProject">导出工程</button>
+    <button class="btn" data-act="importProject">导入工程</button>
+    <button class="btn" id="btnDrawerReset">恢复默认文案</button>
+    <button class="btn" id="btnEditToggle2">✎ 页面点改</button>
+  </div>
+</aside>
+
+<!-- 演讲 / 编辑 / 提示 -->
+<div class="present-controls">
+  <button id="prevBtn">← 上一步</button><span class="pnum" id="pnum">4 / 7</span><button id="nextBtn">下一步 →</button>
+  <button id="autoBtn">自动播放</button><button id="notesBtn">备注</button><button id="exitBtn">退出</button>
+</div>
+<div class="notes" id="notes"><h4 data-t="mNotesTitle" data-label="演讲备注·标题" data-plain="" contenteditable="false" spellcheck="false">演示备注</h4><div id="notesText">行是初判等级，列是物流 ABC。颜色越深收入越高，两边错位的单品值得单独讲：品质好但卖得少、或者反过来。</div></div>
+<div class="editbar" id="editbar">
+  <span class="hint" data-t="mEditHint" data-label="编辑条·提示" contenteditable="false" spellcheck="false">页面文字已解锁：直接点开改，失焦即自动保存。带 <code>{变量}</code> 的结论模板会随数据自动填数。</span>
+  <button id="btnEditDone">✓ 完成编辑</button>
+  <button id="btnEditDrawer">⚙ 内容管理</button>
+</div>
+<div id="tooltip" style="display: none; left: 858px; top: 438px;"><b>PA-04 · A 类</b><div class="tt-row"><span>供应商</span><span>经纪人.A</span></div><div class="tt-row"><span>初判等级</span><span>A 级</span></div><div class="tt-row"><span>产量</span><span>1,000 kg</span></div><div class="tt-row"><span>销售收入</span><span>¥48,000</span></div><div class="tt-row"><span>收入占比</span><span>10.38%</span></div><div class="tt-row"><span>累计占比</span><span>63.32%</span></div><div class="tt-row"><span>毛利空间</span><span>50.00%</span></div></div>
+<div id="toast" class="">已锁定 PA-03，可跳到作业卡</div>
+<input type="file" id="fileCsv" accept=".csv,.txt" hidden="">
+<input type="file" id="fileProject" accept=".json" hidden="">
+
+<script>
+/* ============================================================
+   兰州鲜百合 · 供应链品类分析工作台（可编辑增强版）
+   单文件 / 零依赖 / 全部数据与文案本机自动保存
+   ============================================================ */
+
+/* ---------- 原始数据 ---------- */
+const SAMPLE = `单品编号,供应商,初判等级,产量(kg),收购单价(元/kg),销售单价(元/kg)
+PB-01,产地合作社.甲,B,2500,20.00,32.00
+PA-02,产地合作社.乙,A,1200,24.00,48.00
+PA-01,经纪人.丙,A,900,24.00,48.00
+PB-02,加工厂.丁,C,1500,16.00,24.00
+PA-03,餐饮供应链,B,1100,20.00,32.00
+PB-03,加工.百合干原料,C,700,16.00,24.00`;
+
+/* ---------- 动态文案模板（可被内容管理编辑） ---------- */
+const TEMPLATES = {
+  nav0:'数据总览<small>分类口径 · KPI</small>', nav1:'数据工作台<small>数据与阈值</small>',
+  nav2:'ABC 分类<small>帕累托 · 集中度</small>', nav3:'等级对照<small>热力矩阵</small>',
+  nav4:'供应商贡献<small>构成 · CR3</small>', nav5:'分类作业规范<small>作业卡 · 留痕</small>',
+  nav6:'结论建议<small>模板变量</small>',
+  note0:'先看总览：这份表按销售收入排队，累计占比 A 线以内是 A 类，B 线以内 B 类，剩下 C 类。树图面积就是收入。',
+  note1:'底表就是那张 ABC 计算表。六列原始数据都能直接改，还能增删行、调阈值，所有图表跟着重算。',
+  note2:'折线是累计占比，柱子是销售收入。点演示分类过程，一项一项看它怎么越过分界线；洛伦兹曲线和基尼系数说明集中度。',
+  note3:'行是初判等级，列是物流 ABC。颜色越深收入越高，两边错位的单品值得单独讲：品质好但卖得少、或者反过来。',
+  note4:'供应商这页按供方汇总：堆叠条看 ABC 构成，仪表看 CR3 集中度，条形看毛利空间，谁撑盘子一眼看出来。',
+  note5:'随手点一个单品，作业卡就出来了。A 类重点保障，C 类简化流程；清单可以勾选留痕，刷新不丢。',
+  note6:'最后这页是汇总结论，用模板变量自动填数。改一次数据，这里就重出一版，也能整体导出报告或工程文件。',
+  polA_label:'重点保障', polA_safety:'高备货 · 周盘点', polA_review:'月度复盘', polA_focus:'优先锁定产能与运力，到货全数清点',
+  polB_label:'常规管理', polB_safety:'常规备货 · 半月盘点', polB_review:'季度复盘', polB_focus:'按量采购，抽样复核，保持供方稳定',
+  polC_label:'简化流程', polC_safety:'按需采购 · 月度盘点', polC_review:'年度复盘', polC_focus:'简化作业，控制库存，避免占用过多精力',
+  workA_items:'到货前 24 小时预报，优先安排卸货月台|送货单与单品编号、批次信息逐项核对|到货数量全数清点，差异当场记录|重点抽样复核（产量与初判等级）|优先入库上架，单独区域存放|每日盘点，异常 4 小时内反馈供方',
+  workA_flow:'到货预报|单证核对|全数清点|重点抽检|优先入库|每日盘点',
+  workA_check:'送货单、单品编号与批次信息齐全一致|数量全数清点，差异已当场记录并签字|供货方资质与该批次初判等级可追溯|抽样复核记录留档，结果与单据一致|优先入库区域已预留，批次卡已挂|每日盘点执行，异常 4 小时内反馈',
+  workB_items:'到货预报与单证核对|数量清点与外包装检查|按批次抽样复核|入库上架，常规区域存放|每周盘点，异常 24 小时内反馈',
+  workB_flow:'到货预报|单证核对|数量清点|抽样复核|入库上架|每周盘点',
+  workB_check:'送货单与单品编号一致|数量清点完成，差异已记录|按批次抽样复核并留档|入库上架完成，批次卡已挂|每周盘点执行，异常 24 小时内反馈',
+  workC_items:'到货单证核对|数量清点|简易抽样|按批次入库|按需补货，月度盘点',
+  workC_flow:'单证核对|数量清点|简易抽样|按批入库|月度盘点',
+  workC_check:'送货单与单品编号核对一致|数量清点完成|抽样结果留档|批次信息录入台账|月度盘点执行，异常及时反馈',
+  concl1:'<b>分类结论：</b>A 类 {aCount} 个单品（{aList}），合计销售收入 {aRev}，占总收入 <b>{aPct}</b>，按累计占比 {aLine}% 划线得出。',
+  concl2:'<b>等级对照：</b>初判 A 级但落在物流 C 类的有 {hiLow} 个，初判 B / C 级却是物流 A 类的有 {lowHi} 个；两口径一致 {agreeCount} / {skuCount} 个，错位单品要分开定作业投入。',
+  concl3:'<b>供方结论：</b>{topSup} 贡献销售收入 <b>{cr1}</b>，居首位；前三供方集中度 CR3 为 {cr3}。{tailSup} 占比 {tailPct}，按量采购即可。',
+  concl4:'<b>集中度：</b>洛伦兹曲线基尼系数 {gini}，前 {aCount} 个 A 类单品撑起 {aPct} 的收入，符合“关键少数”，保供资源应向其倾斜。',
+  concl5:'<b>环节落地：</b>物流 ABC 已映射到作业卡，{polA} / {polB} / {polC} 三级动作，清点、抽检、盘点和反馈时效都跟着分类变。产量、两个单价和分类阈值均可现改，改完本页重算。',
+  fc1:'A 类收入占比', fc2:'物流 A 类单品', fc3:'供方集中度 CR3',
+  fc1s:'重点单品集中度', fc2s:'优先保障', fc3s:'前三供方合计'
+};
+const TPL_LABELS = {
+  nav0:'导航 1 数据总览',nav1:'导航 2 数据工作台',nav2:'导航 3 ABC 分类',nav3:'导航 4 等级对照',nav4:'导航 5 供应商贡献',nav5:'导航 6 作业规范',nav6:'导航 7 结论建议',
+  note0:'备注 1',note1:'备注 2',note2:'备注 3',note3:'备注 4',note4:'备注 5',note5:'备注 6',note6:'备注 7',
+  concl1:'结论 1 分类',concl2:'结论 2 等级对照',concl3:'结论 3 供方',concl4:'结论 4 集中度',concl5:'结论 5 落地',
+  fc1:'总结卡 1 标题',fc2:'总结卡 2 标题',fc3:'总结卡 3 标题',fc1s:'总结卡 1 副标题',fc2s:'总结卡 2 副标题',fc3s:'总结卡 3 副标题'
+};
+const TPL_HINT = '可用变量：{aCount} {aList} {aRev} {aPct} {aLine} {bLine} {skuCount} {total} {supCount} {hiLow} {lowHi} {agreeCount} {cr1} {cr3} {topSup} {tailSup} {tailPct} {gini} {polA} {polB} {polC}';
+
+/* ---------- 小字与标注：图例 / 表头 / 图注 / 注释（全部纳入可编辑） ---------- */
+const TH_DEFS = {
+  d:['#','单品编号','供应商','初判等级','产量 kg','收购单价','销售单价','销售收入','累计占比','物流 ABC','毛利空间'],
+  a:['排名','单品编号','供应商','初判等级','产量 kg','销售收入','占比','累计占比','物流 ABC','毛利空间'],
+  s:['排名','供应商','供货单品','主要 ABC','产量 kg','销售收入','收入占比','平均收购价','平均销售价','毛利空间','建议'],
+  c:['初判等级 ＼ 物流 ABC','A 类','B 类','C 类']
+};
+const TH_GROUP = {d:'数据明细表',a:'ABC 明细表',s:'供方明细表',c:'等级交叉矩阵'};
+const MINI = {};
+Object.keys(TH_DEFS).forEach(p=>TH_DEFS[p].forEach((t,i)=>{MINI['mTh_'+p+(i+1)]=[t,'表头·'+TH_GROUP[p]+' 第 '+(i+1)+' 列'];}));
+Object.assign(MINI,{
+  /* 通用提示 */
+  mNoData:['当前筛选下没有数据','通用·无数据提示'],
+  mNoDataShort:['暂无数据','通用·暂无数据'],
+  mNoSupData:['当前筛选下没有供方数据','供方·无数据提示'],
+  mNoSkuData:['暂无单品数据','作业卡·无数据提示'],
+  /* 帕累托 / 图下提示 */
+  mCapDefault:['点击柱子锁定单品，或点「演示分类」逐项看累计占比越过分界线。','帕累托·图下默认提示'],
+  mCapFiltered:['当前筛选 {n} / {m} 个单品，其余柱子已淡化；累计占比仍按全量口径计算。','帕累托·筛选提示模板'],
+  mCapDemoStart:['开始逐项演示：按销售收入从高到低累计…','帕累托·演示开场'],
+  mCapDemoStep:['第 {i} 个｜{code}｜销售收入 {rev}｜累计 {cum}｜{abc} 类','帕累托·演示逐项模板'],
+  mCapDemoDone:['演示完成：累计占比依次越过 {a}% 与 {b}%，形成 A / B / C 三类。','帕累托·演示收尾'],
+  mZoneA:['A 类区 ≤ {a}%','帕累托·A 区标注'],
+  mZoneB:['B 类区 ≤ {b}%','帕累托·B 区标注'],
+  mZoneC:['C 类区','帕累托·C 区标注'],
+  mParetoAxis:['单品（按销售收入降序） · 左轴：销售收入 / 右轴：累计占比','帕累托·轴说明'],
+  /* 环形 */
+  mDonutCenter:['筛选后收入','环形图·中心说明'],
+  mDonutSub:['{rev} · {n} 个单品','环形图·图例副行'],
+  /* 洛伦兹 */
+  mLorenzEqual:['绝对平等线','洛伦兹·平等线标注'],
+  mLorenzGini:['基尼系数','洛伦兹·基尼标签'],
+  mLorenzScale:['0 = 完全平均 · 1 = 完全集中','洛伦兹·刻度说明'],
+  mLvLow:['收入较均衡','集中度·较均衡'],
+  mLvMid:['中等集中','集中度·中等集中'],
+  mLvHigh:['高度集中','集中度·高度集中'],
+  /* 气泡 */
+  mBubHH:['高产 · 高价','气泡图·象限 高产高价'],
+  mBubLL:['低产 · 低价','气泡图·象限 低产低价'],
+  mBubX:['产量 (kg) →','气泡图·X 轴'],
+  mBubY:['销售单价 (元/kg) →','气泡图·Y 轴'],
+  /* 交叉矩阵 / 一致性 */
+  mCrossLegend:['底色越深 = 该格销售收入越高；点击格子筛选（再点一次取消）','交叉矩阵·图例说明'],
+  mCrossHiLow:['<b>初判 A 级却落在物流 C 类</b>：{list}。品质初判高但销售贡献小，别按 A 类投入过多作业资源。','对照·错位说明 1'],
+  mCrossLowHi:['<b>初判 B / C 级却是物流 A 类</b>：{list}。销售贡献大但初判一般，保供和到货核验要跟上。','对照·错位说明 2'],
+  mCrossAgree:['<b>两口径一致</b>：{a} / {n} 个，占 {pct}。一致率高说明初判等级和销售贡献基本同向。','对照·一致性说明'],
+  mCrossUse:['<b>怎么用</b>：初判等级管品质预期，物流 ABC 管作业投入，两张表分开看，错位单品单独议。','对照·使用建议'],
+  mAgreeHigh:['两口径高度一致，初判等级可作为作业投入的快速代理指标。','一致性·高度一致'],
+  mAgreeMid:['一致性中等，建议对错位单品单独复核初判口径。','一致性·中等一致'],
+  mAgreeLow:['一致性偏低，初判等级与销售贡献明显脱节，应以物流 ABC 为主安排作业。','一致性·偏低'],
+  mAgreeTail:['一致 {a} 个 · 错位 {b} 个','一致性·统计尾注'],
+  /* 供方 */
+  mLgSupA:['A 类收入','供方图例·A 类收入'],
+  mLgSupB:['B 类收入','供方图例·B 类收入'],
+  mLgSupC:['C 类收入','供方图例·C 类收入'],
+  mGaugeSub:['前三供方合计','仪表·副标题'],
+  mGauge0:['0%','仪表·0 刻度'],
+  mGauge100:['100%','仪表·100 刻度'],
+  mGaugeHigh:['CR3 偏高：供方波动会直接传导到销售收入，建议备好替代供方与产能预案。','仪表·高集中度说明'],
+  mGaugeMid:['CR3 适中：供方之间有一定分散度，仍需关注第一大供方的稳定性。','仪表·中集中度说明'],
+  mGaugeLow:['CR3 较低：供方分散，管理成本略高但抗单一供方波动能力强。','仪表·低集中度说明'],
+  mSupFirst:['<b>第一大供方</b>：{name}，占销售收入 <b>{pct}</b>。','供方结论·第一大供方'],
+  mSupCr3:['<b>前三集中度 CR3</b>：<b>{pct}</b>。{adv}','供方结论·CR3'],
+  mSupCr3High:['集中度偏高，建议准备替代供方。','供方结论·CR3 偏高'],
+  mSupCr3Ok:['集中度适中，供方之间有一定分散度。','供方结论·CR3 适中'],
+  mSupBest:['<b>价差最高</b>：{name}，毛利空间 <b>{m}</b>，贡献收入 <b>{pct}</b>。','供方结论·价差最高'],
+  mSupCaliber:['<b>看数口径</b>：毛利空间按（销售单价 − 收购单价）÷ 销售单价计算，只反映表内两个价格字段的差；供方毛利按收入加权。','供方结论·口径说明'],
+  mAdvCore:['核心供方 · 优先保供 + 锁定产能','供方建议·核心'],
+  mAdvMargin:['高价差供方 · 可争取扩大份额','供方建议·高价差'],
+  mAdvNormal:['常规供方 · 按量采购 + 定期复盘','供方建议·常规'],
+  /* ABC 策略 */
+  mAbcA:['<b>A 类（{n} 个 / {pct}）</b>：{list}，{focus}。','ABC 策略·A 类'],
+  mAbcB:['<b>B 类（{n} 个 / {pct}）</b>：{focus}。','ABC 策略·B 类'],
+  mAbcC:['<b>C 类（{n} 个 / {pct}）</b>：{focus}。','ABC 策略·C 类'],
+  mAbcKey:['<b>关键少数</b>：前 {n} 个单品贡献 {pct} 销售收入；基尼系数 {gini}（{lv}）。','ABC 策略·关键少数'],
+  /* 自动洞察卡 */
+  mIns1:['收入冠军','洞察卡·1 标题'],mIns2:['关键少数','洞察卡·2 标题'],mIns3:['等级错位','洞察卡·3 标题'],mIns4:['供方集中','洞察卡·4 标题'],mIns5:['毛利最高','洞察卡·5 标题'],mIns6:['单公斤价差','洞察卡·6 标题'],
+  mIns1v:['<b>{code}</b> 贡献 {pct} 销售收入','洞察卡·1 内容'],
+  mIns2v:['A 类 <b>{n}</b> 个单品撑起 <b>{pct}</b> 收入','洞察卡·2 内容'],
+  mIns3v:['共 <b>{n}</b> 个单品两口径错位，需单独定作业投入','洞察卡·3 内容'],
+  mIns4v:['<b>{name}</b> 占 {pct}，CR3 {cr3}','洞察卡·4 内容'],
+  mIns5v:['<b>{code}</b> 毛利空间 <b>{pct}</b>','洞察卡·5 内容'],
+  mIns6v:['<b>{code}</b> 价差 ¥{d}/kg','洞察卡·6 内容'],
+  /* 作业卡 */
+  mWcFlow:['到货流程','作业卡·流程标题'],
+  mWcList:['作业清单（{abc} 类 · {label}）','作业卡·清单标题'],
+  mWcK1:['销售收入 / 产量','作业卡·KPI 1'],mWcK2:['收购价 / 销售价','作业卡·KPI 2'],mWcK3:['备货 / 盘点','作业卡·KPI 3'],mWcK4:['复盘频率','作业卡·KPI 4'],
+  mWcNote:['{focus}。初判等级管品质预期，物流 ABC 管作业投入，两张表分开用；异常批次隔离标识，24 小时内反馈供方。','作业卡·底部说明'],
+  mWcProgress:['完成进度','作业卡·完成进度'],
+  /* KPI 卡 */
+  mKpi1:['单品数量','KPI·1 标题'],mKpi2:['销售收入合计','KPI·2 标题'],mKpi3:['A 类收入占比','KPI·3 标题'],mKpi4:['A 类单品','KPI·4 标题'],mKpi5:['最大供方占比','KPI·5 标题'],mKpi6:['合作供方','KPI·6 标题'],
+  mKpiS1:['按销售收入排序','KPI·1 副标题'],mKpiS2:['产量 × 销售单价','KPI·2 副标题'],mKpiS3:['A 类 {n} 个单品','KPI·3 副标题'],mKpiS4:['累计占比 ≤ {a}%','KPI·4 副标题'],mKpiS5:['{name}','KPI·5 副标题'],mKpiS6:['按供方字段汇总','KPI·6 副标题'],
+  /* 悬浮明细行标签 */
+  mTipSup:['供应商','浮层·供应商'],mTipGrade:['初判等级','浮层·初判等级'],mTipQty:['产量','浮层·产量'],mTipRev:['销售收入','浮层·销售收入'],mTipShare:['收入占比','浮层·收入占比'],mTipCum:['累计占比','浮层·累计占比'],mTipMargin:['毛利空间','浮层·毛利空间'],mTipTotal:['占总收入','浮层·占总收入'],mTipPrice:['销售单价','浮层·销售单价'],mTipQuad:['象限','浮层·象限']
+});
+/* T：纯文本小字（HTML 文本位置，自动转义）
+   TV：纯文本模板（含 {变量}）
+   THtml：可含 <b> 等简单标签的模板
+   thCells：生成带 data-t 的表格表头 */
+const T = k => esc(TEXT[k]||'');
+const TV = (k,ctx) => esc(tpl(TEXT[k]||'',ctx||{}));
+const THtml = (k,ctx) => tpl(TEXT[k]||'',ctx||{});
+const thCells = p => TH_DEFS[p].map((t,i)=>'<th data-t="mTh_'+p+(i+1)+'" data-plain>'+T('mTh_'+p+(i+1))+'</th>').join('');
+const STEPS_COUNT = 7;
+const FIELDS = ['code','supplier','grade0','qty','buyPrice','sellPrice'];
+const ALIAS = {
+  code:['单品编号','编码','编号','货号'], supplier:['供应商','供方'],
+  grade0:['初判等级','初判','等级'], qty:['产量','数量'],
+  buyPrice:['收购单价','收购价'], sellPrice:['销售单价','销售价']
+};
+const PRESETS = [[70,90,'标准 70 / 90'],[60,85,'收紧 60 / 85'],[80,95,'放宽 80 / 95'],[75,92,'均衡 75 / 92']];
+const STORE_KEY = 'lily_supply_studio_v3';
+
+/* ---------- 状态 ---------- */
+const state = {
+  rows:[], sorted:[], suppliers:[], total:1,
+  abcA:70, abcB:90, step:0, theme:'light',
+  filters:{abc:'ALL',sup:'ALL',grade:'ALL',q:''},
+  showLabels:false, checks:{}, editMode:false, drawerGroup:'全部',
+  presenting:false, notes:false, auto:null, selectedSup:null, selectedSku:null,
+  gini:0, cr3:0
+};
+let TEXT = {}, LABELS = {}, DEFAULT_TEXT = {};
+let hist = [], hi = -1;
+let toastTimer = null, commitTimer = null;
+
+/* ---------- 工具 ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => { const n=parseFloat(String(v==null?'':v).replace(/[,%¥\s，]/g,'')); return isNaN(n)?0:n; };
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const money=n=>'¥'+Math.round(n||0).toLocaleString('zh-CN');
+const pct=n=>(+n||0).toFixed(2)+'%';
+const fmt=(n,d=2)=>Number(n||0).toLocaleString('zh-CN',{maximumFractionDigits:d});
+const sum=(arr,f)=>arr.reduce((s,x)=>s+(f?f(x):x),0);
+const C=()=>{const s=getComputedStyle(document.documentElement),g=k=>s.getPropertyValue(k).trim();
+  return {ink:g('--ink'),ink2:g('--ink2'),muted:g('--muted'),faint:g('--faint'),grid:g('--grid'),line:g('--line'),surface:g('--surface'),surface2:g('--surface2'),
+    A:g('--a'),B:g('--b'),C:g('--c'),brand:g('--brand'),brand2:g('--brand2'),accent:g('--accent'),brandL:g('--brand-l')};};
+const abcColor=k=>{const c=C();return k==='A'?c.A:k==='B'?c.B:c.C;};
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('on'),2200);}
+function markSaved(){const s=$('#saveState');s.classList.add('flash');$('#saveTxt').textContent='已保存 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});setTimeout(()=>s.classList.remove('flash'),600);}
+function showTip(html,e){const t=$('#tooltip');t.innerHTML=html;t.style.display='block';const w=250;const x=Math.min(e.clientX+14,window.innerWidth-w-14);const y=clamp(e.clientY-12,10,window.innerHeight-130);t.style.left=Math.max(8,x)+'px';t.style.top=y+'px';}
+function hideTip(){$('#tooltip').style.display='none';}
+function tipRows(title,rows){return '<b>'+title+'</b>'+rows.map(r=>'<div class="tt-row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('');}
+function P(abc,k){return TEXT['pol'+abc+'_'+k]||'';}
+function W(abc,k){return (TEXT['work'+abc+'_'+k]||'').split('|').map(s=>s.trim()).filter(Boolean);}
+function tpl(s,ctx){return String(s==null?'':s).replace(/\{(\w+)\}/g,(m,k)=>ctx[k]!=null?ctx[k]:m);}
+
+/* ---------- 解析与计算 ---------- */
+function parseCSV(text){
+  const lines=String(text||'').split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  if(lines.length<1) throw new Error('请先输入数据。');
+  const d=lines[0].includes('\t')?'\t':',';
+  const head=lines[0].split(d).map(s=>s.replace(/^\ufeff/,'').trim());
+  const isHead=head.some(h=>ALIAS.code.some(a=>h.toLowerCase().includes(a.toLowerCase())));
+  const idx={};
+  FIELDS.forEach(k=>{const i=head.findIndex(h=>ALIAS[k].some(a=>h.toLowerCase().includes(a.toLowerCase())));idx[k]=i<0?FIELDS.indexOf(k):i;});
+  const out=(isHead?lines.slice(1):lines).map((line,i)=>{
+    const c=line.split(d).map(s=>s.trim());const o={id:i};
+    FIELDS.forEach(k=>o[k]=c[idx[k]]==null?'':c[idx[k]].trim());
+    ['qty','buyPrice','sellPrice'].forEach(k=>o[k]=num(o[k]));
+    o.grade0=o.grade0.replace(/级/g,'').toUpperCase()||'—';
+    if(!o.code)o.code='单品'+(i+1);
+    return o;
+  }).filter(o=>o.qty>0||o.sellPrice>0||o.code);
+  if(!out.length) throw new Error('未识别到有效数据行，请检查列格式。');
+  return out;
+}
+function toCSV(rows){
+  return '单品编号,供应商,初判等级,产量(kg),收购单价(元/kg),销售单价(元/kg)\n'+
+    rows.map(r=>[r.code,r.supplier,r.grade0,r.qty,r.buyPrice,r.sellPrice].join(',')).join('\n');
+}
+function compute(){
+  state.rows.forEach(r=>{
+    r.revenue=r.qty*r.sellPrice;
+    r.profit=r.qty*(r.sellPrice-r.buyPrice);
+    r.margin=r.sellPrice>0?(r.sellPrice-r.buyPrice)/r.sellPrice*100:0;
+  });
+  state.total=sum(state.rows,r=>r.revenue)||1;
+  const sorted=[...state.rows].sort((a,b)=>b.revenue-a.revenue);
+  let cum=0;
+  sorted.forEach((r,i)=>{
+    cum+=r.revenue;r.rank=i+1;
+    r.share=r.revenue/state.total*100;
+    r.cumPct=cum/state.total*100;
+    r.abc=r.cumPct<=state.abcA?'A':(r.cumPct<=state.abcB?'B':'C');
+  });
+  state.sorted=sorted;
+  /* 洛伦兹 / 基尼 */
+  let area=0,px=0,py=0;
+  sorted.forEach((r,i)=>{const x=(i+1)/sorted.length*100,y=r.cumPct;area+=(x-px)*(y+py)/2;px=x;py=y;});
+  state.gini=sorted.length>1?clamp((5000-area)/5000,0,1):0;
+  /* 供方汇总 */
+  const map={};
+  state.rows.forEach(r=>{
+    const k=r.supplier||'未指定';
+    if(!map[k])map[k]={name:k,items:0,qty:0,revenue:0,profit:0,buySum:0,sellSum:0,abc:{A:0,B:0,C:0},revAbc:{A:0,B:0,C:0}};
+    const s=map[k];s.items++;s.qty+=r.qty;s.revenue+=r.revenue;s.profit+=r.profit;
+    s.buySum+=r.buyPrice;s.sellSum+=r.sellPrice;s.abc[r.abc]++;s.revAbc[r.abc]+=r.revenue;
+  });
+  const sups=Object.values(map);
+  sups.forEach(s=>{
+    s.share=s.revenue/state.total*100;
+    s.margin=s.revenue>0?s.profit/s.revenue*100:0;
+    s.avgBuy=s.buySum/s.items;s.avgSell=s.sellSum/s.items;
+    s.mainAbc=Object.keys(s.abc).sort((a,b)=>s.abc[b]-s.abc[a])[0];
+    s.advice=s.share>=25?(TEXT.mAdvCore||''):(s.margin>=45?(TEXT.mAdvMargin||''):(TEXT.mAdvNormal||''));
+  });
+  state.suppliers=sups.sort((a,b)=>b.revenue-a.revenue);
+  state.cr3=sum(state.suppliers.slice(0,3),s=>s.share);
+  /* 清理已失效的筛选项 */
+  if(state.filters.sup!=='ALL'&&!state.suppliers.some(s=>s.name===state.filters.sup))state.filters.sup='ALL';
+  if(state.filters.grade!=='ALL'&&!state.rows.some(r=>r.grade0===state.filters.grade))state.filters.grade='ALL';
+  if(!state.suppliers.find(s=>s.name===state.selectedSup))state.selectedSup=state.suppliers[0]?state.suppliers[0].name:null;
+  if(!state.rows.find(r=>r.code===state.selectedSku))state.selectedSku=sorted[0]?sorted[0].code:null;
+}
+function visibleRows(){const f=state.filters,q=f.q.trim().toLowerCase();return state.rows.filter(r=>
+  (f.abc==='ALL'||r.abc===f.abc)&&(f.sup==='ALL'||r.supplier===f.sup)&&(f.grade==='ALL'||r.grade0===f.grade)&&
+  (!q||r.code.toLowerCase().includes(q)||String(r.supplier).toLowerCase().includes(q)));}
+function visibleSorted(){const f=state.filters,q=f.q.trim().toLowerCase();return state.sorted.filter(r=>
+  (f.abc==='ALL'||r.abc===f.abc)&&(f.sup==='ALL'||r.supplier===f.sup)&&(f.grade==='ALL'||r.grade0===f.grade)&&
+  (!q||r.code.toLowerCase().includes(q)||String(r.supplier).toLowerCase().includes(q)));}
+function isFiltered(){const f=state.filters;return f.abc!=='ALL'||f.sup!=='ALL'||f.grade!=='ALL'||!!f.q.trim();}
+function tokens(){
+  const a=state.sorted.filter(r=>r.abc==='A');
+  const hiLow=state.sorted.filter(r=>r.grade0==='A'&&r.abc==='C').length;
+  const lowHi=state.sorted.filter(r=>(r.grade0==='B'||r.grade0==='C')&&r.abc==='A').length;
+  const agree=state.sorted.filter(r=>r.grade0===r.abc).length;
+  const top=state.suppliers[0],tail=state.suppliers[state.suppliers.length-1];
+  return {
+    aCount:a.length,aList:a.map(r=>esc(r.code)).join('、')||'—',aRev:money(sum(a,r=>r.revenue)),aPct:pct(sum(a,r=>r.revenue)/state.total*100),
+    aLine:state.abcA,bLine:state.abcB,skuCount:state.sorted.length,total:money(state.total),supCount:state.suppliers.length,
+    hiLow,lowHi,agreeCount:agree,cr1:top?pct(top.share):'—',cr3:pct(state.cr3),
+    topSup:top?esc(top.name):'—',tailSup:tail?esc(tail.name):'—',tailPct:tail?pct(tail.share):'—',
+    gini:state.gini.toFixed(3),polA:P('A','label'),polB:P('B','label'),polC:P('C','label')
+  };
+}
+
+/* ---------- 文案系统 ---------- */
+function collectDefaults(){
+  $$('[data-t]').forEach(el=>{
+    const k=el.dataset.t;
+    DEFAULT_TEXT[k]=el.dataset.tpl?TEMPLATES[k]:(el.dataset.plain!=null?el.textContent.trim():el.innerHTML.trim());
+    LABELS[k]=el.dataset.label||TPL_LABELS[k]||k;
+  });
+  Object.keys(TEMPLATES).forEach(k=>{if(!(k in DEFAULT_TEXT)){DEFAULT_TEXT[k]=TEMPLATES[k];LABELS[k]=TPL_LABELS[k]||k;}});
+  Object.keys(MINI).forEach(k=>{if(!(k in DEFAULT_TEXT))DEFAULT_TEXT[k]=MINI[k][0];if(!(k in LABELS))LABELS[k]=MINI[k][1];});
+  TEXT=Object.assign({},DEFAULT_TEXT);
+}
+function applyText(){
+  if(state.editMode)return;
+  const tk=tokens();
+  $$('[data-t]').forEach(el=>{
+    const k=el.dataset.t;if(TEXT[k]==null)return;
+    const html=el.dataset.tpl?tpl(TEXT[k],tk):TEXT[k];
+    if(el.dataset.plain!=null){if(el.textContent!==html)el.textContent=html;}
+    else if(el.innerHTML!==html)el.innerHTML=html;
+  });
+  $('#notesText').textContent=TEXT['note'+state.step]||'';
+}
+function groupOf(k){
+  if(/^m/.test(k))return '小字与标注';
+  if(/^(brand|side|role|nav)/.test(k))return '品牌与导航';
+  if(/^(pol|work)/.test(k))return '策略与作业';
+  if(/^(concl|note|fc)/.test(k))return '结论与备注';
+  return '页面文案';
+}
+
+/* ---------- 持久化 / 撤销重做 ---------- */
+function snapshot(){
+  return {v:3,rows:state.rows.map(r=>({code:r.code,supplier:r.supplier,grade0:r.grade0,qty:r.qty,buyPrice:r.buyPrice,sellPrice:r.sellPrice})),
+    abcA:state.abcA,abcB:state.abcB,theme:state.theme,text:Object.assign({},TEXT),checks:Object.assign({},state.checks),
+    filters:Object.assign({},state.filters),showLabels:state.showLabels};
+}
+function save(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(snapshot()));markSaved();}catch(e){$('#saveTxt').textContent='本机存储不可用';}
+}
+function commit(){hist=hist.slice(0,hi+1);hist.push(JSON.stringify(snapshot()));if(hist.length>60)hist.shift();hi=hist.length-1;save();}
+function commitSoon(){clearTimeout(commitTimer);commitTimer=setTimeout(commit,450);}
+function restore(str){
+  const d=JSON.parse(str);
+  state.rows=d.rows.map((r,i)=>Object.assign({id:i},r));
+  state.abcA=d.abcA;state.abcB=d.abcB;state.theme=d.theme||'light';
+  state.checks=d.checks||{};state.showLabels=!!d.showLabels;
+  state.filters=Object.assign({abc:'ALL',sup:'ALL',grade:'ALL',q:''},d.filters||{});
+  Object.keys(TEXT).forEach(k=>delete TEXT[k]);Object.assign(TEXT,DEFAULT_TEXT,d.text||{});
+  applyTheme();compute();syncControls();$('#csvBox').value=toCSV(state.rows);renderAll();
+}
+function undo(){if(hi<=0){toast('没有更早的记录了');return;}hi--;restore(hist[hi]);save();toast('已撤销');}
+function redo(){if(hi>=hist.length-1){toast('没有可重做的记录');return;}hi++;restore(hist[hi]);save();toast('已重做');}
+function loadSaved(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);if(!raw)return false;
+    const d=JSON.parse(raw);
+    if(!d||!Array.isArray(d.rows)||!d.rows.length)return false;
+    state.rows=d.rows.map((r,i)=>Object.assign({id:i},r));
+    state.abcA=d.abcA||70;state.abcB=d.abcB||90;state.theme=d.theme||'light';
+    state.checks=d.checks||{};state.showLabels=!!d.showLabels;
+    state.filters=Object.assign({abc:'ALL',sup:'ALL',grade:'ALL',q:''},d.filters||{});
+    Object.assign(TEXT,DEFAULT_TEXT,d.text||{});
+    return true;
+  }catch(e){return false;}
+}
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',state.theme);
+  $('#btnTheme').textContent=state.theme==='dark'?'☀️':'🌓';
+}
+
+/* ---------- 渲染：导航 / 筛选 / 控件 ---------- */
+function renderStepNav(){
+  $('#stepNav').innerHTML=Array.from({length:STEPS_COUNT},(_,i)=>
+    `<button class="step ${i===state.step?'active':''} ${i<state.step?'done':''}" data-i="${i}"><span class="num">${i+1}</span><span class="tx">${TEXT['nav'+i]||''}</span></button>`).join('');
+  $$('.step').forEach(b=>b.onclick=()=>goStep(+b.dataset.i));
+}
+function renderFilterBar(){
+  const sups=[...new Set(state.rows.map(r=>r.supplier||'未指定'))];
+  const grades=[...new Set(state.rows.map(r=>r.grade0))].sort();
+  const keep=(sel,val,def)=>{$(sel).innerHTML='<option value="ALL">'+def+'</option>'+val.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');};
+  keep('#fSup',sups,'全部供方');keep('#fGrade',grades,'全部初判等级');
+  $('#fAbc').value=state.filters.abc;$('#fSup').value=sups.includes(state.filters.sup)?state.filters.sup:'ALL';
+  $('#fGrade').value=grades.includes(state.filters.grade)?state.filters.grade:'ALL';$('#fQ').value=state.filters.q;
+  $('#showLabels').checked=state.showLabels;
+  const n=visibleRows().length,m=state.rows.length;
+  $('#fCount').innerHTML=isFiltered()?`筛选中 <b>${n}</b> / ${m} 条`:`共 <b>${m}</b> 条单品`;
+  $('#thrBadge').textContent=`A ≤ ${state.abcA}% · B ≤ ${state.abcB}%`;
+  $('#sideRows').textContent=state.rows.length+' 条单品';
+  $('#sideThr').textContent=state.abcA+'% / '+state.abcB+'%';
+}
+function syncControls(){
+  $('#sA').value=state.abcA;$('#nA').value=state.abcA;$('#sB').value=state.abcB;$('#nB').value=state.abcB;
+  $('#presets').innerHTML=PRESETS.map(p=>`<button class="preset ${p[0]===state.abcA&&p[1]===state.abcB?'active':''}" data-a="${p[0]}" data-b="${p[1]}">${p[2]}</button>`).join('');
+  $$('#presets .preset').forEach(b=>b.onclick=()=>{setThreshold(+b.dataset.a,+b.dataset.b);});
+}
+function setThreshold(a,b){
+  state.abcA=clamp(Math.round(a),40,90);state.abcB=clamp(Math.round(b),state.abcA+1,99);
+  compute();syncControls();renderAll();commit();toast('阈值已更新为 '+state.abcA+'% / '+state.abcB+'%');
+}
+
+/* ---------- 渲染：KPI ---------- */
+function renderKpis(){
+  const a=state.sorted.filter(r=>r.abc==='A'),c=C();
+  const av=sum(a,r=>r.revenue)/state.total*100,top=state.suppliers[0];
+  const vals=state.sorted.map(r=>r.revenue);
+  const spark=(v,col)=>{const mx=Math.max(...v,1);const pts=v.map((x,i)=>`${(i/(v.length-1||1)*100).toFixed(1)},${(28-x/mx*25).toFixed(1)}`).join(' ');
+    return `<svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.8" opacity=".8"/><polygon points="0,30 ${pts} 100,30" fill="${col}" opacity=".08"/></svg>`;};
+  const kctx={n:a.length,a:state.abcA,name:top?esc(top.name):'—'};
+  const k=[
+    ['mKpi1',state.sorted.length,'个','mKpiS1','blue','▦',vals],
+    ['mKpi2',money(state.total),'','mKpiS2','red','¥',vals],
+    ['mKpi3',av.toFixed(2),'%','mKpiS3','amber','◔',vals],
+    ['mKpi4',a.length,'个','mKpiS4','purple','A',vals],
+    ['mKpi5',top?top.share.toFixed(2):'0','%','mKpiS5','green','⚑',state.suppliers.map(s=>s.revenue)],
+    ['mKpi6',state.suppliers.length,'家','mKpiS6','green','⚙',state.suppliers.map(s=>s.revenue)]
+  ];
+  $('#kpis').innerHTML=k.map(x=>`<div class="kpi ${x[4]}"><div class="top"><span class="lb" data-t="${x[0]}" data-plain>${T(x[0])}</span><span class="ico">${x[5]}</span></div><b><span data-num="${typeof x[1]==='number'?x[1]:0}" data-raw="${esc(String(x[1]))}">${x[1]}</span>${x[2]}</b><div class="sb">${TV(x[3],kctx)}</div>${spark(x[6],x[4]==='red'?c.A:x[4]==='amber'?c.B:x[4]==='purple'?c.accent:x[4]==='green'?c.C:c.brand)}</div>`).join('');
+  animateNumbers($('#kpis'));
+}
+function animateNumbers(scope){
+  $$('[data-num]',scope).forEach(el=>{
+    const target=+el.dataset.num,raw=el.dataset.raw;
+    if(!target||/[^0-9.]/.test(raw))return;
+    const dec=(raw.split('.')[1]||'').length;let t0=null;
+    const step=ts=>{if(!t0)t0=ts;const p=Math.min((ts-t0)/650,1),e=1-Math.pow(1-p,3);el.textContent=(target*e).toFixed(dec);if(p<1)requestAnimationFrame(step);};
+    requestAnimationFrame(step);
+  });
+}
+
+/* ---------- 渲染：数据工作台 ---------- */
+function renderTable(){
+  const h='<tr>'+thCells('d')+'<th></th></tr>';
+  $('#dataTable').innerHTML=h+state.rows.map((r,i)=>`<tr>
+    <td style="color:var(--faint)">${i+1}</td>
+    <td><input data-i="${i}" data-f="code" value="${esc(r.code)}"></td>
+    <td><input data-i="${i}" data-f="supplier" value="${esc(r.supplier)}"></td>
+    <td><input data-i="${i}" data-f="grade0" value="${esc(r.grade0)}" style="width:52px"></td>
+    <td><input data-i="${i}" data-f="qty" value="${r.qty}"></td>
+    <td><input data-i="${i}" data-f="buyPrice" value="${r.buyPrice}"></td>
+    <td><input data-i="${i}" data-f="sellPrice" value="${r.sellPrice}"></td>
+    <td class="calc-rev" style="font-weight:750;color:var(--brand)">${money(r.revenue)}</td>
+    <td class="calc-cum">${r.cumPct==null?'—':pct(r.cumPct)}</td>
+    <td class="calc-abc">${r.abc?'<span class="pill p'+r.abc+'">'+r.abc+'</span>':'—'}</td>
+    <td class="calc-margin">${pct(r.margin)}</td>
+    <td><button class="rowdel" data-del="${i}" title="删除该行">✕</button></td></tr>`).join('');
+}
+function updateRowCalc(tr,r){
+  const set=(c,v)=>{const el=tr.querySelector(c);if(el)el.innerHTML=v;};
+  set('.calc-rev',money(r.revenue));set('.calc-cum',pct(r.cumPct));
+  set('.calc-abc','<span class="pill p'+r.abc+'">'+r.abc+'</span>');set('.calc-margin',pct(r.margin));
+}
+
+/* ---------- 渲染：帕累托 ---------- */
+function renderPareto(){
+  const items=state.sorted,c=C(),W=960,H=420,pl=66,pr=66,pt=38,pb=112,iw=W-pl-pr,ih=H-pt-pb;
+  $('#selHint').innerHTML='';
+  if(!items.length){$('#pareto').innerHTML='<div class="note" data-t="mNoDataShort" data-plain>'+T('mNoDataShort')+'</div>';return;}
+  const maxV=Math.max(...items.map(i=>i.revenue),1);
+  const bw=Math.max(7,iw/items.length*.58);
+  const vis=visibleRows(),visCodes=new Set(vis.map(r=>r.code));
+  let grid='',bars='',labels='',dots='',amt='';
+  for(let t=0;t<=4;t++){
+    const y=pt+ih-ih*t/4;
+    grid+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="${c.grid}" stroke-dasharray="4 5"/>`;
+    grid+=`<text x="${pl-10}" y="${y+4}" text-anchor="end" font-size="10" fill="${c.muted}">${money(maxV*t/4).replace('¥','')}</text>`;
+    grid+=`<text x="${pl+iw+10}" y="${y+4}" font-size="10" fill="${c.muted}">${t*25}%</text>`;
+  }
+  const pts=[];
+  items.forEach((it,i)=>{
+    const x=pl+iw*(i+.5)/items.length,h=ih*it.revenue/maxV,col=abcColor(it.abc);
+    const faded=isFiltered()&&!visCodes.has(it.code);
+    bars+=`<rect class="pbar hit ${faded?'dim':''}" data-i="${i}" x="${(x-bw/2).toFixed(1)}" y="${(pt+ih-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(h,1).toFixed(1)}" rx="4" fill="${col}" style="animation-delay:${i*55}ms"/>`;
+    labels+=`<text x="${x.toFixed(1)}" y="${pt+ih+19}" transform="rotate(-38 ${x.toFixed(1)} ${pt+ih+19})" text-anchor="end" font-size="10.5" fill="${c.muted}">${esc(it.code)}</text>`;
+    if(state.showLabels)amt+=`<text x="${x.toFixed(1)}" y="${(pt+ih-h-7).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="${c.ink2}">${Math.round(it.revenue/1000)}k</text>`;
+    pts.push([x,pt+ih-ih*it.cumPct/100]);
+  });
+  const line=pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const areaPoly=`${pl},${pt+ih} ${line} ${(pl+iw).toFixed(1)},${pt+ih}`;
+  dots=pts.map((p,i)=>`<circle class="pdot hit" data-i="${i}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4" fill="${c.surface}" stroke="${c.brand}" stroke-width="2.2" style="animation-delay:${320+i*55}ms"/>`).join('');
+  const bi=items.findIndex(r=>r.abc==='B'),ci=items.findIndex(r=>r.abc==='C');
+  let zones='';
+  const ax=bi>0?pl+iw*bi/items.length:pl+iw;
+  zones+=`<rect x="${pl}" y="${pt}" width="${(ax-pl).toFixed(1)}" height="${ih}" fill="${c.A}" opacity=".05"/>`;
+  if(bi>0)zones+=`<line x1="${ax}" y1="${pt}" x2="${ax}" y2="${pt+ih}" stroke="${c.A}" stroke-dasharray="6 5" opacity=".6"/><text x="${pl+8}" y="${pt-9}" font-size="11" font-weight="700" fill="${c.A}">${TV('mZoneA',{a:state.abcA})}</text>`;
+  if(ci>0&&bi>0){
+    const bx=pl+iw*ci/items.length;
+    zones+=`<rect x="${ax}" y="${pt}" width="${(bx-ax).toFixed(1)}" height="${ih}" fill="${c.B}" opacity=".06"/><line x1="${bx}" y1="${pt}" x2="${bx}" y2="${pt+ih}" stroke="${c.B}" stroke-dasharray="6 5" opacity=".6"/><text x="${ax+8}" y="${pt-9}" font-size="11" font-weight="700" fill="${c.B}">${TV('mZoneB',{b:state.abcB})}</text><text x="${bx+8}" y="${pt-9}" font-size="11" font-weight="700" fill="${c.C}">${T('mZoneC')}</text>`;
+  }
+  /* 阈值横线 */
+  [state.abcA,state.abcB].forEach((v,i)=>{const y=pt+ih-ih*v/100;zones+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="${i?c.B:c.A}" stroke-width="1" stroke-dasharray="2 6" opacity=".55"/>`;});
+  $('#pareto').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">
+    <defs><linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${c.brand}" stop-opacity=".20"/><stop offset="100%" stop-color="${c.brand}" stop-opacity="0"/></linearGradient></defs>
+    ${grid}${zones}<polygon points="${areaPoly}" fill="url(#areaG)"/>${bars}
+    <polyline class="pline" points="${line}" stroke="${c.brand}"/>${dots}${amt}${labels}
+    <line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="${c.line}"/>
+    <text x="${pl}" y="${H-8}" font-size="10" fill="${c.faint}">${T('mParetoAxis')}</text></svg>`;
+  $$('#pareto .hit').forEach(el=>{
+    el.addEventListener('mousemove',e=>{const r=items[+el.dataset.i];showTip(tipRows(esc(r.code)+' · '+r.abc+' 类',[[T('mTipSup'),esc(r.supplier)],[T('mTipGrade'),esc(r.grade0)+' 级'],[T('mTipQty'),fmt(r.qty)+' kg'],[T('mTipRev'),money(r.revenue)],[T('mTipShare'),pct(r.share)],[T('mTipCum'),pct(r.cumPct)],[T('mTipMargin'),pct(r.margin)]]),e);});
+    el.addEventListener('mouseleave',hideTip);
+    el.onclick=()=>{const r=items[+el.dataset.i];state.selectedSku=r.code;renderWorkcard();$('#selHint').innerHTML=`<b style="color:var(--brand)">已选 ${esc(r.code)}</b> · <button class="mini" id="gotoWork" style="padding:2px 7px">查看作业卡 →</button>`;$('#gotoWork').onclick=()=>goStep(5);toast('已锁定 '+r.code+'，可跳到作业卡');};
+  });
+  $('#paretoCaption').textContent=isFiltered()?TV('mCapFiltered',{n:vis.length,m:items.length}):TV('mCapDefault');
+}
+
+/* ---------- 渲染：环形图 ---------- */
+function renderDonut(){
+  const c=C(),groups=[['A',0,0],['B',0,0],['C',0,0]];
+  visibleSorted().forEach(r=>{const g=groups.find(x=>x[0]===r.abc);if(g){g[1]+=r.revenue;g[2]++;}});
+  const tot=sum(groups,g=>g[1])||1,R=54,CX=76,CY=76,CIRC=2*Math.PI*R;let off=0,parts='';
+  groups.forEach(g=>{
+    const len=CIRC*g[1]/tot,gap=Math.min(3,len*.06);
+    parts+=`<circle class="dseg" data-abc="${g[0]}" cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${abcColor(g[0])}" stroke-width="22" stroke-dasharray="${Math.max(len-gap,0).toFixed(2)} ${(CIRC-Math.max(len-gap,0)).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${CX} ${CY})" stroke-linecap="butt"/>`;
+    off+=len;
+  });
+  const legend=groups.map(g=>`<div class="dleg" data-abc="${g[0]}"><i style="background:${abcColor(g[0])}"></i>${g[0]} 类　<b>${pct(g[1]/tot*100)}</b><br><span style="color:var(--muted);font-size:10.5px">${TV('mDonutSub',{rev:money(g[1]),n:g[2]})}</span></div>`).join('');
+  $('#donut').innerHTML=`<svg viewBox="0 0 152 152" style="width:158px;flex:none" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">${parts}<text x="${CX}" y="${CY-3}" text-anchor="middle" font-size="13" font-weight="700" fill="${c.ink}">${money(tot)}</text><text x="${CX}" y="${CY+14}" text-anchor="middle" font-size="9.5" fill="${c.muted}">${T('mDonutCenter')}</text></svg><div>${legend}</div>`;
+  $$('#donut [data-abc]').forEach(el=>el.onclick=()=>{state.filters.abc=state.filters.abc===el.dataset.abc?'ALL':el.dataset.abc;renderAll();commitSoon();});
+}
+
+/* ---------- 渲染：树图 ---------- */
+function squarify(items,x,y,w,h,out){
+  if(!items.length)return;
+  if(items.length===1){out.push({it:items[0],x,y,w,h});return;}
+  const total=sum(items,i=>i.revenue)||1;let best=Infinity,k=1,acc=0;
+  for(let i=0;i<items.length-1;i++){acc+=items[i].revenue;const d=Math.abs(acc/total-.5);if(d<best){best=d;k=i+1;}}
+  const left=items.slice(0,k),right=items.slice(k),f=sum(left,i=>i.revenue)/total;
+  if(w>=h){squarify(left,x,y,w*f,h,out);squarify(right,x+w*f,y,w*(1-f),h,out);}
+  else{squarify(left,x,y,w,h*f,out);squarify(right,x,y+h*f,w,h*(1-f),out);}
+}
+function renderTreemap(){
+  const items=visibleSorted(),c=C(),W=620,H=310;
+  if(!items.length){$('#treemap').innerHTML='<div class="note" data-t="mNoData" data-plain>'+T('mNoData')+'</div>';return;}
+  const out=[];squarify(items,0,0,W,H,out);
+  const maxV=Math.max(...items.map(i=>i.revenue),1);
+  let html=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter, PingFang SC, sans-serif">`;
+  out.forEach((b,i)=>{
+    const pad=3,x=b.x+pad,y=b.y+pad,w=Math.max(b.w-pad*2,1),h=Math.max(b.h-pad*2,1),r=b.it;
+    const col=abcColor(r.abc),op=.55+.4*(r.revenue/maxV);
+    html+=`<g class="hit" data-i="${i}"><rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="7" fill="${col}" opacity="${op.toFixed(2)}"/>`;
+    if(w>62&&h>40){
+      html+=`<text x="${(x+9).toFixed(1)}" y="${(y+20).toFixed(1)}" font-size="12" font-weight="700" fill="#fff">${esc(r.code)}</text>`;
+      html+=`<text x="${(x+9).toFixed(1)}" y="${(y+37).toFixed(1)}" font-size="10" fill="#fff" opacity=".9">${money(r.revenue)} · ${pct(r.share)}</text>`;
+    }
+    html+='</g>';
+  });
+  html+='</svg>';
+  $('#treemap').innerHTML=html;
+  $$('#treemap .hit').forEach(el=>el.addEventListener('mousemove',e=>{const r=out[+el.dataset.i].it;showTip(tipRows(esc(r.code)+' · '+r.abc+' 类',[[T('mTipSup'),esc(r.supplier)],[T('mTipGrade'),esc(r.grade0)+' 级'],[T('mTipRev'),money(r.revenue)],[T('mTipTotal'),pct(r.share)],[T('mTipCum'),pct(r.cumPct)],[T('mTipQty'),fmt(r.qty)+' kg']]),e);}));
+  $$('#treemap .hit').forEach(el=>{el.addEventListener('mouseleave',hideTip);el.onclick=()=>{state.selectedSku=out[+el.dataset.i].it.code;renderWorkcard();goStep(5);};});
+}
+
+/* ---------- 渲染：洛伦兹 / 基尼 ---------- */
+function renderLorenz(){
+  const items=visibleSorted(),c=C(),W=440,H=250,pl=44,pr=18,pt=18,pb=38,iw=W-pl-pr,ih=H-pt-pb;
+  if(!items.length){$('#lorenz').innerHTML='<div class="note" data-t="mNoData" data-plain>'+T('mNoData')+'</div>';return;}
+  const tot=sum(items,r=>r.revenue)||1;let cum=0;const pts=[[0,0]];
+  items.forEach((r,i)=>{cum+=r.revenue;pts.push([(i+1)/items.length*100,cum/tot*100]);});
+  const P2=p=>[(pl+iw*p[0]/100).toFixed(1),(pt+ih-ih*p[1]/100).toFixed(1)];
+  const line=pts.map(P2).join(' '),poly=`${pl},${pt+ih} ${line} ${pl+iw},${pt+ih}`;
+  let grid='';[0,25,50,75,100].forEach(v=>{const x=pl+iw*v/100,y=pt+ih-ih*v/100;
+    grid+=`<line x1="${pl}" y1="${y}" x2="${pl+iw}" y2="${y}" stroke="${c.grid}" stroke-dasharray="3 5"/><text x="${pl-7}" y="${y+4}" text-anchor="end" font-size="9.5" fill="${c.muted}">${v}</text><text x="${x}" y="${pt+ih+16}" text-anchor="middle" font-size="9.5" fill="${c.muted}">${v}%</text>`;});
+  const g=state.gini.toFixed(3),lv=state.gini<.3?T('mLvLow'):state.gini<.5?T('mLvMid'):T('mLvHigh');
+  $('#lorenz').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+    ${grid}<line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt}" stroke="${c.faint}" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <polygon points="${poly}" fill="${c.brand}" opacity=".10"/><polyline points="${line}" fill="none" stroke="${c.brand}" stroke-width="2.6"/>
+    ${pts.slice(1).map(p=>`<circle cx="${P2(p)[0]}" cy="${P2(p)[1]}" r="2.8" fill="${c.surface}" stroke="${c.brand}" stroke-width="1.6"/>`).join('')}
+    <text x="${pl+iw-4}" y="${pt+ih-8}" text-anchor="end" font-size="10" fill="${c.muted}">${T('mLorenzEqual')}</text></svg>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px">
+      <div style="font-size:12px;color:var(--ink2)">${T('mLorenzGini')} <b style="font-size:20px;color:var(--brand)">${g}</b> <span class="pill" style="background:${state.gini<.5?'var(--c)':'var(--a)'}">${lv}</span></div>
+      <div style="flex:1;min-width:130px"><div class="progressbar"><i style="width:${(state.gini*100).toFixed(1)}%"></i></div><div style="font-size:10.5px;color:var(--muted)">${T('mLorenzScale')}</div></div>
+    </div>`;
+}
+
+/* ---------- 渲染：四象限气泡 ---------- */
+function renderBubble(){
+  const items=visibleSorted(),c=C(),W=440,H=290,pl=52,pr=20,pt=20,pb=44,iw=W-pl-pr,ih=H-pt-pb;
+  if(!items.length){$('#bubble').innerHTML='<div class="note" data-t="mNoData" data-plain>'+T('mNoData')+'</div>';return;}
+  const maxQ=Math.max(...items.map(r=>r.qty),1)*1.15,maxP=Math.max(...items.map(r=>r.sellPrice),1)*1.15,maxR=Math.max(...items.map(r=>r.revenue),1);
+  const avgQ=sum(items,r=>r.qty)/items.length,avgP=sum(items,r=>r.sellPrice)/items.length;
+  const X=q=>pl+iw*q/maxQ,Y=p=>pt+ih-ih*p/maxP;
+  let grid='';for(let t=0;t<=4;t++){const gx=pl+iw*t/4,gy=pt+ih-ih*t/4;
+    grid+=`<line x1="${gx}" y1="${pt}" x2="${gx}" y2="${pt+ih}" stroke="${c.grid}" stroke-dasharray="3 5"/><line x1="${pl}" y1="${gy}" x2="${pl+iw}" y2="${gy}" stroke="${c.grid}" stroke-dasharray="3 5"/>`;
+    grid+=`<text x="${gx}" y="${pt+ih+16}" text-anchor="middle" font-size="9.5" fill="${c.muted}">${Math.round(maxQ*t/4)}</text><text x="${pl-7}" y="${gy+4}" text-anchor="end" font-size="9.5" fill="${c.muted}">${Math.round(maxP*t/4)}</text>`;}
+  const ax=X(avgQ),ay=Y(avgP);
+  grid+=`<line x1="${ax}" y1="${pt}" x2="${ax}" y2="${pt+ih}" stroke="${c.accent}" stroke-dasharray="6 5" opacity=".65"/><line x1="${pl}" y1="${ay}" x2="${pl+iw}" y2="${ay}" stroke="${c.accent}" stroke-dasharray="6 5" opacity=".65"/>`;
+  grid+=`<text x="${pl+iw-5}" y="${pt+13}" text-anchor="end" font-size="10" fill="${c.accent}">${T('mBubHH')}</text><text x="${pl+5}" y="${pt+ih-7}" font-size="10" fill="${c.muted}">${T('mBubLL')}</text>`;
+  let bub=items.map((r,i)=>{
+    const rad=7+25*Math.sqrt(r.revenue/maxR),col=abcColor(r.abc);
+    return `<g class="hit" data-i="${i}"><circle cx="${X(r.qty).toFixed(1)}" cy="${Y(r.sellPrice).toFixed(1)}" r="${rad.toFixed(1)}" fill="${col}" opacity=".62" stroke="${col}" stroke-width="1.5"/><text x="${X(r.qty).toFixed(1)}" y="${(Y(r.sellPrice)+3).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">${esc(r.code)}</text></g>`;
+  }).join('');
+  $('#bubble').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">${grid}${bub}
+    <line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="${c.line}"/><text x="${pl+iw/2}" y="${H-4}" text-anchor="middle" font-size="10" fill="${c.muted}">${T('mBubX')}</text><text x="12" y="${pt+ih/2}" text-anchor="middle" font-size="10" fill="${c.muted}" transform="rotate(-90 12 ${pt+ih/2})">${T('mBubY')}</text></svg>`;
+  $$('#bubble .hit').forEach(el=>{
+    el.addEventListener('mousemove',e=>{const r=items[+el.dataset.i];showTip(tipRows(esc(r.code)+' · '+r.abc+' 类',[[T('mTipQty'),fmt(r.qty)+' kg'],[T('mTipPrice'),'¥'+fmt(r.sellPrice)],[T('mTipRev'),money(r.revenue)],[T('mTipShare'),pct(r.share)],[T('mTipQuad'),(r.qty>=avgQ?'高产':'低产')+' · '+(r.sellPrice>=avgP?'高价':'低价')]]),e);});
+    el.addEventListener('mouseleave',hideTip);el.onclick=()=>{state.selectedSku=items[+el.dataset.i].code;renderWorkcard();goStep(5);};
+  });
+}
+
+/* ---------- 渲染：ABC 表 / 策略 ---------- */
+function renderAbcTable(){
+  const rows=visibleSorted();
+  $('#abcTable').innerHTML='<tr>'+thCells('a')+'</tr>'+
+    (rows.length?rows.map(r=>`<tr class="rowsel" data-code="${esc(r.code)}"><td>${r.rank}</td><td><b>${esc(r.code)}</b></td><td>${esc(r.supplier)}</td><td>${esc(r.grade0)}</td><td>${fmt(r.qty)}</td><td>${money(r.revenue)}</td><td>${pct(r.share)}</td><td>${pct(r.cumPct)}</td><td><span class="pill p${r.abc}">${r.abc}</span></td><td>${pct(r.margin)}</td></tr>`).join(''):'<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:22px">'+T('mNoData')+'</td></tr>');
+  $$('#abcTable .rowsel').forEach(tr=>tr.onclick=()=>{state.selectedSku=tr.dataset.code;renderWorkcard();goStep(5);});
+}
+function renderAbcInsight(){
+  const a=state.sorted.filter(r=>r.abc==='A'),b=state.sorted.filter(r=>r.abc==='B'),cc=state.sorted.filter(r=>r.abc==='C');
+  const sv=arr=>sum(arr,r=>r.revenue)/state.total*100;
+  const lvTxt=state.gini<.3?T('mLvLow'):state.gini<.5?T('mLvMid'):T('mLvHigh');
+  $('#abcInsight').innerHTML=`<ul class="rules">
+    <li>${THtml('mAbcA',{n:a.length,pct:pct(sv(a)),list:a.map(r=>esc(r.code)).join('、')||'—',focus:esc(P('A','focus'))})}</li>
+    <li>${THtml('mAbcB',{n:b.length,pct:pct(sv(b)),focus:esc(P('B','focus'))})}</li>
+    <li>${THtml('mAbcC',{n:cc.length,pct:pct(sv(cc)),focus:esc(P('C','focus'))})}</li>
+    <li>${THtml('mAbcKey',{n:a.length,pct:pct(sv(a)),gini:state.gini.toFixed(3),lv:lvTxt})}</li></ul>`;
+}
+
+/* ---------- 渲染：等级对照 ---------- */
+function renderCross(){
+  const c=C(),gs=[...new Set(state.sorted.map(r=>r.grade0))].sort((a,b)=>{const o={A:0,B:1,C:2};return (o[a]??9)-(o[b]??9);}),cs=['A','B','C'];
+  const cells=[];let maxV=1;
+  gs.forEach(g=>cs.forEach(k=>{const arr=state.sorted.filter(r=>r.grade0===g&&r.abc===k);const rev=sum(arr,r=>r.revenue);maxV=Math.max(maxV,rev);cells.push({g,k,arr,rev});}));
+  let html='<table class="cross"><tr>'+TH_DEFS.c.map((t,i)=>{const k='mTh_c'+(i+1);return `<th${i===0?' style="width:130px"':''} data-t="${k}" data-plain>${T(k)}</th>`;}).join('')+'</tr>';
+  gs.forEach(g=>{
+    html+=`<tr><th>${esc(g)} 级</th>`;
+    cs.forEach(k=>{
+      const cell=cells.find(x=>x.g===g&&x.k===k),col=abcColor(k),alpha=(.05+.5*cell.rev/maxV).toFixed(2);
+      const bg=`color-mix(in srgb, ${col} ${(alpha*100).toFixed(0)}%, var(--surface))`;
+      html+=`<td data-g="${esc(g)}" data-k="${k}" style="background:${bg}">${cell.arr.length?cell.arr.map(r=>`<span class="xcell ${k}">${esc(r.code)}</span>`).join(''):'<span style="color:var(--faint)">—</span>'}<span class="cnt">${cell.arr.length} 个 · ${money(cell.rev)}</span></td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</table><div class="legend" style="margin-top:10px"><span data-t="mCrossLegend" data-plain>'+T('mCrossLegend')+'</span></div>';
+  $('#crossMatrix').innerHTML=html;
+  $$('#crossMatrix td[data-g]').forEach(td=>td.onclick=()=>{
+    const g=td.dataset.g,k=td.dataset.k;
+    if(state.filters.grade===g&&state.filters.abc===k){state.filters.grade='ALL';state.filters.abc='ALL';}
+    else{state.filters.grade=g;state.filters.abc=k;}
+    renderAll();commitSoon();
+  });
+  const hiLow=state.sorted.filter(r=>r.grade0==='A'&&r.abc==='C');
+  const lowHi=state.sorted.filter(r=>(r.grade0==='B'||r.grade0==='C')&&r.abc==='A');
+  const agree=state.sorted.filter(r=>r.grade0===r.abc);
+  const hl=hiLow.length?hiLow.map(r=>`${esc(r.code)}（${money(r.revenue)}）`).join('、'):'无';
+  const lh=lowHi.length?lowHi.map(r=>`${esc(r.code)}（${money(r.revenue)}）`).join('、'):'无';
+  $('#crossInsight').innerHTML=`<ul class="rules">
+    <li>${THtml('mCrossHiLow',{list:hl})}</li>
+    <li>${THtml('mCrossLowHi',{list:lh})}</li>
+    <li>${THtml('mCrossAgree',{a:agree.length,n:state.sorted.length,pct:pct(agree.length/state.sorted.length*100)})}</li>
+    <li>${THtml('mCrossUse')}</li></ul>`;
+  const ratio=state.sorted.length?agree.length/state.sorted.length*100:0;
+  $('#agreeBox').innerHTML=`<div style="font-size:34px;font-weight:800;color:var(--brand);letter-spacing:-1px">${pct(ratio)}</div>
+    <div class="progressbar"><i style="width:${ratio.toFixed(1)}%"></i></div>
+    <div class="note">${ratio>=70?T('mAgreeHigh'):ratio>=40?T('mAgreeMid'):T('mAgreeLow')}<br>${TV('mAgreeTail',{a:agree.length,b:state.sorted.length-agree.length})}</div>`;
+}
+
+/* ---------- 渲染：供应商 ---------- */
+const SCOLOR=['brand','C','B','accent','A','brand2'];
+function renderSuppliers(){
+  const c=C(),sups=state.suppliers.filter(s=>state.filters.sup==='ALL'||s.name===state.filters.sup);
+  const maxS=Math.max(...sups.map(s=>s.revenue),1);
+  $('#supBars').innerHTML=sups.length?sups.map(s=>{
+    const segs=['A','B','C'].map(k=>`<div class="seg" style="width:${(s.revAbc[k]/maxS*100).toFixed(2)}%;background:${abcColor(k)}" title="${k} 类 ${money(s.revAbc[k])}"></div>`).join('');
+    return `<div class="stackrow"><span class="nm" title="${esc(s.name)}">${esc(s.name)}</span><div class="bar">${segs}</div><span class="val">${pct(s.share)}</span></div>`;
+  }).join('')+'<div class="legend"><span><i style="background:var(--a)"></i><span data-t="mLgSupA" data-plain>'+T('mLgSupA')+'</span></span><span><i style="background:var(--b)"></i><span data-t="mLgSupB" data-plain>'+T('mLgSupB')+'</span></span><span><i style="background:var(--c)"></i><span data-t="mLgSupC" data-plain>'+T('mLgSupC')+'</span></span></div>':'<div class="note" data-t="mNoSupData" data-plain>'+T('mNoSupData')+'</div>';
+  /* CR3 仪表 */
+  const W=300,H=160,cx=150,cy=136,R=112,val=clamp(state.cr3,0,100);
+  const pt=(t)=>{const a=Math.PI-t/100*Math.PI;return [(cx+R*Math.cos(a)).toFixed(1),(cy-R*Math.sin(a)).toFixed(1)];};
+  const bg=[],fg=[];for(let i=0;i<=60;i++){bg.push(pt(i/60*100).join(','));if(i/60*100<=val)fg.push(pt(i/60*100).join(','));}
+  const end=pt(val),ang=Math.PI-val/100*Math.PI;
+  $('#gauge').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+    <polyline points="${bg.join(' ')}" fill="none" stroke="${c.grid}" stroke-width="15" stroke-linecap="round"/>
+    <polyline points="${fg.join(' ')}" fill="none" stroke="url(#gGrad)" stroke-width="15" stroke-linecap="round"/>
+    <defs><linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="${c.brand}"/><stop offset="100%" stop-color="${c.accent}"/></linearGradient></defs>
+    <line x1="${cx}" y1="${cy}" x2="${(cx+(R-24)*Math.cos(ang)).toFixed(1)}" y2="${(cy-(R-24)*Math.sin(ang)).toFixed(1)}" stroke="${c.ink}" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="7" fill="${c.ink}"/>
+    <text x="${cx}" y="${cy-30}" text-anchor="middle" font-size="28" font-weight="800" fill="${c.brand}">${pct(val)}</text>
+    <text x="${cx}" y="${cy-12}" text-anchor="middle" font-size="10" fill="${c.muted}">${T('mGaugeSub')}</text>
+    <text x="${cx-R+2}" y="${cy+16}" font-size="9.5" fill="${c.faint}">${T('mGauge0')}</text><text x="${cx+R-2}" y="${cy+16}" text-anchor="end" font-size="9.5" fill="${c.faint}">${T('mGauge100')}</text></svg>
+    <div class="note" style="margin-top:4px">${state.cr3>=70?T('mGaugeHigh'):state.cr3>=45?T('mGaugeMid'):T('mGaugeLow')}</div>`;
+  /* 毛利对比 */
+  const marg=[...sups].sort((a,b)=>b.margin-a.margin),maxM=Math.max(...marg.map(s=>s.margin),1);
+  $('#marginBars').innerHTML=marg.map((s,i)=>`<div class="barrow"><span class="nm" title="${esc(s.name)}">${esc(s.name)}</span><div class="track"><div class="fillv" style="width:${(s.margin/maxM*100).toFixed(1)}%;background:${i===0?c.C:c.brand};animation-delay:${i*70}ms"></div></div><span class="sc">${pct(s.margin)}</span></div>`).join('')||'<div class="note" data-t="mNoDataShort" data-plain>'+T('mNoDataShort')+'</div>';
+  const cr1=state.suppliers[0]?state.suppliers[0].share:0,best=[...state.suppliers].sort((a,b)=>b.margin-a.margin)[0];
+  $('#supInsight').innerHTML=`<ul class="rules">
+    <li>${THtml('mSupFirst',{name:state.suppliers[0]?esc(state.suppliers[0].name):'—',pct:pct(cr1)})}</li>
+    <li>${THtml('mSupCr3',{pct:pct(state.cr3),adv:state.cr3>=70?T('mSupCr3High'):T('mSupCr3Ok')})}</li>
+    <li>${THtml('mSupBest',{name:best?esc(best.name):'—',m:best?pct(best.margin):'—',pct:best?pct(best.share):'—'})}</li>
+    <li>${THtml('mSupCaliber')}</li></ul>`;
+  $('#supTable').innerHTML='<tr>'+thCells('s')+'</tr>'+
+    sups.map((s,i)=>`<tr class="rowsel" data-sup="${esc(s.name)}"><td>${i+1}</td><td><b>${esc(s.name)}</b></td><td>${s.items} 个</td><td><span class="pill p${s.mainAbc}">${s.mainAbc}</span></td><td>${fmt(s.qty)}</td><td>${money(s.revenue)}</td><td>${pct(s.share)}</td><td>${fmt(s.avgBuy)}</td><td>${fmt(s.avgSell)}</td><td><b>${pct(s.margin)}</b></td><td>${esc(s.advice)}</td></tr>`).join('');
+  $$('#supTable .rowsel').forEach(tr=>tr.onclick=()=>{const v=tr.dataset.sup;state.filters.sup=state.filters.sup===v?'ALL':v;renderAll();commitSoon();toast(state.filters.sup==='ALL'?'已取消供方筛选':'已按 '+v+' 筛选');});
+}
+
+/* ---------- 渲染：自动洞察 ---------- */
+function renderInsights(){
+  const top=state.sorted[0],a=state.sorted.filter(r=>r.abc==='A');
+  const hiLow=state.sorted.filter(r=>r.grade0==='A'&&r.abc==='C').length;
+  const lowHi=state.sorted.filter(r=>(r.grade0==='B'||r.grade0==='C')&&r.abc==='A').length;
+  const bestM=[...state.sorted].sort((x,y)=>y.margin-x.margin)[0];
+  const spread=[...state.sorted].sort((x,y)=>(y.sellPrice-y.buyPrice)-(x.sellPrice-x.buyPrice))[0];
+  const topSup=state.suppliers[0];
+  const cards=[
+    ['▣','mIns1','mIns1v',top?{code:esc(top.code),pct:pct(top.share)}:null,2],
+    ['◔','mIns2','mIns2v',{n:a.length,pct:pct(sum(a,r=>r.revenue)/state.total*100)},2],
+    ['⚖','mIns3','mIns3v',{n:hiLow+lowHi},3],
+    ['⚑','mIns4','mIns4v',topSup?{name:esc(topSup.name),pct:pct(topSup.share),cr3:pct(state.cr3)}:null,4],
+    ['↗','mIns5','mIns5v',bestM?{code:esc(bestM.code),pct:pct(bestM.margin)}:null,2],
+    ['¥','mIns6','mIns6v',spread?{code:esc(spread.code),d:fmt(spread.sellPrice-spread.buyPrice)}:null,4]
+  ];
+  $('#insights').innerHTML=cards.map(x=>`<div class="ins" data-go="${x[4]}"><div class="ii">${x[0]}</div><div><div class="it" data-t="${x[1]}" data-plain>${T(x[1])}</div><div class="iv">${x[3]?THtml(x[2],x[3]):'—'}</div></div></div>`).join('');
+  $$('#insights .ins').forEach(el=>el.onclick=()=>goStep(+el.dataset.go));
+}
+
+/* ---------- 渲染：作业卡 ---------- */
+function renderWorkcard(){
+  const sel=$('#skuSelect');
+  sel.innerHTML=state.sorted.map(r=>`<option value="${esc(r.code)}" ${r.code===state.selectedSku?'selected':''}>${esc(r.code)} · ${esc(r.supplier)}｜${r.abc} 类 / ${esc(r.grade0)} 级</option>`).join('');
+  const r=state.sorted.find(x=>x.code===state.selectedSku)||state.sorted[0];
+  if(!r){$('#workcard').innerHTML='<div class="note" data-t="mNoSkuData" data-plain>'+T('mNoSkuData')+'</div>';$('#seedCheck').innerHTML='';return;}
+  const abc=r.abc,items=W(abc,'items'),flow=W(abc,'flow'),checks=W(abc,'check'),col=abcColor(abc);
+  const iKey=i=>abc+'|'+r.code+'|item|'+i, cKey=i=>abc+'|'+r.code+'|check|'+i;
+  $('#workcard').innerHTML=`<div class="wc" style="margin-top:14px">
+    <div class="wc-head"><b>${esc(r.code)}</b><span class="pill p${abc}">${abc} 类 · ${esc(P(abc,'label'))}</span><span class="lv" style="background:${col}">初判 ${esc(r.grade0)} 级</span><span class="badge">占销售收入 ${pct(r.share)}</span><span class="badge">排名 #${r.rank}</span></div>
+    <div class="wc-kpis">
+      <div><span data-t="mWcK1" data-plain>${T('mWcK1')}</span><b>${money(r.revenue)} / ${fmt(r.qty)} kg</b></div>
+      <div><span data-t="mWcK2" data-plain>${T('mWcK2')}</span><b>¥${fmt(r.buyPrice)} / ¥${fmt(r.sellPrice)}</b></div>
+      <div><span data-t="mWcK3" data-plain>${T('mWcK3')}</span><b>${esc(P(abc,'safety'))}</b></div>
+      <div><span data-t="mWcK4" data-plain>${T('mWcK4')}</span><b>${esc(P(abc,'review'))}</b></div>
+    </div>
+    <div style="margin-top:15px"><b style="font-size:12.5px" data-t="mWcFlow" data-plain>${T('mWcFlow')}</b><ol class="timeline">${flow.map((f,i)=>`<li><span class="dot">${i+1}</span>${esc(f)}</li>`).join('')}</ol></div>
+    <div style="margin-top:12px"><b style="font-size:12.5px">${TV('mWcList',{abc:abc,label:P(abc,'label')})}</b><ul class="check">${items.map((x,i)=>`<li class="clickable ${state.checks[iKey(i)]?'done':''}" data-wc="${i}">${esc(x)}</li>`).join('')}</ul></div>
+    <div class="note" style="margin-top:10px">${TV('mWcNote',{focus:P(abc,'focus')})}</div>
+  </div>`;
+  $$('#workcard [data-wc]').forEach(li=>li.onclick=()=>{const key=iKey(+li.dataset.wc);state.checks[key]=!state.checks[key];li.classList.toggle('done',!!state.checks[key]);renderCheckProgress();commitSoon();});
+  $('#seedCheck').innerHTML=checks.map((x,i)=>`<li class="clickable ${state.checks[cKey(i)]?'done':''}" data-sc="${i}">${esc(x)}</li>`).join('');
+  $$('#seedCheck [data-sc]').forEach(li=>li.onclick=()=>{const key=cKey(+li.dataset.sc);state.checks[key]=!state.checks[key];li.classList.toggle('done',!!state.checks[key]);commitSoon();});
+  renderCheckProgress();
+  syncEditables();
+}
+function renderCheckProgress(){
+  const box=$('#seedCheck');if(!box)return;
+  const all=$$('[data-sc]',box),done=all.filter(li=>li.classList.contains('done')).length;
+  let bar=$('#checkProgress');
+  if(!bar){bar=document.createElement('div');bar.id='checkProgress';bar.style.cssText='margin-top:10px';box.parentNode.insertBefore(bar,box.nextSibling);}
+  bar.innerHTML=`<div style="font-size:11.5px;color:var(--muted);margin-bottom:4px">${T('mWcProgress')} <b style="color:var(--brand)">${done} / ${all.length}</b></div><div class="progressbar"><i style="width:${all.length?done/all.length*100:0}%"></i></div>`;
+}
+
+/* ---------- 渲染：结论 ---------- */
+function renderConclusion(){
+  const tk=tokens(),keys=['concl1','concl2','concl3','concl4','concl5'];
+  if(!state.editMode)$('#conclusion').innerHTML=keys.map(k=>`<li>${tpl(TEXT[k]||'',tk)}</li>`).join('');
+  $('#finalCards').innerHTML=[
+    [TEXT.fc1,tk.aPct,TEXT.fc1s,'red'],[TEXT.fc2,tk.aCount+' 个',TEXT.fc2s,'purple'],[TEXT.fc3,tk.cr3,TEXT.fc3s,'blue']
+  ].map(x=>`<div class="kpi ${x[3]}"><div class="top"><span class="lb">${esc(x[0])}</span><span class="ico">◆</span></div><b>${x[1]}</b><div class="sb">${esc(x[2])}</div></div>`).join('');
+}
+function conclusionText(){
+  const tk=tokens();
+  return ['concl1','concl2','concl3','concl4','concl5'].map((k,i)=>(i+1)+'. '+tpl(TEXT[k]||'',tk).replace(/<[^>]+>/g,'')).join('\n');
+}
+
+/* ---------- 总渲染 / 导航 ---------- */
+function renderAnalysis(){
+  applyText();renderFilterBar();renderKpis();renderInsights();renderTreemap();renderPareto();renderDonut();renderLorenz();renderBubble();
+  renderAbcTable();renderAbcInsight();renderCross();renderSuppliers();renderWorkcard();renderConclusion();
+  applyText();syncEditables();
+}
+function syncEditables(){
+  if(!state.editMode)return;
+  $$('[data-t]').forEach(el=>{if(el.contentEditable!=='true'){el.contentEditable='true';el.spellcheck=false;}});
+}
+function renderAll(){renderStepNav();renderTable();renderAnalysis();}
+function goStep(i){
+  state.step=clamp(i,0,STEPS_COUNT-1);
+  $$('.view').forEach((v,k)=>v.classList.toggle('active',k===state.step));
+  $$('.step').forEach((v,k)=>{v.classList.toggle('active',k===state.step);v.classList.toggle('done',k<state.step);});
+  $('#pnum').textContent=(state.step+1)+' / '+STEPS_COUNT;
+  $('#progress').style.width=((state.step+1)/STEPS_COUNT*100)+'%';
+  $('#notesText').textContent=TEXT['note'+state.step]||'';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- 面板 / 编辑模式 ---------- */
+function hintOf(k){
+  if(/^(concl)/.test(k))return esc(TPL_HINT);
+  if(/^(nav|n0d|f0d|r0c|roleBody|brandSub|n1d)/.test(k))return '可含 &lt;b&gt; &lt;span&gt; &lt;small&gt; &lt;br&gt; 等简单标签';
+  if(/^m/.test(k))return '纯文本小字；含 {变量} 的项会随数据自动填数（表头 / 图例 / 图注）';
+  return '纯文本；用 | 分隔多项（作业清单 / 流程 / 勾选项）';
+}
+function renderDrawer(){
+  const q=$('#drawerSearch').value.trim().toLowerCase(),groups=['全部','品牌与导航','页面文案','策略与作业','结论与备注','小字与标注'];
+  $('#drawerGroups').innerHTML=groups.map(g=>`<button class="gbtn ${state.drawerGroup===g?'active':''}" data-g="${g}">${g}</button>`).join('');
+  $$('#drawerGroups .gbtn').forEach(b=>b.onclick=()=>{state.drawerGroup=b.dataset.g;renderDrawer();});
+  const keys=Object.keys(TEXT).filter(k=>{
+    if(state.drawerGroup!=='全部'&&groupOf(k)!==state.drawerGroup)return false;
+    if(!q)return true;
+    return (LABELS[k]||k).toLowerCase().includes(q)||k.toLowerCase().includes(q)||String(TEXT[k]).toLowerCase().includes(q);
+  });
+  $('#drawerList').innerHTML=keys.length?keys.map(k=>`<div class="titem" data-k="${esc(k)}">
+    <div class="th"><b>${esc(LABELS[k]||k)}</b><code>${esc(k)}</code><span class="rs" data-reset="${esc(k)}">恢复默认</span></div>
+    <textarea data-edit="${esc(k)}" spellcheck="false">${esc(TEXT[k])}</textarea>
+    <div class="hint">${hintOf(k)}</div></div>`).join(''):'<div class="note">没有匹配的文案项</div>';
+  $$('#drawerList textarea').forEach(ta=>{
+    ta.addEventListener('input',()=>{const k=ta.dataset.edit;TEXT[k]=ta.value;applyText();renderConclusionTextOnly();commitSoon();});
+  });
+  $$('#drawerList [data-reset]').forEach(b=>b.onclick=()=>{const k=b.dataset.reset;TEXT[k]=DEFAULT_TEXT[k];applyText();renderConclusionTextOnly();renderDrawer();commit();toast('已恢复默认：'+(LABELS[k]||k));});
+}
+function renderConclusionTextOnly(){if(!state.editMode){const tk=tokens();$('#conclusion').innerHTML=['concl1','concl2','concl3','concl4','concl5'].map(k=>`<li>${tpl(TEXT[k]||'',tk)}</li>`).join('');}}
+function openDrawer(on){$('#drawer').classList.toggle('open',on);$('#mask').classList.toggle('on',on);if(on)renderDrawer();}
+function toggleEdit(force){
+  state.editMode=force!=null?force:!state.editMode;
+  document.body.classList.toggle('edit-mode',state.editMode);
+  $('#btnEdit').classList.toggle('on',state.editMode);
+  $('#btnEdit').textContent=state.editMode?'✎ 编辑中':'✎ 编辑文字';
+  if(state.editMode){
+    $$('[data-t]').forEach(el=>{el.contentEditable='true';el.spellcheck=false;});
+    toast('编辑已解锁：直接点击页面文字修改，失焦自动保存');
+  }else{
+    $$('[data-t]').forEach(el=>{el.contentEditable='false';});
+    applyText();renderConclusion();toast('编辑完成，修改已保存');
+  }
+}
+function bindEditSave(){
+  document.addEventListener('focusout',e=>{
+    const el=e.target;if(!state.editMode||!el.dataset||!el.dataset.t)return;
+    const k=el.dataset.t;const v=el.dataset.plain!=null?el.textContent:el.innerHTML;if(TEXT[k]===v)return;
+    TEXT[k]=v;
+    $$('[data-t="'+k+'"]').forEach(o=>{if(o!==el){if(o.dataset.plain!=null)o.textContent=v;else o.innerHTML=v;}});
+    commit();markSaved();
+  });
+  document.addEventListener('keydown',e=>{if(state.editMode&&e.key==='Escape')toggleEdit(false);});
+}
+
+/* ---------- 导入导出 ---------- */
+function download(name,content,type){
+  const blob=new Blob(['\ufeff'+content],{type:type||'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
+function exportCsv(){
+  const header='单品编号,供应商,初判等级,产量(kg),收购单价(元/kg),销售单价(元/kg),销售收入(元),占比%,累计占比%,物流ABC,毛利空间%';
+  const body=state.sorted.map(r=>[r.code,r.supplier,r.grade0,r.qty,r.buyPrice.toFixed(2),r.sellPrice.toFixed(2),r.revenue.toFixed(2),r.share.toFixed(2),r.cumPct.toFixed(2),r.abc,r.margin.toFixed(2)].join(',')).join('\n');
+  const sup='\n\n供应商,供货单品数,产量kg,销售收入,收入占比%,平均收购价,平均销售价,毛利空间%\n'+state.suppliers.map(s=>[s.name,s.items,s.qty,s.revenue.toFixed(2),s.share.toFixed(2),s.avgBuy.toFixed(2),s.avgSell.toFixed(2),s.margin.toFixed(2)].join(',')).join('\n');
+  download('兰州鲜百合物流ABC分析结果.csv',header+'\n'+body+sup,'text/csv;charset=utf-8');toast('分析结果 CSV 已导出');
+}
+function exportReport(){
+  const tk=tokens();
+  const lines=['# 兰州鲜百合 · 物流 ABC 分析报告','','> 生成时间：'+new Date().toLocaleString('zh-CN'),'> 分类阈值：A ≤ '+state.abcA+'% ，B ≤ '+state.abcB+'%','',
+    '## 一、口径','','- 销售收入 = 产量 × 销售单价；按降序累计占比划分 A / B / C','- 毛利空间 =（销售单价 − 收购单价）÷ 销售单价','- 基尼系数：'+state.gini.toFixed(3),'','## 二、分析结论','',conclusionText(),'','## 三、单品明细','',
+    '| 排名 | 单品 | 供方 | 初判 | 产量kg | 销售收入 | 占比 | 累计 | ABC | 毛利空间 |','|---|---|---|---|---|---|---|---|---|---|'];
+  state.sorted.forEach(r=>lines.push(`| ${r.rank} | ${r.code} | ${r.supplier} | ${r.grade0} | ${fmt(r.qty)} | ${money(r.revenue)} | ${pct(r.share)} | ${pct(r.cumPct)} | ${r.abc} | ${pct(r.margin)} |`));
+  lines.push('','## 四、供应商汇总','','| 供方 | 单品数 | 产量kg | 销售收入 | 占比 | 毛利空间 | 建议 |','|---|---|---|---|---|---|---|');
+  state.suppliers.forEach(s=>lines.push(`| ${s.name} | ${s.items} | ${fmt(s.qty)} | ${money(s.revenue)} | ${pct(s.share)} | ${pct(s.margin)} | ${s.advice} |`));
+  lines.push('','## 五、作业规范','');
+  ['A','B','C'].forEach(k=>{lines.push(`### ${k} 类 · ${P(k,'label')}`,'',`- 备货盘点：${P(k,'safety')}`,`- 复盘频率：${P(k,'review')}`,`- 要点：${P(k,'focus')}`,'',...W(k,'items').map(x=>'- '+x),'');});
+  download('兰州鲜百合供应链分析报告.md',lines.join('\n'),'text/markdown;charset=utf-8');toast('分析报告已导出');
+}
+function exportProject(){
+  download('百合供应链分析工程.json',JSON.stringify(snapshot(),null,2),'application/json;charset=utf-8');toast('工程文件已导出（含全部文案与数据）');
+}
+function exportPng(id){
+  const box=$('#'+(id||'pareto')),svg=box&&box.querySelector('svg');if(!svg){toast('当前图表暂无可导出内容');return;}
+  const clone=svg.cloneNode(true);clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
+  const vb=svg.viewBox.baseVal,w=vb.width||960,h=vb.height||420;
+  clone.setAttribute('width',w*2);clone.setAttribute('height',h*2);
+  $$('[class]',clone).forEach(el=>{el.removeAttribute('class');el.removeAttribute('style');});
+  $$('polyline',clone).forEach(el=>el.setAttribute('fill','none'));
+  const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  bg.setAttribute('x','0');bg.setAttribute('y','0');bg.setAttribute('width',w);bg.setAttribute('height',h);bg.setAttribute('fill',getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#fff');
+  clone.insertBefore(bg,clone.firstChild);
+  const s=new XMLSerializer().serializeToString(clone);
+  const img=new Image();
+  img.onload=()=>{const cv=document.createElement('canvas');cv.width=w*2;cv.height=h*2;const ctx=cv.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);
+    const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download=(id==='treemap'?'收入结构树图':'销售收入帕累托图')+'.png';a.click();toast('图表 PNG 已导出');};
+  img.onerror=()=>toast('导出失败，请尝试用浏览器打印/截图');
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+}
+function doAction(act){
+  const map={importCsv:()=>$('#fileCsv').click(),importProject:()=>$('#fileProject').click(),loadSample:loadSample,
+    exportCsv,exportReport,exportProject,exportPng:()=>exportPng('pareto')};
+  if(map[act])map[act]();
+  $('#ddData').classList.remove('open');
+}
+function loadSample(){
+  state.rows=parseCSV(SAMPLE);state.abcA=70;state.abcB=90;state.selectedSku=null;state.selectedSup=null;
+  state.filters={abc:'ALL',sup:'ALL',grade:'ALL',q:''};
+  $('#csvBox').value=SAMPLE;$('#err').textContent='';
+  compute();syncControls();renderAll();commit();toast('已恢复初始示例数据');
+}
+
+/* ---------- 事件绑定 ---------- */
+function bind(){
+  $('#btnUndo').onclick=undo;$('#btnRedo').onclick=redo;
+  $('#btnTheme').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';applyTheme();renderAnalysis();commitSoon();toast('已切换至'+(state.theme==='dark'?'深色':'浅色')+'主题');};
+  $('#btnEdit').onclick=()=>toggleEdit();
+  $('#btnEditDone').onclick=()=>toggleEdit(false);
+  $('#btnEditDrawer').onclick=()=>openDrawer(true);
+  $('#btnDrawer').onclick=()=>openDrawer(true);
+  $('#drawerClose').onclick=()=>openDrawer(false);
+  $('#mask').onclick=()=>openDrawer(false);
+  $('#drawerSearch').oninput=renderDrawer;
+  $('#btnEditToggle2').onclick=()=>{openDrawer(false);toggleEdit(true);};
+  $('#btnDrawerReset').onclick=()=>{if(!confirm('恢复全部文案为默认值？数据、阈值和勾选状态不会受影响。'))return;
+    Object.keys(TEXT).forEach(k=>TEXT[k]=DEFAULT_TEXT[k]);applyText();renderDrawer();renderConclusionTextOnly();commit();toast('全部文案已恢复默认');};
+  $('#btnDataMenu').onclick=e=>{e.stopPropagation();$('#ddData').classList.toggle('open');};
+  document.addEventListener('click',e=>{if(!e.target.closest('#ddData'))$('#ddData').classList.remove('open');});
+  $$('[data-act]').forEach(b=>b.onclick=()=>doAction(b.dataset.act));
+  $$('[data-act2]').forEach(b=>b.onclick=()=>doAction(b.dataset.act2));
+  /* 数据工作台 */
+  $('#btnApply').onclick=()=>{try{state.rows=parseCSV($('#csvBox').value);state.selectedSku=null;$('#err').textContent='';compute();renderAll();commit();toast('数据已应用，共 '+state.rows.length+' 条');}catch(e){$('#err').textContent='导入失败：'+e.message;}};
+  $('#btnSample2').onclick=loadSample;
+  $('#btnClear').onclick=()=>{$('#csvBox').value='';$('#err').textContent='';};
+  /* 位于 data-t 卡片标题内的按钮：用事件委托，保证文案重渲染后依然可用 */
+  const addRow=()=>{
+    const n=state.rows.length+1;
+    state.rows.push({id:n,code:'NEW-'+String(n).padStart(2,'0'),supplier:'新增供方',grade0:'B',qty:1000,buyPrice:20,sellPrice:32});
+    compute();$('#csvBox').value=toCSV(state.rows);renderAll();commit();toast('已新增一行，可直接编辑');
+  };
+  const copyConcl=()=>{const t=conclusionText();if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('结论已复制到剪贴板')).catch(()=>toast('复制失败，请手动选择'));else toast('浏览器不支持自动复制');};
+  document.addEventListener('click',e=>{
+    const t=e.target;
+    if(t.closest('#btnAddRow')){addRow();return;}
+    if(t.closest('#btnDemo')){demoPareto();return;}
+    const png=t.closest('[data-png]');if(png){exportPng(png.dataset.png);return;}
+    if(t.closest('#btnCopyConcl')){copyConcl();return;}
+  });
+  $('#dataTable').addEventListener('input',e=>{
+    const t=e.target;if(!t.dataset||t.dataset.i==null)return;
+    const r=state.rows[+t.dataset.i],f=t.dataset.f;if(!r)return;
+    if(['qty','buyPrice','sellPrice'].includes(f))r[f]=num(t.value);
+    else if(f==='grade0')r[f]=t.value.replace(/级/g,'').toUpperCase();
+    else r[f]=t.value;
+    if(!r.code)r.code='单品'+(+t.dataset.i+1);
+    compute();renderAnalysis();updateRowCalc(t.closest('tr'),r);
+    $('#csvBox').value=toCSV(state.rows);commitSoon();
+  });
+  $('#dataTable').addEventListener('click',e=>{
+    const b=e.target.closest('[data-del]');if(!b)return;
+    if(state.rows.length<=1){toast('至少保留一条数据');return;}
+    state.rows.splice(+b.dataset.del,1);state.rows.forEach((r,i)=>r.id=i);
+    compute();$('#csvBox').value=toCSV(state.rows);renderAll();commit();toast('已删除该单品');
+  });
+  /* 阈值 */
+  const slider=(sid,nid,key,other)=>{
+    const apply=v=>{
+      if(key==='abcA'){state.abcA=clamp(Math.round(v),40,90);if(state.abcB<=state.abcA)state.abcB=state.abcA+1;}
+      else{state.abcB=clamp(Math.round(v),state.abcA+1,99);}
+      compute();syncControls();renderAll();commitSoon();
+    };
+    $(sid).oninput=e=>apply(+e.target.value);
+    $(nid).onchange=e=>apply(+e.target.value);
+  };
+  slider('#sA','#nA','abcA');slider('#sB','#nB','abcB');
+  /* 筛选 */
+  ['fAbc','fSup','fGrade'].forEach(id=>$('#'+id).onchange=e=>{state.filters[{fAbc:'abc',fSup:'sup',fGrade:'grade'}[id]]=e.target.value;renderAll();commitSoon();});
+  let qTimer;$('#fQ').oninput=e=>{clearTimeout(qTimer);qTimer=setTimeout(()=>{state.filters.q=e.target.value;renderAll();commitSoon();},250);};
+  $('#fClear').onclick=()=>{state.filters={abc:'ALL',sup:'ALL',grade:'ALL',q:''};renderAll();commitSoon();toast('筛选已清除');};
+  $('#showLabels').onchange=e=>{state.showLabels=e.target.checked;renderPareto();commitSoon();};
+  /* 文件 */
+  $('#fileCsv').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$('#csvBox').value=rd.result;$('#btnApply').click();};rd.readAsText(f,'UTF-8');e.target.value='';};
+  $('#fileProject').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+    rd.onload=()=>{try{const d=JSON.parse(String(rd.result).replace(/^\ufeff/,''));
+      if(!d||!Array.isArray(d.rows))throw new Error('文件结构不正确');
+      state.rows=d.rows.map((r,i)=>Object.assign({id:i},r));
+      state.abcA=d.abcA||70;state.abcB=d.abcB||90;state.theme=d.theme||'light';state.checks=d.checks||{};
+      state.showLabels=!!d.showLabels;state.filters=Object.assign({abc:'ALL',sup:'ALL',grade:'ALL',q:''},d.filters||{});
+      Object.keys(TEXT).forEach(k=>delete TEXT[k]);Object.assign(TEXT,DEFAULT_TEXT,d.text||{});
+      applyTheme();compute();$('#csvBox').value=toCSV(state.rows);syncControls();renderAll();commit();toast('工程文件已载入');
+    }catch(err){toast('导入失败：'+err.message);}e.target.value='';};
+    rd.readAsText(f,'UTF-8');
+  };
+  /* 图表交互 */
+  $('#skuSelect').onchange=e=>{state.selectedSku=e.target.value;renderWorkcard();};
+  /* 演讲 */
+  $('#btnPresent').onclick=togglePresent;
+  $('#prevBtn').onclick=()=>goStep(state.step-1);$('#nextBtn').onclick=()=>goStep(state.step+1);
+  $('#notesBtn').onclick=()=>{state.notes=!state.notes;document.body.classList.toggle('notes-on',state.notes);};
+  $('#exitBtn').onclick=togglePresent;
+  $('#autoBtn').onclick=()=>{
+    if(state.auto){clearInterval(state.auto);state.auto=null;$('#autoBtn').textContent='自动播放';return;}
+    state.auto=setInterval(()=>goStep(state.step>=STEPS_COUNT-1?0:state.step+1),9000);$('#autoBtn').textContent='暂停播放';
+  };
+  document.addEventListener('keydown',e=>{
+    const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||document.activeElement.isContentEditable;
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!document.activeElement.isContentEditable){e.preventDefault();e.shiftKey?redo():undo();return;}
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();save();toast('已保存到本机');return;}
+    if(typing)return;
+    if(state.presenting){
+      if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();goStep(state.step+1);}
+      if(e.key==='ArrowLeft'){e.preventDefault();goStep(state.step-1);}
+      if(e.key.toLowerCase()==='n')$('#notesBtn').click();
+      if(e.key==='Escape')togglePresent();
+    }else{
+      if(e.key.toLowerCase()==='e')toggleEdit();
+      if(e.key==='ArrowRight'&&e.altKey)goStep(state.step+1);
+      if(e.key==='ArrowLeft'&&e.altKey)goStep(state.step-1);
+    }
+  });
+}
+function togglePresent(){
+  state.presenting=!state.presenting;
+  document.body.classList.toggle('presenting',state.presenting);
+  $('#btnPresent').textContent=state.presenting?'退出演讲':'▶ 演讲模式';
+  if(!state.presenting&&state.auto){clearInterval(state.auto);state.auto=null;$('#autoBtn').textContent='自动播放';}
+}
+function demoPareto(){
+  const bars=$$('#pareto .pbar'),dots=$$('#pareto .pdot'),cap=$('#paretoCaption');
+  bars.forEach(b=>b.classList.add('dim'));dots.forEach(d=>d.classList.add('dim'));
+  let i=0;cap.textContent=TV('mCapDemoStart');
+  const timer=setInterval(()=>{
+    if(i>=bars.length){clearInterval(timer);renderPareto();$('#paretoCaption').textContent=TV('mCapDemoDone',{a:state.abcA,b:state.abcB});return;}
+    bars[i].classList.remove('dim');if(dots[i])dots[i].classList.remove('dim');
+    const r=state.sorted[i];cap.textContent=TV('mCapDemoStep',{i:i+1,code:esc(r.code),rev:money(r.revenue),cum:pct(r.cumPct),abc:r.abc});
+    i++;
+  },620);
+}
+
+/* ---------- 启动 ---------- */
+collectDefaults();
+const restored=loadSaved();
+if(!restored){state.rows=parseCSV(SAMPLE);}
+applyTheme();bind();bindEditSave();
+compute();$('#csvBox').value=toCSV(state.rows);syncControls();renderAll();goStep(0);
+hist=[JSON.stringify(snapshot())];hi=0;
+</script>
+
+
+</body></html>
