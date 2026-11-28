@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>绿链云仓 · 智慧物流数字孪生驾驶舱</title>
+<style>
+  :root{
+    --bg:#061022; --panel:rgba(9,26,48,.82); --line:#173c5c;
+    --cyan:#00e5ff; --green:#00f0a8; --amber:#ffb648; --red:#ff5d70; --violet:#b388ff;
+    --blue:#42a5f5; --yellow:#ffd54f; --txt:#dcefff; --sub:#7ba4c6; --dim:#4d7392;
+    --transport:#00e5ff; --store:#42a5f5; --transit:#ffd54f; --precool:#ffb648;
+    --loss:#ff5d70; --reefer:#00f0a8; --handle:#78909c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);overflow:hidden;
+    font-family:"Microsoft YaHei","PingFang SC",-apple-system,"Segoe UI",sans-serif}
+  .app{height:100vh;display:grid;grid-template-rows:62px 38px 1fr 30px;gap:8px;padding:10px 16px}
+  .header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:34px;height:34px;flex:none}
+  .brand h1{font-size:19px;font-weight:600;letter-spacing:2px}
+  .brand h1 span{color:var(--cyan)}
+  .brand p{font-size:11px;color:var(--sub);letter-spacing:3px;margin-top:2px}
+  .head-right{display:flex;align-items:center;gap:18px}
+  .live{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--green)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.6s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  .clock{font-family:Consolas,monospace;font-size:15px;color:var(--txt);letter-spacing:1px}
+
+  .main{display:grid;grid-template-columns:272px 1fr 300px;gap:10px;min-height:0}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+  .panel::before{content:"";position:absolute;left:0;top:0;width:24px;height:2px;background:var(--cyan)}
+  .panel-r{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#1d4a6e transparent}
+  .panel-r::-webkit-scrollbar{width:5px}
+  .panel-r::-webkit-scrollbar-thumb{background:#1d4a6e;border-radius:3px}
+  .ptitle{font-size:12px;color:var(--cyan);letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px;flex:none}
+  .ptitle::before{content:"";width:3px;height:11px;background:var(--cyan);border-radius:2px}
+
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:none}
+  .kpi{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.14);border-radius:6px;padding:9px 10px}
+  .kpi .lbl{font-size:11px;color:var(--sub)}
+  .kpi .val{font-family:Consolas,monospace;font-size:23px;font-weight:600;line-height:1.15;margin-top:3px}
+  .kpi .unit{font-size:11px;color:var(--sub);font-weight:400;margin-left:2px}
+  .kpi .chg{font-size:10px;margin-top:2px}
+  .down{color:var(--green)} .up{color:var(--red)}
+
+  .section-gap{margin-top:8px}
+
+  /* ===== 路线重构成本变动 ===== */
+  .cost-shift{flex:none;background:linear-gradient(135deg,rgba(0,240,168,.09),rgba(0,229,255,.03));border:1px solid rgba(0,240,168,.22);border-radius:7px;padding:10px}
+  .cs-top{display:flex;align-items:center;justify-content:space-between;gap:4px}
+  .cs-old,.cs-new{flex:1}
+  .cs-old span,.cs-new span{display:block;font-size:10px;color:var(--sub);margin-bottom:2px}
+  .cs-old b{font-family:Consolas,monospace;font-size:21px;color:var(--red);font-weight:600}
+  .cs-new b{font-family:Consolas,monospace;font-size:21px;color:var(--green);font-weight:600;text-shadow:0 0 12px rgba(0,240,168,.45)}
+  .cs-old i,.cs-new i{font-size:9px;color:var(--dim);font-style:normal;margin-left:2px}
+  .cs-arrow{color:var(--dim);font-size:18px}
+  .cs-save{margin-top:8px;padding-top:7px;border-top:1px dashed rgba(0,240,168,.25);font-size:10px;color:var(--sub)}
+  .cs-save #savePct{font-family:Consolas,monospace;font-size:18px;color:var(--green);font-weight:700;margin-right:6px;text-shadow:0 0 10px rgba(0,240,168,.4)}
+  .cs-save b{color:var(--green);font-family:Consolas,monospace;font-size:13px}
+  .stack-wrap{margin-top:7px}
+  .stack-row{margin:5px 0}
+  .stack-row .sl{font-size:9px;color:var(--dim);margin-bottom:2px;display:flex;justify-content:space-between}
+  .stack-bar{display:flex;height:9px;border-radius:3px;overflow:hidden;background:rgba(255,255,255,.04)}
+  .stack-bar i{height:100%;transition:width .7s cubic-bezier(.22,1,.36,1)}
+  .cost-legend{display:flex;flex-wrap:wrap;gap:3px 8px;margin-top:7px;font-size:9px;color:var(--dim)}
+  .cost-legend span{display:flex;align-items:center;gap:3px}
+  .cost-legend i{width:6px;height:6px;border-radius:1px;display:inline-block}
+
+  /* ===== 地图 ===== */
+  .stage{position:relative;background:#0a1c30;border:1px solid var(--line);border-radius:8px;overflow:hidden;min-height:0}
+  .netmap{width:100%;height:100%;display:block}
+  .map-tag{position:absolute;left:12px;top:12px;z-index:5;background:rgba(6,16,34,.85);border:1px solid var(--line);border-radius:6px;padding:8px 11px;font-size:11px;pointer-events:none}
+  .map-tag b{color:var(--cyan);font-size:13px}
+  .map-tag .rt{color:var(--green);margin-top:3px}
+  .legend{position:absolute;right:12px;bottom:12px;z-index:5;background:rgba(6,16,34,.85);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:10px;color:var(--sub);pointer-events:none}
+  .legend div{display:flex;align-items:center;gap:6px;margin:3px 0}
+  .lg{width:14px;height:3px;border-radius:2px;display:inline-block}
+  .route-flash{position:absolute;left:50%;top:14%;transform:translate(-50%,-8px);z-index:8;background:rgba(6,16,34,.94);border:1px solid var(--green);border-radius:8px;padding:10px 18px;text-align:center;opacity:0;pointer-events:none;transition:opacity .35s,transform .35s;box-shadow:0 0 30px rgba(0,240,168,.2)}
+  .route-flash.show{opacity:1;transform:translate(-50%,0)}
+  .route-flash .rf-t{font-size:10px;color:var(--sub);letter-spacing:2px}
+  .route-flash .rf-v{font-family:Consolas,monospace;font-size:19px;font-weight:700;color:var(--green);margin-top:3px}
+  .route-flash .rf-p{font-size:10px;color:var(--sub);margin-top:4px}
+
+  /* ===== 右侧 ===== */
+  .scenes{display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:none}
+  .scene{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;padding:6px 5px;text-align:center;cursor:pointer;transition:.2s;font-size:11px;color:var(--sub)}
+  .scene:hover{background:rgba(0,229,255,.1)}
+  .scene.on{background:rgba(0,229,255,.16);border-color:var(--cyan);color:var(--txt);box-shadow:0 0 12px rgba(0,229,255,.18)}
+  .scene .ic{font-size:15px;display:block;margin-bottom:3px}
+  .route-card{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.16);border-radius:6px;padding:6px 9px;margin-top:6px;flex:none}
+  .route-card .rn{font-size:12px;color:var(--cyan);font-weight:600}
+  .route-card .rp{font-size:11px;color:var(--txt);margin:5px 0;line-height:1.45}
+  .route-card .rp i{color:var(--dim);font-style:normal}
+  .chip{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(0,240,168,.13);color:var(--green);margin-right:5px}
+
+  /* 车辆能源对比 */
+  .veh-tabs{display:flex;gap:6px;flex:none}
+  .vt{flex:1;text-align:center;font-size:11px;padding:5px 0;border:1px solid var(--line);border-radius:5px;color:var(--sub);cursor:pointer;transition:.2s;background:rgba(255,255,255,.03)}
+  .vt.on{border-color:var(--amber);color:var(--amber);background:rgba(255,182,72,.12)}
+  .vt[data-v="ev"].on{border-color:var(--green);color:var(--green);background:rgba(0,240,168,.12)}
+  .veh-comp{margin-top:8px;font-size:10px;flex:none}
+  .veh-row{margin-bottom:4px}
+  .veh-row .vh{display:flex;justify-content:space-between;color:var(--sub);margin-bottom:3px}
+  .veh-row .vh b{font-family:Consolas,monospace;color:var(--txt);font-weight:500}
+  .vbar{height:8px;border-radius:4px;background:rgba(255,255,255,.05);overflow:hidden}
+  .vbar i{display:block;height:100%;border-radius:4px;transition:width .7s cubic-bezier(.22,1,.36,1)}
+  .veh-sum{margin-top:4px;padding:5px 7px;background:rgba(0,240,168,.08);border:1px solid rgba(0,240,168,.18);border-radius:5px;font-size:10px;color:var(--sub);line-height:1.5}
+  .veh-sum b{color:var(--green);font-family:Consolas,monospace}
+
+  /* ABC 分类明细 */
+  .abc-tbl{width:100%;border-collapse:collapse;font-size:10px;flex:none}
+  .abc-tbl th{color:var(--dim);font-weight:400;text-align:right;padding:3px 2px;border-bottom:1px solid var(--line);font-size:9px}
+  .abc-tbl th:first-child,.abc-tbl td:first-child{text-align:left}
+  .abc-tbl td{text-align:right;padding:3px 2px;border-bottom:1px solid rgba(23,60,92,.45);font-family:Consolas,monospace;color:var(--txt)}
+  .abc-tbl tr:last-child td{border-bottom:none}
+  .abc-tbl .grand td{color:var(--cyan);font-weight:600;border-top:1px solid var(--line)}
+  .abc-tag{display:inline-block;width:15px;height:15px;line-height:15px;text-align:center;border-radius:3px;font-size:9px;font-weight:700}
+  .tag-A{background:rgba(0,240,168,.16);color:var(--green)}
+  .tag-B{background:rgba(0,229,255,.16);color:var(--cyan)}
+  .tag-C{background:rgba(255,182,72,.16);color:var(--amber)}
+  .abc-note{font-size:9px;color:var(--dim);line-height:1.45;margin-top:5px;flex:none}
+
+  /* 参数滑块 */
+  .params{flex:none}
+  .param{margin-bottom:4px}
+  .pl{display:flex;justify-content:space-between;font-size:10px;color:var(--sub)}
+  .pl b{font-family:Consolas,monospace;color:var(--cyan);font-weight:500}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:linear-gradient(90deg,#1a6b8c,#173c5c);border-radius:2px;outline:none;margin-top:2px;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:12px;height:12px;border:none;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);cursor:pointer}
+
+  .temp-svg{width:100%;height:72px;display:block;flex:none}
+  .temp-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-top:2px;flex:none}
+  .temp-float{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:5;background:rgba(6,16,34,.9);border:1px solid var(--line);border-radius:7px;padding:7px 12px;width:340px;pointer-events:none}
+  .temp-float .tf-t{font-size:10px;color:var(--cyan);letter-spacing:1px;margin-bottom:2px}
+  .temp-float .temp-svg{height:60px}
+
+  .footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:6px;font-size:10px;color:var(--dim)}
+  .footer b{color:var(--sub);font-weight:400}
+
+  /* ===== 下钻交互：可点击节点 / 小车 ===== */
+  .drill-node{cursor:pointer}
+  .drill-node:hover circle:nth-of-type(1){stroke-width:4}
+  #car{cursor:pointer}
+  #car:hover{r:12}
+  .drill-tip{position:absolute;right:12px;top:11px;z-index:6;background:rgba(6,16,34,.88);border:1px solid var(--cyan);border-radius:6px;padding:7px 10px;font-size:10px;color:var(--sub);pointer-events:none}
+  .drill-tip b{color:var(--cyan)}
+
+  /* ===== 下钻浮层 ===== */
+  .ov{position:fixed;inset:0;z-index:100;background:rgba(2,8,20,.82);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center}
+  .ov.show{display:flex}
+  .modal{width:min(1180px,95vw);height:min(720px,92vh);background:#08182c;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+  .mhead{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(0,229,255,.08),transparent)}
+  .mhead .mt{font-size:15px;font-weight:600;color:var(--cyan);letter-spacing:1px}
+  .mhead .mt small{font-size:10px;color:var(--sub);font-weight:400;margin-left:8px;letter-spacing:0}
+  .mclose{width:28px;height:28px;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.04);color:var(--sub);font-size:17px;line-height:1;cursor:pointer}
+  .mclose:hover{border-color:var(--red);color:var(--red)}
+  .mbody{flex:1;min-height:0;display:grid;grid-template-columns:1fr 268px}
+  .mstage{position:relative;background:radial-gradient(ellipse at 50% 42%,#0d2742,#061426 72%);min-height:0;overflow:hidden}
+  .mstage canvas{width:100%;height:100%;display:block}
+  .mstage .badge{position:absolute;left:12px;top:11px;background:rgba(6,16,34,.85);border:1px solid var(--line);border-radius:6px;padding:7px 10px;font-size:10px;color:var(--sub);pointer-events:none}
+  .mstage .badge b{color:var(--green);font-size:12px}
+  .mstage .lg{position:absolute;right:12px;bottom:11px;background:rgba(6,16,34,.85);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:9px;color:var(--sub);pointer-events:none}
+  .mstage .lg div{display:flex;align-items:center;gap:6px;margin:3px 0}
+  .mstage .lg i{width:12px;height:8px;border-radius:2px;display:inline-block}
+  .mside{border-left:1px solid var(--line);padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+  .mside .ptitle{margin-bottom:2px}
+  .wm{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.14);border-radius:6px;padding:8px 10px}
+  .wm .l{font-size:10px;color:var(--sub)}
+  .wm .v{font-family:Consolas,monospace;font-size:21px;font-weight:600;margin-top:1px}
+  .wm .u{font-size:10px;color:var(--sub);font-weight:400;margin-left:2px}
+  .wm .s{font-size:9px;color:var(--dim);margin-top:1px}
+  .obar{height:8px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:5px}
+  .obar i{display:block;height:100%;border-radius:4px}
+  .zline{display:flex;justify-content:space-between;font-size:10px;padding:5px 0;border-bottom:1px dashed rgba(23,60,92,.55);color:var(--sub)}
+  .zline b{font-family:Consolas,monospace;color:var(--txt)}
+  .agvline{display:flex;align-items:center;gap:6px;font-size:10px;padding:4px 0;color:var(--sub)}
+  .agvline .led{width:7px;height:7px;border-radius:50%;flex:none;box-shadow:0 0 7px currentColor}
+  .agvline .nm{font-family:Consolas,monospace;color:var(--txt);width:48px}
+  .agvline .pc{margin-left:auto;font-family:Consolas,monospace;color:var(--cyan)}
+  .mnote{font-size:9px;color:var(--dim);line-height:1.5;margin-top:auto}
+
+  /* 车厢浮窗 */
+  .cab{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:14px;height:100%;min-height:0}
+  .cabcard{background:rgba(0,229,255,.04);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;min-height:0}
+  .cabcard h3{font-size:12px;color:var(--cyan);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .cabcard h3::before{content:"";width:3px;height:11px;background:var(--cyan);border-radius:2px}
+  .cabchart{flex:1;min-height:120px;width:100%;display:block}
+  .cab-kpi{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .cab-kpi .k{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+  .cab-kpi .k .l{font-size:10px;color:var(--sub)}
+  .cab-kpi .k .v{font-family:Consolas,monospace;font-size:20px;font-weight:600;margin-top:2px}
+  .cab-kpi .k .v small{font-size:10px;color:var(--sub);font-weight:400}
+  .door{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;background:rgba(0,240,168,.08);border:1px solid rgba(0,240,168,.25);font-size:11px;color:var(--green)}
+  .door .ic{font-size:16px}
+  .door b{font-family:Consolas,monospace;font-size:13px}
+  .vib{height:46px;width:100%;display:block;margin-top:4px}
+  .cab-sum{grid-column:1/-1;background:linear-gradient(135deg,rgba(0,240,168,.09),rgba(0,229,255,.03));border:1px solid rgba(0,240,168,.22);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--sub);line-height:1.6}
+  .cab-sum b{color:var(--green)}
+
+  /* ===== 全屏下钻：完整仓储数字孪生 ===== */
+  .whfull{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;flex-direction:column}
+  .whfull.show{display:flex;animation:whIn .38s cubic-bezier(.22,1,.36,1)}
+  @keyframes whIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+  .whbar{height:54px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+    border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(0,229,255,.10),rgba(0,240,168,.05),transparent)}
+  .whbar-t{font-size:15px;font-weight:600;color:var(--cyan);letter-spacing:1px;display:flex;align-items:center;gap:10px}
+  .whbar-t::before{content:"▦";font-size:18px;color:var(--green)}
+  .whbar-t small{font-size:10px;color:var(--sub);font-weight:400;letter-spacing:0;margin-left:6px}
+  .whback{border:1px solid var(--line);border-radius:6px;background:rgba(255,93,112,.08);color:var(--sub);
+    font-size:12px;padding:8px 14px;cursor:pointer;transition:.2s;font-family:inherit}
+  .whback:hover{border-color:var(--red);color:var(--red);background:rgba(255,93,112,.16)}
+  .whframe{flex:1;min-height:0;position:relative;background:#061022}
+  .whframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#061022}
+
+  /* ===== 统一版：唯一数据源条 / 编辑态 / 数据底座 ===== */
+  .head-right{flex-wrap:wrap;gap:12px}
+  .hbtns{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .hbtn{font-family:inherit;font-size:11px;padding:5px 9px;border:1px solid rgba(0,229,255,.32);border-radius:6px;
+    background:rgba(0,229,255,.07);color:var(--txt);cursor:pointer;white-space:nowrap;transition:.2s}
+  .hbtn:hover{border-color:var(--cyan);background:rgba(0,229,255,.16)}
+  .hbtn.on{border-color:var(--green);color:var(--green);background:rgba(0,240,168,.14)}
+  .hbtn.warn{border-color:rgba(255,93,112,.42)}
+  .hbtn.warn:hover{border-color:var(--red);color:var(--red);background:rgba(255,93,112,.12)}
+  .saveStatus{font-size:10px;color:var(--green);white-space:nowrap}
+  .sourcebar{display:flex;align-items:center;gap:14px;background:linear-gradient(90deg,rgba(0,240,168,.11),rgba(0,229,255,.05));
+    border:1px solid rgba(0,240,168,.28);border-radius:7px;padding:0 14px;font-size:11px;color:var(--sub);min-width:0}
+  .sb-src{white-space:nowrap}
+  .sb-src b{color:var(--green)}
+  .sb-nums{display:flex;gap:18px;flex:1;justify-content:center;flex-wrap:wrap}
+  .sb-nums span{white-space:nowrap}
+  .sb-nums b{font-family:Consolas,monospace;font-size:15px;color:#fff;font-weight:700;margin-left:4px}
+  .sb-tag{color:var(--green);font-size:11px;white-space:nowrap}
+  .editTip{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:400;display:none;
+    background:rgba(6,16,34,.96);border:1px solid var(--green);border-radius:8px;padding:8px 14px;
+    font-size:10px;line-height:1.5;color:var(--txt);box-shadow:0 10px 30px rgba(0,0,0,.5);
+    width:min(720px,90vw);text-align:center}
+  body.editing [data-edit]{outline:1px dashed rgba(0,240,168,.65);outline-offset:2px;border-radius:3px;cursor:text}
+  [data-edit][contenteditable="true"]:focus{outline:2px solid var(--green);background:rgba(255,255,255,.06)}
+  .ec[contenteditable="true"]{cursor:text;border-bottom:1px dashed rgba(0,229,255,.55)}
+  .ec[contenteditable="true"]:hover{background:rgba(0,229,255,.13)}
+  .ec[contenteditable="true"]:focus{background:rgba(0,240,168,.16);outline:1px solid var(--green);color:#fff}
+  .brief-mini{font-size:10px;color:var(--dim);margin-top:9px;line-height:1.6}
+  .hublink{display:inline-block;color:var(--green);cursor:pointer;border-bottom:1px dashed rgba(0,240,168,.5)}
+  .hublink:hover{color:#fff}
+
+  /* 数据底座（全屏面板） */
+  .hub{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;flex-direction:column}
+  .hub.show{display:flex;animation:whIn .3s cubic-bezier(.22,1,.36,1)}
+  .hubbar{height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;
+    border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(0,229,255,.12),rgba(0,240,168,.05),transparent)}
+  .hubbar-t{font-size:15px;font-weight:600;color:var(--cyan);letter-spacing:1px;white-space:nowrap}
+  .hubbar-t::before{content:"▦";font-size:18px;color:var(--green);margin-right:8px}
+  .hubbar-t small{font-size:10px;color:var(--sub);font-weight:400;letter-spacing:0;margin-left:10px}
+  .hubbtns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .hubbody{flex:1;min-height:0;display:grid;grid-template-columns:1.4fr .9fr;gap:12px;padding:12px 16px;overflow:hidden}
+  .hubcol{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#1d4a6e transparent;display:flex;flex-direction:column;gap:12px;padding-right:4px}
+  .hubcol::-webkit-scrollbar{width:6px}
+  .hubcol::-webkit-scrollbar-thumb{background:#1d4a6e;border-radius:3px}
+  .hubcard{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px 14px;flex:none}
+  .hubcard h3{font-size:13px;color:var(--cyan);font-weight:600;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .hubcard h3::before{content:"";width:3px;height:12px;background:var(--cyan);border-radius:2px}
+  .hub-tbl-wrap{overflow-x:auto}
+  .hubtbl{width:100%;border-collapse:collapse;font-size:11.5px;white-space:nowrap}
+  .hubtbl th{color:var(--dim);font-weight:500;text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);font-size:10px;background:rgba(0,229,255,.04)}
+  .hubtbl th:first-child,.hubtbl th:nth-child(2),.hubtbl th:nth-child(3),.hubtbl th:last-child{text-align:left}
+  .hubtbl td{text-align:right;padding:6px 8px;border-bottom:1px solid rgba(23,60,92,.5);font-family:Consolas,monospace;color:var(--txt)}
+  .hubtbl td:first-child,.hubtbl td:nth-child(2),.hubtbl td:nth-child(3),.hubtbl td:last-child{text-align:left}
+  .hubtbl tr.grand td{color:var(--green);font-weight:700;border-top:1px solid var(--line);border-bottom:none;background:rgba(0,240,168,.06)}
+  .hubtbl .ok{color:var(--green);font-weight:600}
+  .aligntbl td{font-family:inherit;font-size:11px;line-height:1.5;white-space:normal}
+  .aligntbl th{white-space:nowrap}
+  .hubnote{font-size:10.5px;color:var(--sub);line-height:1.65;margin-top:10px;padding:9px 11px;background:rgba(0,229,255,.05);border:1px dashed rgba(0,229,255,.22);border-radius:6px}
+  .hubnote b{color:var(--green)}
+  .hub-sum{font-size:10.5px;color:var(--sub);line-height:1.6;margin-top:9px}
+  .hub-sum b{color:var(--green);font-family:Consolas,monospace}
+  .briefrow{display:flex;gap:9px;font-size:11.5px;color:var(--txt);line-height:1.65;padding:7px 0;border-bottom:1px dashed rgba(23,60,92,.55)}
+  .briefrow:last-child{border-bottom:none}
+  .briefrow>b{flex:none;width:20px;height:20px;line-height:20px;text-align:center;border-radius:5px;background:rgba(0,229,255,.14);color:var(--cyan);font-size:11px}
+  .briefrow .hl{color:var(--green);font-weight:700;font-family:Consolas,monospace}
+  .dict{font-size:11px;color:var(--sub);line-height:1.85}
+  .dict b{color:var(--cyan);font-weight:600}
+  .howto{font-size:11px;color:var(--sub);line-height:1.8;padding-left:16px}
+  .howto li{margin-bottom:5px}
+  .howto b{color:var(--green)}
+  @media(max-width:1000px){.hubbody{grid-template-columns:1fr;overflow-y:auto}.hubcol{overflow:visible}.sb-nums{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="18" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity=".5"/>
+        <path d="M20 8C12 12 12 24 20 32C28 24 28 12 20 8Z" fill="none" stroke="#00f0a8" stroke-width="1.5"/>
+        <path d="M20 32V16" stroke="#00e5ff" stroke-width="1.5"/>
+        <circle cx="20" cy="20" r="3" fill="#00e5ff"/>
+      </svg>
+      <div>
+        <h1>绿链云仓 · 智慧物流<span>数字孪生驾驶舱</span></h1>
+        <p data-edit="headSub">HUB TO MARKET · 源头到市场全链路数字孪生与成本推演 ｜ 唯一数据源：陇原百合最终数据表</p>
+      </div>
+    </div>
+    <div class="head-right">
+      <div class="hbtns">
+        <button class="hbtn" id="btnEdit">✎ 全文字编辑</button>
+        <button class="hbtn" id="btnHub">▦ 数据底座</button>
+        <button class="hbtn" id="btnExportHTML">↧ 导出可编辑页</button>
+        <button class="hbtn warn" id="btnReset">↺ 恢复默认</button>
+        <span class="saveStatus" id="saveStatus"></span>
+      </div>
+      <div class="live"><span class="dot"></span>系统运行中</div>
+      <div class="clock" id="clock">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- 唯一数据源 · 一眼看懂 -->
+  <div class="sourcebar">
+    <div class="sb-src">唯一数据源 · <b>陇原百合最终数据表.xlsx</b> ｜ 物流ABC计算表（Sheet1）</div>
+    <div class="sb-nums">
+      <span>单品 <b id="sbN">10</b> 项</span>
+      <span>收购量 <b id="sbQty">13,600</b> kg</span>
+      <span>销售收入 <b id="sbRev">¥462,400</b></span>
+      <span>盈利 <b id="sbProfit">¥192,400</b></span>
+      <span>加权货值 <b id="sbPrice">¥34.00</b>/kg</span>
+    </div>
+    <div class="sb-tag" data-edit="sbTag">✅ 网页模式 · 老原版 · 最终表 三源口径统一</div>
+  </div>
+
+  <div class="main">
+    <!-- ============ 左栏 ============ -->
+    <div class="panel">
+      <div class="ptitle">全链路实时指标</div>
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">运输时效</div><div class="val"><span id="kTime">--</span><span class="unit">h</span></div><div class="chg down" id="cTime">--</div></div>
+        <div class="kpi"><div class="lbl">综合成本</div><div class="val"><span id="kCost">--</span><span class="unit">元/kg</span></div><div class="chg down" id="cCost">--</div></div>
+        <div class="kpi"><div class="lbl">链路货损率</div><div class="val"><span id="kLoss">--</span><span class="unit">%</span></div><div class="chg down" id="cLoss">--</div></div>
+        <div class="kpi"><div class="lbl">干线空驶率</div><div class="val"><span id="kEmpty">--</span><span class="unit">%</span></div><div class="chg down" id="cEmpty">--</div></div>
+      </div>
+
+      <div class="section-gap ptitle">路线重构 · 成本变动</div>
+      <div class="cost-shift">
+        <div class="cs-top">
+          <div class="cs-old"><span>改造前 · 基线</span><b id="oldCost">--</b><i>元/kg</i></div>
+          <div class="cs-arrow">→</div>
+          <div class="cs-new"><span>改造后 · 当前</span><b id="newCost">--</b><i>元/kg</i></div>
+        </div>
+        <div class="cs-save"><span id="savePct">--</span>每批次节省 <b id="saveAmt">¥--</b></div>
+        <div class="stack-wrap" id="stackWrap"></div>
+        <div class="cost-legend" id="costLegend"></div>
+      </div>
+      <div class="brief-mini" data-edit="briefMini">成本为仿真测算：7 项逐项累加（运输 / 产地仓储 / 中转 / 预冷 / 货损 / 制冷 / 装卸）。货量与货值由最终数据表自动带出，改 ABC 明细或拖动右侧滑块即全页实时重算。</div>
+      <button class="hbtn open-hub" id="openHubMini" style="margin-top:8px;width:100%">▦ 数据底座 · 全字段明细 / 口径统一 / 公式速查</button>
+    </div>
+
+    <!-- ============ 中间路网 ============ -->
+    <div class="stage">
+      <svg class="netmap" id="netmap" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M40 0H0V40" fill="none" stroke="#123150" stroke-width="0.6"/>
+          </pattern>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="800" height="500" fill="url(#grid)"/>
+        <g id="edges"></g>
+        <g id="activePath"></g>
+        <g id="nodes"></g>
+        <circle id="car" cx="0" cy="0" r="9" fill="#00e5ff" stroke="#fff" stroke-width="2" filter="url(#glow)"/>
+      </svg>
+      <div class="map-tag"><b>源头基地 A → 市场</b> 六节点全链路孪生路网<div class="rt" style="color:var(--amber)">东部专线 · 干线运输路由 T-01</div><div class="rt" id="mapRoute">● 最优路径计算中…</div></div>
+      <div class="route-flash" id="routeFlash">
+        <div class="rf-t">ROUTE RECONSTRUCTED · 路线重构</div>
+        <div class="rf-v" id="rfVal">--</div>
+        <div class="rf-p" id="rfPath">--</div>
+      </div>
+      <div class="temp-float">
+        <div class="tf-t">冷链温控仿真 · 全程 0–4℃ 区间</div>
+        <svg class="temp-svg" id="tempSvg" viewBox="0 0 260 96" preserveAspectRatio="none"></svg>
+        <div class="temp-lbl"><span>采后 0h</span><span>6h</span><span>12h</span><span>24h</span></div>
+      </div>
+      <div class="legend">
+        <div><i class="lg" style="background:#00e5ff"></i>当前最优路径</div>
+        <div><i class="lg" style="background:#2a5578"></i>候选路段</div>
+        <div><i class="lg" style="background:#ffb648"></i>源头　<i class="lg" style="background:#00e5ff"></i>预冷</div>
+        <div><i class="lg" style="background:#42a5f5"></i>冷链枢纽 Hub-1　<i class="lg" style="background:#ffd54f"></i>配送站 Site-C</div>
+        <div><i class="lg" style="background:#00f0a8"></i>枢纽　<i class="lg" style="background:#b388ff"></i>市场</div>
+      </div>
+    </div>
+
+    <!-- ============ 右栏 ============ -->
+    <div class="panel panel-r">
+      <div class="ptitle">场景控制台</div>
+      <div class="scenes">
+        <div class="scene" data-s="base"><span class="ic">▧</span>痛点基线</div>
+        <div class="scene on" data-s="proj"><span class="ic">◆</span>项目方案</div>
+        <div class="scene" data-s="cost"><span class="ic">◇</span>成本优先</div>
+        <div class="scene" data-s="time"><span class="ic">▲</span>时效优先</div>
+      </div>
+      <div class="route-card">
+        <div class="rn" id="rName">--</div>
+        <div class="rp" id="rPath">--</div>
+        <div><span class="chip" id="rChip">--</span><span style="font-size:10px;color:var(--sub)" id="rNote">--</span></div>
+      </div>
+
+      <div class="section-gap ptitle">新能源 vs 燃油车</div>
+      <div class="veh-tabs">
+        <div class="vt on" data-v="ev">⚡ 新能源车</div>
+        <div class="vt" data-v="fuel">⛽ 燃油车</div>
+      </div>
+      <div class="veh-comp" id="vehComp"></div>
+
+      <div class="section-gap ptitle">ABC 分类明细 · <span style="color:var(--green)">最终数据表（蓝色数字可改）</span></div>
+      <table class="abc-tbl" id="abcTbl"></table>
+      <div class="abc-note" id="abcNote"></div>
+
+      <div class="section-gap ptitle">仿真参数 · 拖动实时重算</div>
+      <div class="params" id="params"></div>
+      <div style="font-size:9px;color:var(--dim);margin-top:5px;line-height:1.4;flex:none">参数修改后，主指标、成本拆解与车辆对比同步重算。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div data-edit="footLeft">唯一数据源：陇原百合最终数据表.xlsx · 网页模式 / 老原版 / 最终表三源口径统一 · 仿真值仅用于方案对比</div>
+    <div><b>操作：</b>改蓝色数字即联动重算 → 切换场景看路线重构 → <b style="color:var(--cyan)">点节点看库内孪生</b> → <b style="color:var(--cyan)">点小车看车厢数据</b> → <b style="color:var(--green)">数据底座看口径与导出</b></div>
+  </div>
+</div>
+
+<!-- 编辑模式提示条 -->
+<div class="editTip" id="editTip">✎ 全文字编辑：点任意文字改写 · 选中后用底部工具条改字体 / 字号 / 颜色 / 加粗 · 路网等 SVG 文字点击弹窗编辑 · 自动保存并随「导出可编辑页」打包 · 点「✓ 完成编辑」退出</div>
+
+<!-- ============ 数据底座：唯一数据源 / 可编辑明细 / 口径统一 ============ -->
+<div class="hub" id="hub">
+  <div class="hubbar">
+    <div class="hubbar-t"><span data-edit="hubTitle">数据底座 · 唯一数据源与口径统一</span><small data-edit="hubSub">陇原百合最终数据表 · 全字段可编辑 · 改动联动全页重算</small></div>
+    <div class="hubbtns">
+      <button class="hbtn" id="hubRerank">↕ 按收入重算排名</button>
+      <button class="hbtn" id="hubExportCSV">↧ 导出明细 CSV</button>
+      <button class="hbtn" id="hubExportHTML">↧ 导出可编辑页</button>
+      <button class="hbtn warn" id="hubReset">↺ 恢复默认</button>
+      <button class="hbtn" id="hubClose">× 关闭</button>
+      <span class="saveStatus" id="hubStatus"></span>
+    </div>
+  </div>
+  <div class="hubbody">
+    <div class="hubcol">
+      <div class="hubcard">
+        <h3>① 最终数据表 · ABC 明细（行顺序与 Excel 完全一致，蓝色单元格可点击直接改）</h3>
+        <div class="hub-tbl-wrap"><table class="hubtbl" id="hubTbl"></table></div>
+        <div class="hub-sum" id="hubSum"></div>
+      </div>
+      <div class="hubcard">
+        <h3>② 三源口径统一对照（网页模式 / 老原版 / 最终数据表）</h3>
+        <div id="hubAlign"></div>
+      </div>
+    </div>
+    <div class="hubcol">
+      <div class="hubcard">
+        <h3>③ 评委速读 · 30 秒看懂（随数据自动更新）</h3>
+        <div id="hubBrief"></div>
+      </div>
+      <div class="hubcard">
+        <h3>④ 字段字典与公式速查</h3>
+        <div class="dict" id="hubDict"></div>
+      </div>
+      <div class="hubcard">
+        <h3>⑤ 操作说明</h3>
+        <div id="hubHow"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 下钻浮层 ============ -->
+<div class="ov" id="ov">
+  <div class="modal">
+    <div class="mhead">
+      <div class="mt" id="mTitle">—<small id="mSub">—</small></div>
+      <button class="mclose" id="mClose" title="关闭">×</button>
+    </div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+
+<!-- ============ 全屏下钻浮层：完整仓储数字孪生 ============ -->
+<div class="whfull" id="whFull">
+  <div class="whbar">
+    <div class="whbar-t" id="whBarT">库内数字孪生 · 冷链枢纽 Hub-1</div>
+    <button class="whback" id="whBack">← 返回宏观视图</button>
+  </div>
+  <div class="whframe" id="whFrame"></div>
+</div>
+
+
+<!-- ============ 内联子页：完整 3D 仓储孪生（点节点全屏下钻） ============ -->
+<template id="whTpl">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>绿链云仓 · 智能仓储数字孪生系统</title>
+<style>
+  :root{
+    --bg:#061022; --panel:rgba(9,26,48,.82); --line:#173c5c;
+    --cyan:#00e5ff; --green:#00f0a8; --amber:#ffb648; --red:#ff5d70; --violet:#b388ff;
+    --blue:#42a5f5; --yellow:#ffd54f; --txt:#dcefff; --sub:#7ba4c6; --dim:#4d7392;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);overflow:hidden;
+    font-family:"Microsoft YaHei","PingFang SC",-apple-system,"Segoe UI",sans-serif}
+  .app{height:100vh;display:grid;grid-template-rows:62px 1fr 30px;gap:9px;padding:11px 15px}
+
+  .header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:7px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .logo{width:32px;height:32px;flex:none}
+  .brand h1{font-size:18px;font-weight:600;letter-spacing:1.5px}
+  .brand h1 span{color:var(--cyan)}
+  .brand p{font-size:10px;color:var(--sub);letter-spacing:2.5px;margin-top:2px}
+  .head-right{display:flex;align-items:center;gap:16px}
+  .live{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--green)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.6s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  .clock{font-family:Consolas,monospace;font-size:14px;color:var(--txt);letter-spacing:1px}
+
+  .main{display:grid;grid-template-columns:236px 1fr 244px;gap:9px;min-height:0}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:11px;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+  .panel::before{content:"";position:absolute;left:0;top:0;width:22px;height:2px;background:var(--cyan)}
+  .panel-r{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#1d4a6e transparent}
+  .panel-r::-webkit-scrollbar{width:5px}
+  .panel-r::-webkit-scrollbar-thumb{background:#1d4a6e;border-radius:3px}
+  .ptitle{font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:9px;display:flex;align-items:center;gap:6px;flex:none}
+  .ptitle::before{content:"";width:3px;height:11px;background:var(--cyan);border-radius:2px}
+
+  .zone-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:6px 0;border-bottom:1px dashed rgba(23,60,92,.6)}
+  .zone-row:last-child{border-bottom:none}
+  .zone-row .zn{color:var(--sub);display:flex;align-items:center;gap:6px}
+  .zone-row .zn i{width:8px;height:8px;border-radius:2px;display:inline-block}
+  .zone-row b{font-family:Consolas,monospace;font-size:13px;font-weight:600}
+
+  .metric{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.14);border-radius:6px;padding:6px 9px;margin-bottom:5px}
+  .metric .lbl{font-size:10px;color:var(--sub)}
+  .metric .val{font-family:Consolas,monospace;font-size:22px;font-weight:600;line-height:1.15;margin-top:2px}
+  .metric .unit{font-size:10px;color:var(--sub);font-weight:400;margin-left:2px}
+  .metric .sub{font-size:9px;color:var(--dim);margin-top:2px}
+
+  .tbar{height:11px;border-radius:5px;margin-top:6px;background:linear-gradient(90deg,#42a5f5,#00e5ff,#00f0a8,#ffd54f,#ffb648,#ff5d70)}
+  .tscale{display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-top:3px}
+
+  .stage{position:relative;background:radial-gradient(ellipse at 50% 40%,#0c233c,#071426 72%);border:1px solid var(--line);border-radius:8px;overflow:hidden;min-height:0}
+  #cv{width:100%;height:100%;display:block}
+  .stage-tag{position:absolute;left:12px;top:11px;z-index:5;background:rgba(6,16,34,.86);border:1px solid var(--line);border-radius:6px;padding:8px 11px;font-size:11px;pointer-events:none}
+  .stage-tag b{color:var(--cyan);font-size:13px}
+  .stage-tag .rt{color:var(--green);margin-top:3px;font-size:10px}
+
+  .seg{display:flex;gap:5px;margin-bottom:8px}
+  .seg button{flex:1;font-size:10px;padding:6px 2px;border:1px solid var(--line);border-radius:5px;color:var(--sub);cursor:pointer;background:rgba(255,255,255,.03);transition:.2s;font-family:inherit}
+  .seg button.on{border-color:var(--cyan);color:var(--txt);background:rgba(0,229,255,.14)}
+  .seg button.on.warn{border-color:var(--amber);color:var(--amber);background:rgba(255,182,72,.13)}
+
+  .toggle{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--sub);padding:6px 0;border-bottom:1px dashed rgba(23,60,92,.55);cursor:pointer}
+  .toggle:last-of-type{border-bottom:none}
+  .sw{width:30px;height:16px;border-radius:9px;background:#173c5c;position:relative;transition:.2s;flex:none}
+  .sw::after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--dim);transition:.2s}
+  .toggle.on .sw{background:rgba(0,229,255,.35)}
+  .toggle.on .sw::after{left:16px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+
+  .agv{font-size:10px;display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px dashed rgba(23,60,92,.45)}
+  .agv:last-of-type{border-bottom:none}
+  .agv .led{width:7px;height:7px;border-radius:50%;flex:none;box-shadow:0 0 7px currentColor}
+  .agv .nm{font-family:Consolas,monospace;color:var(--txt);width:52px}
+  .agv .st{flex:1;color:var(--sub)}
+  .agv .pc{font-family:Consolas,monospace;color:var(--cyan)}
+  .hint{font-size:9px;color:var(--dim);line-height:1.5;margin-top:auto;padding-top:8px}
+
+  .legend{position:absolute;right:12px;bottom:11px;z-index:5;background:rgba(6,16,34,.86);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:10px;color:var(--sub);pointer-events:none}
+  .legend div{display:flex;align-items:center;gap:6px;margin:3px 0}
+  .lg{width:13px;height:8px;border-radius:2px;display:inline-block}
+
+  .footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:5px;font-size:9px;color:var(--dim)}
+  .footer b{color:var(--sub);font-weight:400}
+
+  /* ===== 新增：货架详情 / 业务模块 / 趋势 / 仪表 / 报警 ===== */
+  .shelf-card{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.16);border-radius:6px;padding:8px 10px;margin-bottom:7px}
+  .shelf-card .sh{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--cyan);font-weight:600;margin-bottom:5px}
+  .shelf-card .sh .tag{font-size:9px;padding:1px 6px;border-radius:8px;background:rgba(0,240,168,.14);color:var(--green)}
+  .shelf-card .srow{display:flex;justify-content:space-between;font-size:10px;padding:3px 0;border-bottom:1px dashed rgba(23,60,92,.5);color:var(--sub)}
+  .shelf-card .srow:last-child{border-bottom:none}
+  .shelf-card .srow b{font-family:Consolas,monospace;color:var(--txt);font-weight:500}
+  .shelf-empty{font-size:10px;color:var(--dim);line-height:1.6;background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:6px;padding:10px;margin-bottom:7px;text-align:center}
+
+  .trend{width:100%;height:56px;display:block;background:rgba(0,0,0,.15);border-radius:4px;margin-top:2px}
+  .gauge{display:flex;align-items:center;gap:8px;margin:6px 0}
+  .gauge .gv{font-family:Consolas,monospace;font-size:18px;font-weight:600;color:var(--green)}
+  .gauge .gv small{font-size:9px;color:var(--sub);font-weight:400}
+  .gauge .gbar{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden}
+  .gauge .gbar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#42a5f5,#00f0a8)}
+  .warnbox{background:rgba(255,93,112,.09);border:1px solid rgba(255,93,112,.35);border-radius:6px;padding:8px 10px;font-size:10px;color:var(--red);line-height:1.55}
+  .warnbox.ok{background:rgba(0,240,168,.07);border-color:rgba(0,240,168,.28);color:var(--green)}
+
+  .alarm{position:absolute;left:50%;top:16px;transform:translate(-50%,-14px);z-index:9;background:rgba(30,8,12,.96);border:1px solid var(--red);border-radius:9px;padding:11px 16px;min-width:360px;box-shadow:0 12px 40px rgba(255,93,112,.25);opacity:0;pointer-events:none;transition:opacity .35s,transform .35s}
+  .alarm.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+  .alarm .ah{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--red)}
+  .alarm .ah .pulse{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 12px var(--red);animation:blink .9s infinite}
+  .alarm .ab{font-size:10px;color:var(--txt);margin-top:6px;line-height:1.6}
+  .alarm .ab b{color:var(--amber)}
+  .alarm .btn{margin-top:8px;display:flex;gap:7px}
+  .alarm .btn button{font-size:10px;padding:5px 10px;border-radius:5px;cursor:pointer;font-family:inherit}
+  .alarm .fix{background:rgba(0,240,168,.16);border:1px solid var(--green);color:var(--green)}
+  .alarm .ign{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--sub)}
+  .faultbtn{border-color:var(--red)!important;color:var(--red)!important;background:rgba(255,93,112,.10)!important}
+  .faultbtn.on{background:rgba(255,93,112,.28)!important;box-shadow:0 0 14px rgba(255,93,112,.35)}
+  #cv{cursor:crosshair}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40">
+        <path d="M6 17L20 8L34 17V32H6Z" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+        <path d="M6 17L20 26L34 17M20 26V32" fill="none" stroke="#00f0a8" stroke-width="1.5"/>
+        <rect x="10" y="12" width="6" height="6" fill="rgba(0,240,168,.4)" stroke="#00f0a8" stroke-width="1"/>
+        <rect x="24" y="12" width="6" height="6" fill="rgba(0,229,255,.4)" stroke="#00e5ff" stroke-width="1"/>
+      </svg>
+      <div>
+        <h1>绿链云仓 · 智能仓储<span>数字孪生系统</span></h1>
+        <p>GREENCHAIN CLOUD WMS · 库内温控热力与 AGV 运营轨迹仿真</p>
+      </div>
+    </div>
+    <div class="head-right">
+      <div class="live"><span class="dot"></span>实时仿真中</div>
+      <div class="clock" id="clock">00:00:00</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- 左栏 -->
+    <aside class="panel panel-r">
+      <div class="ptitle">库区温控状态</div>
+      <div id="zones"></div>
+      <div class="ptitle" style="margin-top:12px">温控指标</div>
+      <div class="metric">
+        <div class="lbl">库内平均温度</div>
+        <div class="val"><span id="avgT">--</span><span class="unit">℃</span></div>
+        <div class="sub">保鲜目标区间 0 – 4 ℃</div>
+      </div>
+      <div class="metric">
+        <div class="lbl">温控达标率</div>
+        <div class="val"><span id="passRate">--</span><span class="unit">%</span></div>
+        <div class="sub">处于 0–4℃ 的库格占比</div>
+      </div>
+      <div class="metric">
+        <div class="lbl">启用 AGV / 在途</div>
+        <div class="val"><span id="agvCnt">4</span><span class="unit">台</span></div>
+        <div class="sub" id="agvRun">全部在线巡航</div>
+      </div>
+      <div class="ptitle" style="margin-top:6px">货品鲜度监控</div>
+      <div class="metric" style="margin-bottom:5px">
+        <div class="lbl">库内相对湿度</div>
+        <div class="val"><span id="humV">--</span><span class="unit">%RH</span></div>
+        <div class="sub">核心品类防失水适宜 85–92%</div>
+      </div>
+      <div class="warnbox ok" id="rotWarn">✓ 腐损率预警：当前 2.4%，处于安全区间</div>
+
+      <div class="ptitle" style="margin-top:11px">选中货架详情</div>
+      <div class="shelf-empty" id="shelfEmpty">点击 3D 场景中的货架<br>查看库位存储的详细信息</div>
+      <div class="shelf-card" id="shelfCard" style="display:none"></div>
+
+      <div class="ptitle" style="margin-top:10px">24 小时温度趋势</div>
+      <svg class="trend" id="trendSvg" viewBox="0 0 220 66" preserveAspectRatio="none"></svg>
+      <div class="tbar"></div>
+      <div class="tscale"><span>-2℃</span><span>2℃</span><span>4℃</span><span>7℃</span><span>10℃</span><span>14℃</span></div>
+    </aside>
+
+    <!-- 中栏：3D 场景 -->
+    <section class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <div class="stage-tag">
+        <b id="sceneName">项目方案 · 全程冷链</b>
+        <div class="rt" id="sceneDesc">CO₂ 制冷 · 库温 0–4℃ · AGV 有序巡航</div>
+      </div>
+      <div class="legend">
+        <div><i class="lg" style="background:#00f0a8"></i>达标库区 0–4℃</div>
+        <div><i class="lg" style="background:#ffb648"></i>偏热库区 &gt;7℃</div>
+        <div><i class="lg" style="background:#00e5ff"></i>AGV 运营轨迹</div>
+        <div><i class="lg" style="background:#ff5d70"></i>故障区域</div>
+      </div>
+      <div class="alarm" id="alarm">
+        <div class="ah"><span class="pulse"></span>温度异常报警 · 3 号冷库制冷故障</div>
+        <div class="ab">3 号库区温度已从 <b>2.4℃</b> 升至 <b id="alarmT">8.6℃</b>，超出保鲜区间，腐损风险上升。<br>系统诊断：制冷机组停机 · 建议<b>开启备用风机并切换 B 路供冷</b>。</div>
+        <div class="btn"><button class="fix" id="alarmFix">✓ 一键处置（开启备用风机）</button><button class="ign" id="alarmIgn">稍后处理</button></div>
+      </div>
+    </section>
+
+    <!-- 右栏：控制 -->
+    <aside class="panel panel-r">
+      <div class="ptitle">运行模式</div>
+      <div class="seg">
+        <button id="mBase">痛点基线</button>
+        <button id="mProj" class="on">项目方案</button>
+      </div>
+      <div class="ptitle">视角控制</div>
+      <div class="seg">
+        <button id="v0" class="on">视角 A</button>
+        <button id="v1">视角 B</button>
+        <button id="v2">视角 C</button>
+        <button id="v3">视角 D</button>
+      </div>
+      <div class="ptitle" style="margin-top:11px">应急演练</div>
+      <div class="seg">
+        <button id="faultBtn">⚠ 模拟 3 号冷库故障</button>
+      </div>
+      <div class="warnbox ok" id="faultState">制冷机组运行正常 · 无告警</div>
+      <div class="ptitle" style="margin-top:11px">绿链贡献 · 今日</div>
+      <div class="gauge"><span class="gv" id="saveKwh">--<small> kWh</small></span><div class="gbar"><i style="width:76%"></i></div></div>
+      <div style="font-size:9px;color:var(--dim)">CO₂ 制冷较传统氟利昂节电</div>
+      <div class="gauge"><span class="gv" id="cutCo2">--<small> kg</small></span><div class="gbar"><i style="width:64%;background:linear-gradient(90deg,#00e5ff,#42a5f5)"></i></div></div>
+      <div style="font-size:9px;color:var(--dim)">减少碳排放 · 相当于植树 <b id="trees" style="color:var(--green)">--</b> 棵</div>
+
+      <div class="ptitle" style="margin-top:11px">图层与动画</div>
+      <div class="toggle on" id="tgHeat"><span>温度热力图</span><span class="sw"></span></div>
+      <div class="toggle on" id="tgTrail"><span>AGV 运营轨迹</span><span class="sw"></span></div>
+      <div class="toggle on" id="tgLabel"><span>库位标签</span><span class="sw"></span></div>
+      <div class="toggle on" id="tgPlay"><span>动画播放 / 暂停</span><span class="sw"></span></div>
+      <div class="ptitle" style="margin-top:11px">AGV 运营状态</div>
+      <div id="agvList"></div>
+      <div class="hint">提示：点击 3D 货架看存储详情；点"模拟故障"看应急联动；切换视角按钮旋转仓库。</div>
+    </aside>
+  </div>
+
+  <div class="footer">
+    <div><b>说明：</b>库温热力与 AGV 轨迹为仿真推演，用于方案对比演示，非现场实测数据。</div>
+    <div>绿链云仓 · 智能仓储数字孪生系统　|　单文件前端实现 · 零依赖</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var canvas=document.getElementById('cv'), ctx=canvas.getContext('2d'), stage=document.getElementById('stage');
+  var GW=12, GH=9, C=Math.cos(Math.PI/6), D=0.5, MAXZ=3.2;
+  var S=30, ox=0, oy=0, W=0, H=0, dpr=1;
+
+  // ---------- 状态 ----------
+  var state={mode:'proj', angle:0, heat:true, trail:true, label:true, play:true, t:0, fault:false, faultLevel:0, selected:null, hover:null};
+
+  // ---------- 库位（10 个货位，对应 10 个单品 / ABC） ----------
+  var racks=[];
+  var abc=['A','A','A','A','B','B','B','C','C','C'];
+  var goods=[
+    {n:'SKU-A类 · 生鲜筐',in:'09:40',life:5,t:1.8},
+    {n:'SKU-A类 · 精选筐',in:'10:00',life:7,t:2.1},
+    {n:'SKU-B类 · 鲜切筐',in:'08:20',life:3,t:1.5},
+    {n:'SKU-C类 · 干制原料',in:'07:15',life:30,t:2.6},
+    {n:'SKU-A类 · 预冷筐',in:'10:30',life:6,t:1.2},
+    {n:'SKU-A类 · 生鲜筐',in:'09:05',life:5,t:2.3},
+    {n:'SKU-B类 · 礼盒装',in:'08:50',life:9,t:2.0},
+    {n:'SKU-B类 · 鲜切筐',in:'10:12',life:2,t:1.7},
+    {n:'电商小包装',in:'09:28',life:8,t:2.5},
+    {n:'SKU-C类 · 干制精选',in:'06:40',life:45,t:2.8}
+  ];
+  for(var r=0;r<2;r++){
+    for(var i=0;i<5;i++){
+      var idx=r*5+i;
+      racks.push({x:1.2+i*2.0, y:2.0+r*3.5, w:1.55, d:1.45, h:2.5+((i+r)%3)*0.28,
+        cls:abc[idx], id:'K-'+(idx+1), goods:goods[idx], idx:idx});
+    }
+  }
+  var zones=[
+    {name:'预冷区', color:'#42a5f5', x:[0.4,2.9], y:[0.4,8.5], base:6.5, proj:1.2},
+    {name:'常温存储区', color:'#00e5ff', x:[3.0,8.8], y:[0.4,8.5], base:10.8, proj:2.4},
+    {name:'分拣出库区', color:'#ffb648', x:[8.9,11.6], y:[0.4,8.5], base:13.2, proj:3.4}
+  ];
+
+  // ---------- AGV 路径 ----------
+  function mkPath(pts){var segs=[],len=0;for(var i=0;i<pts.length;i++){var a=pts[i],b=pts[(i+1)%pts.length];var L=Math.hypot(b[0]-a[0],b[1]-a[1]);segs.push({a:a,b:b,L:L,start:len});len+=L;}return {segs:segs,total:len};}
+  var paths=[
+    mkPath([[0.8,0.7],[11.2,0.7],[11.2,3.5],[0.8,3.5]]),
+    mkPath([[0.8,4.6],[11.2,4.6],[11.2,7.9],[0.8,7.9]]),
+    mkPath([[11.0,0.9],[11.0,3.4],[11.0,4.8],[11.0,7.7],[0.9,7.7]]),
+    mkPath([[0.9,7.5],[0.9,4.7],[0.9,3.3],[0.9,0.9]])
+  ];
+  var agvs=[
+    {name:'AGV-01',path:0,speed:1.5,off:0,   color:'#00e5ff'},
+    {name:'AGV-02',path:1,speed:1.2,off:0.35,color:'#00f0a8'},
+    {name:'AGV-03',path:2,speed:1.7,off:0.6, color:'#ffd54f'},
+    {name:'AGV-04',path:3,speed:1.35,off:0.8,color:'#b388ff'}
+  ];
+  function pathPos(p,frac){var d=((frac%1)+1)%1*p.total;for(var i=0;i<p.segs.length;i++){var s=p.segs[i];if(d<=s.start+s.L||i===p.segs.length-1){var u=(d-s.start)/s.L;return [s.a[0]+(s.b[0]-s.a[0])*u, s.a[1]+(s.b[1]-s.a[1])*u];}}return p.segs[0].a;}
+
+  // ---------- 投影 ----------
+  function rot(x,y){var a=state.angle*Math.PI/2, cx=GW/2, cy=GH/2, dx=x-cx, dy=y-cy, c=Math.cos(a), s=Math.sin(a);return [cx+dx*c-dy*s, cy+dx*s+dy*c];}
+  function P(x,y,z){var r=rot(x,y);return {x:ox+(r[0]-r[1])*C*S, y:oy+(r[0]+r[1])*D*S - z*S*0.92};}
+  function resize(){
+    var rect=stage.getBoundingClientRect(); W=rect.width; H=rect.height; dpr=window.devicePixelRatio||1;
+    canvas.width=W*dpr; canvas.height=H*dpr; canvas.style.width=W+'px'; canvas.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    S=Math.min(W*0.88/((GW+GH)*C), (H-50)*0.70/((GW+GH)*D+MAXZ*0.92));
+    ox=W/2; oy=H*0.60-(GW+GH)*D*S/2;
+  }
+
+  // ---------- 温度场 ----------
+  function tempAt(x,y,tm){
+    var ph=tm*0.00028, m=state.mode, t;
+    if(m==='base'){
+      t=10.2
+        +3.2*Math.exp(-(((x-10.6)*(x-10.6))+((y-7.6)*(y-7.6)))/9)
+        -1.4*Math.exp(-(((x-1.6)*(x-1.6))+((y-1.6)*(y-1.6)))/7)
+        +1.3*Math.sin(x*0.85+ph)*Math.cos(y*0.7-ph);
+    }else{
+      t=2.1
+        +1.5*Math.exp(-(((x-10.6)*(x-10.6))+((y-7.6)*(y-7.6)))/11)
+        -1.1*Math.exp(-(((x-1.4)*(x-1.4))+((y-1.4)*(y-1.4)))/6)
+        +0.55*Math.sin(x*0.8+ph)*Math.cos(y*0.62-ph);
+    }
+    // 故障模拟：3 号冷库（x 5.2–7.2, y 1.8–3.6）制冷停机，温度按等级爬升
+    if(state.fault){
+      var fx=6.2, fy=2.7, d2=((x-fx)*(x-fx))/2.2+((y-fy)*(y-fy))/1.5;
+      var infl=Math.exp(-d2/1.3);
+      t+=state.faultLevel*7.5*infl;
+    }
+    return t;
+  }
+  function tempColor(t){
+    var st=[[-2,66,165,245],[2,0,229,255],[4,0,240,168],[7,255,213,79],[10,255,182,72],[14,255,93,112]];
+    var i=0;while(i<st.length-1&&t>st[i+1][0])i++;
+    var a=st[i],b=st[Math.min(i+1,st.length-1)],u=(t-a[0])/(b[0]-a[0]||1);u=Math.max(0,Math.min(1,u));
+    return [Math.round(a[1]+(b[1]-a[1])*u),Math.round(a[2]+(b[2]-a[2])*u),Math.round(a[3]+(b[3]-a[3])*u)];
+  }
+
+  // ---------- 绘制基元 ----------
+  function quad(p1,p2,p3,p4,fill,stroke,lw){
+    ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.lineTo(p3.x,p3.y);ctx.lineTo(p4.x,p4.y);ctx.closePath();
+    if(fill){ctx.fillStyle=fill;ctx.fill();}
+    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();}
+  }
+  function drawGround(){
+    // 地面底板 + 中心微光
+    quad(P(0,0,0),P(GW,0,0),P(GW,GH,0),P(0,GH,0),'rgba(10,28,48,.94)','#1c4260',1);
+    var gc=P(GW/2,GH/2,0.005),gr=ctx.createRadialGradient(gc.x,gc.y,0,gc.x,gc.y,S*7);
+    gr.addColorStop(0,'rgba(0,229,255,.07)');gr.addColorStop(1,'rgba(0,229,255,0)');
+    ctx.fillStyle=gr;ctx.beginPath();ctx.arc(gc.x,gc.y,S*7,0,Math.PI*2);ctx.fill();
+    // 网格：主线 + 细线双密度，增强空间感
+    for(var x=0;x<=GW;x++){
+      var a=P(x,0,0.01),b=P(x,GH,0.01);
+      ctx.strokeStyle=x%3===0?'rgba(45,110,155,.55)':'rgba(30,74,106,.32)';
+      ctx.lineWidth=x%3===0?1:0.55;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+    }
+    for(var y=0;y<=GH;y++){
+      var a2=P(0,y,0.01),b2=P(GW,y,0.01);
+      ctx.strokeStyle=y%3===0?'rgba(45,110,155,.55)':'rgba(30,74,106,.32)';
+      ctx.lineWidth=y%3===0?1:0.55;ctx.beginPath();ctx.moveTo(a2.x,a2.y);ctx.lineTo(b2.x,b2.y);ctx.stroke();
+    }
+    // 地面外沿：冷色反光描边
+    var corners=[P(0,0,0),P(GW,0,0),P(GW,GH,0),P(0,GH,0)];
+    ctx.save();ctx.strokeStyle='rgba(0,229,255,.45)';ctx.lineWidth=1.6;ctx.shadowColor='#00e5ff';ctx.shadowBlur=10;
+    ctx.beginPath();corners.forEach(function(p,i){i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.closePath();ctx.stroke();ctx.restore();
+  }
+  function drawHeat(tm){
+    var n=24, step=0.5, ok=0, tot=0, sum=0, mx=-99;
+    for(var ix=0;ix<n;ix++)for(var iy=0;iy<Math.round(GH/step);iy++){
+      var x=ix*step, y=iy*step, t=tempAt(x+step/2,y+step/2,tm);
+      var c=tempColor(t);tot++;sum+=t;if(t>mx)mx=t;if(t>=0&&t<=4)ok++;
+      quad(P(x,y,0.02),P(x+step,y,0.02),P(x+step,y+step,0.02),P(x,y+step,0.02),'rgba('+c[0]+','+c[1]+','+c[2]+',0.42)');
+    }
+    // 制冷出风口（微光）
+    for(var k=0;k<3;k++){
+      var cp=P(2.2+k*3.6,8.6,0.03), g=ctx.createRadialGradient(cp.x,cp.y,0,cp.x,cp.y,S*1.5);
+      g.addColorStop(0,'rgba(0,229,255,.16)');g.addColorStop(1,'rgba(0,229,255,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(cp.x,cp.y,S*1.5,0,Math.PI*2);ctx.fill();
+    }
+    return {avg:sum/tot,max:mx,pass:ok/tot*100};
+  }
+  function shade(rgb,f){return 'rgb('+Math.min(255,Math.round(rgb[0]*f))+','+Math.min(255,Math.round(rgb[1]*f))+','+Math.min(255,Math.round(rgb[2]*f))+')';}
+  function isFaultRack(o){return state.fault && o.idx===2;} // K-3 位于 3 号库区
+  function drawBox(o){
+    var faulty=isFaultRack(o);
+    var blink=faulty?(0.5+0.5*Math.sin(state.t*0.012)):0;
+    var base= faulty?[255,Math.round(93+60*blink),Math.round(112+40*blink)]
+           : o.cls==='A'?[0,240,168]:o.cls==='B'?[0,229,255]:[255,182,72];
+    var x=o.x,y=o.y,w=o.w,d=o.d,h=o.h;
+    var V=function(i,j,k){return P(x+i*w,y+j*d,k*h);};
+    var a=state.angle, ca=Math.cos(a), sa=Math.sin(a);
+    var xp=ca+sa, xn=-xp, yp=-sa+ca, yn=-yp;
+    var sel=state.selected===o.idx, hov=state.hover===o.idx;
+    // 选中/悬停：地面投影光圈
+    if(sel||hov){
+      var fp=P(x+w/2,y+d/2,0.03);
+      ctx.save();ctx.strokeStyle=sel?'#fff':shade(base,1.1);ctx.lineWidth=sel?2:1.2;
+      ctx.shadowColor=sel?'#fff':shade(base,1);ctx.shadowBlur=sel?14:8;
+      var r=S*(sel?1.15:0.95);ctx.beginPath();ctx.ellipse(fp.x,fp.y,r,r*0.5,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+    }
+    // 立柱（四角细线）
+    [[0,0],[1,0],[1,1],[0,1]].forEach(function(c){
+      var b=V(c[0],c[1],0),tp=V(c[0],c[1],1);
+      ctx.strokeStyle=shade(base,.9);ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.lineTo(tp.x,tp.y);ctx.stroke();
+    });
+    // 侧面（带横向层板纹理）
+    function side(f,p1,p2,p3,p4){
+      ctx.fillStyle=shade(base,f);quad(p1,p2,p3,p4,ctx.fillStyle);
+      ctx.strokeStyle='rgba(4,16,30,.55)';ctx.lineWidth=0.9;
+      for(var s=1;s<4;s++){var z=s/4;
+        var q1={x:p1.x+(p4.x-p1.x)*z,y:p1.y+(p4.y-p1.y)*z};
+        var q2={x:p2.x+(p3.x-p2.x)*z,y:p2.y+(p3.y-p2.y)*z};
+        ctx.beginPath();ctx.moveTo(q1.x,q1.y);ctx.lineTo(q2.x,q2.y);ctx.stroke();}
+    }
+    if(yp>0.01) side(.52,V(0,1,0),V(1,1,0),V(1,1,1),V(0,1,1));
+    if(xp>0.01) side(.34,V(1,0,0),V(1,1,0),V(1,1,1),V(1,0,1));
+    if(yn>0.01) side(.44,V(0,0,0),V(0,1,0),V(0,1,1),V(0,0,1));
+    if(xn>0.01) side(.28,V(0,0,0),V(1,0,0),V(1,0,1),V(0,0,1));
+    // 顶盖：亮面 + 内框纹理
+    quad(V(0,0,1),V(1,0,1),V(1,1,1),V(0,1,1),shade(base,.82),shade(base,1.12),sel?2:1);
+    ctx.strokeStyle='rgba(6,16,34,.5)';ctx.lineWidth=0.8;
+    [0.25,0.5,0.75].forEach(function(u){
+      var p1=V(u,0,1.005),p2=V(u,1,1.005),p3=V(0,u,1.005),p4=V(1,u,1.005);
+      ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(p3.x,p3.y);ctx.lineTo(p4.x,p4.y);ctx.stroke();
+    });
+    if(faulty){ // 故障闪烁标签
+      var fp2=V(0.5,0.5,1.06);
+      ctx.fillStyle='rgba(255,93,112,'+(0.45+0.55*blink)+')';ctx.font='700 10px Consolas,monospace';
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⚠ 温度异常',fp2.x,fp2.y-9);
+    }
+    if(state.label){
+      var tp=V(0.5,0.5,1.02), txt=o.id;
+      ctx.font='600 9px Consolas,monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(6,16,34,.85)';ctx.fillRect(tp.x-13,tp.y-6,26,12);
+      ctx.fillStyle=sel?'#fff':shade(base,1.3);ctx.fillText(txt,tp.x,tp.y);
+    }
+  }
+  function drawTrails(){
+    for(var k=0;k<agvs.length;k++){
+      var p=paths[agvs[k].path], pts=p.segs;
+      ctx.save();
+      ctx.strokeStyle=agvs[k].color;ctx.globalAlpha=state.mode==='base'?0.18:0.42;
+      ctx.lineWidth=1.6;ctx.setLineDash([6,5]);ctx.lineDashOffset=-state.t*0.02*(k%2?1:-1);
+      ctx.beginPath();
+      for(var i=0;i<pts.length;i++){var pt=P(pts[i].a[0],pts[i].a[1],0.04);i?ctx.lineTo(pt.x,pt.y):ctx.moveTo(pt.x,pt.y);}
+      var e=P(pts[0].a[0],pts[0].a[1],0.04);ctx.lineTo(e.x,e.y);ctx.closePath();ctx.stroke();ctx.restore();
+    }
+  }
+  function drawAGV(g){
+    var p=paths[g.path], pos=pathPos(p,state.t*0.00006*g.speed+g.off), xy=P(pos[0],pos[1],0.10);
+    ctx.save();
+    // 地面光晕
+    var gl=ctx.createRadialGradient(xy.x,xy.y,0,xy.x,xy.y,S*0.95);
+    gl.addColorStop(0,hexA(g.color,.5));gl.addColorStop(1,hexA(g.color,0));
+    ctx.fillStyle=gl;ctx.beginPath();ctx.arc(xy.x,xy.y,S*0.95,0,Math.PI*2);ctx.fill();
+    var w=0.66,d=0.46,h=0.30,x=pos[0]-w/2,y=pos[1]-d/2;
+    var V=function(i,j,k){return P(x+i*w,y+j*d,k*h+0.06);};
+    // 车轮（四个小暗块）
+    [[0.1,0.05],[0.9,0.05],[0.1,0.95],[0.9,0.95]].forEach(function(c){
+      var wp=V(c[0],c[1],0);ctx.fillStyle='#0a1a2a';ctx.beginPath();ctx.ellipse(wp.x,wp.y,2.6,1.7,0,0,Math.PI*2);ctx.fill();
+    });
+    // 车身：底盘（深灰）+ 上层（主题色）+ 顶部载货台
+    quad(V(0,0,0),V(1,0,0),V(1,1,0),V(0,1,0),'rgba(70,95,120,.9)');
+    quad(V(0,1,0),V(1,1,0),V(1,1,1),V(0,1,1),shade([120,150,175],.85));
+    quad(V(1,0,0),V(1,1,0),V(1,1,1),V(1,0,1),shade([120,150,175],.62));
+    quad(V(0,0,1),V(1,0,1),V(1,1,1),V(0,1,1),g.color,'rgba(255,255,255,.55)',0.8);
+    // 载货台上的小货箱
+    var bx=pos[0]-0.16,by=pos[1]-0.12;
+    var BV=function(i,j,k){return P(bx+i*0.32,by+j*0.24,0.06+k*0.26+0.30);};
+    quad(BV(0,0,0),BV(1,0,0),BV(1,1,0),BV(0,1,0),'rgba(255,182,72,.85)');
+    quad(BV(0,0,1),BV(1,0,1),BV(1,1,1),BV(0,1,1),'rgba(255,213,79,.95)','rgba(255,255,255,.4)',0.6);
+    // 顶部警示灯（呼吸闪烁）
+    var lp=V(0.5,0.5,1.25), on=0.5+0.5*Math.sin(state.t*0.006+g.off*10);
+    ctx.fillStyle=hexA(g.color,0.35+0.65*on);ctx.beginPath();ctx.arc(lp.x,lp.y,2.8,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=hexA(g.color,on);ctx.lineWidth=1;ctx.beginPath();ctx.arc(lp.x,lp.y,4.5,0,Math.PI*2);ctx.stroke();
+    ctx.restore();
+    g._pos=pos;
+  }
+  function hexA(hex,a){var n=parseInt(hex.slice(1),16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
+
+  // ---------- 主循环 ----------
+  var lastUi=0, stat={avg:0,max:0,pass:0};
+  function render(ts){
+    state.t=ts;
+    ctx.clearRect(0,0,W,H);
+    drawGround();
+    stat=drawHeat(ts);
+    if(state.trail) drawTrails();
+    // 货架按深度排序（远→近）
+    var sorted=racks.slice().sort(function(a,b){return (a.x+a.y)-(b.x+b.y);});
+    for(var i=0;i<sorted.length;i++) drawBox(sorted[i]);
+    for(var j=0;j<agvs.length;j++) drawAGV(agvs[j]);
+    // 扫描线
+    if(state.play){
+      var sy=oy+((ts*0.05)%( (GW+GH)*D*S ))-((ts*0.05)%((GW+GH)*D*S));
+    }
+    if(ts-lastUi>220){lastUi=ts;updateUI();renderQuality();renderGreen(ts);if(state.selected!==null)renderShelfDetail();}
+    if(state.play) requestAnimationFrame(render);
+  }
+  function updateUI(){
+    document.getElementById('avgT').textContent=stat.avg.toFixed(1);
+    document.getElementById('passRate').textContent=stat.pass.toFixed(0);
+    var txt='';
+    for(var i=0;i<agvs.length;i++){
+      var g=agvs[i], z=zoneOf(g._pos?g._pos[0]:1, g._pos?g._pos[1]:1);
+      txt+='<div class="agv"><span class="led" style="color:'+g.color+';background:'+g.color+'"></span>'+
+           '<span class="nm">'+g.name+'</span><span class="st">'+z+'</span><span class="pc">'+(state.play?'巡航':'暂停')+'</span></div>';
+    }
+    document.getElementById('agvList').innerHTML=txt;
+    var c=(state.mode==='base'||state.fault)?'#ff5d70':'#00f0a8';
+    document.getElementById('avgT').style.color=c;
+    document.getElementById('passRate').style.color=c;
+    if(state.fault) return; // 故障态标题由 setFault 管理，避免被覆盖
+    if(state.mode==='base'){
+      document.getElementById('sceneName').textContent='痛点基线 · 传统多段周转';
+      document.getElementById('sceneDesc').textContent='制冷不足 · 库温偏高 · 人工搬运为主';
+    }else{
+      document.getElementById('sceneName').textContent='项目方案 · 全程冷链';
+      document.getElementById('sceneDesc').textContent='CO₂ 制冷 · 库温 0–4℃ · AGV 有序巡航';
+    }
+  }
+  function zoneOf(x,y){return x<2.9?'预冷区':x<8.9?'常温存储区':'分拣出库区';}
+
+  /* ==================== 新增：货架点击联动 / 趋势 / 仪表 / 故障 ==================== */
+  // 点击命中：判断鼠标是否落在某个货架顶面/侧面投影范围内（用顶面四边形 + 包围盒近似）
+  function pickRack(mx,my){
+    var s=racks.slice().sort(function(a,b){return (b.x+b.y)-(a.x+a.y);}); // 由近到远命中
+    for(var i=0;i<s.length;i++){
+      var o=s[i], V=function(ii,jj,kk){return P(o.x+ii*o.w,o.y+jj*o.d,kk*o.h);};
+      var pts=[V(0,0,0),V(1,0,0),V(1,1,0),V(0,1,0),V(0,0,1),V(1,0,1),V(1,1,1),V(0,1,1)];
+      var minX=1e9,maxX=-1e9,minY=1e9,maxY=-1e9;
+      pts.forEach(function(p){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);});
+      if(mx>=minX&&mx<=maxX&&my>=minY&&my<=maxY) return o.idx;
+    }
+    return null;
+  }
+  function renderShelfDetail(){
+    var card=document.getElementById('shelfCard'),empty=document.getElementById('shelfEmpty');
+    if(state.selected===null){card.style.display='none';empty.style.display='block';return;}
+    var o=racks[state.selected],g=o.goods,faulty=isFaultRack(o);
+    empty.style.display='none';card.style.display='block';
+    var tagColor=o.cls==='A'?'#00f0a8':o.cls==='B'?'#00e5ff':'#ffb648';
+    var lifeColor=g.life<=3?'#ff5d70':g.life<=7?'#ffb648':'#00f0a8';
+    var tNow=faulty?tempAt(o.x+o.w/2,o.y+o.d/2,state.t):g.t;
+    card.innerHTML='<div class="sh"><span>▣ '+o.id+' 库位详情</span><span class="tag" style="color:'+tagColor+';background:'+hexA(tagColor,.14)+'">'+o.cls+' 类品</span></div>'+
+      '<div class="srow"><span>当前存储</span><b>'+g.n+'</b></div>'+
+      '<div class="srow"><span>入库时间</span><b>'+g.in+'</b></div>'+
+      '<div class="srow"><span>剩余保质期</span><b style="color:'+lifeColor+'">'+g.life+' 天</b></div>'+
+      '<div class="srow"><span>库位温度</span><b style="color:'+(tNow>4?'#ff5d70':'#00f0a8')+'">'+tNow.toFixed(1)+' ℃</b></div>'+
+      '<div class="srow"><span>库位湿度</span><b>'+(88+o.idx).toFixed(0)+' %RH</b></div>'+
+      (faulty?'<div class="warnbox" style="margin-top:6px">⚠ 该库位制冷异常，温度超标，建议尽快转移！</div>':'');
+  }
+
+  // 24 小时温度趋势（历史数据模拟）
+  var trendData=(function(){var a=[];for(var i=0;i<24;i++){a.push(2.0+0.9*Math.sin(i*0.45)+0.3*Math.sin(i*1.3));}return a;})();
+  function renderTrend(){
+    var svg=document.getElementById('trendSvg');if(!svg)return;
+    var W=220,H=66,pad=5,pts=trendData.map(function(v,i){
+      var x=pad+i/(23)*(W-2*pad),y=H-8-(v+2)/16*(H-16);return x.toFixed(1)+','+y.toFixed(1)}).join(" ");
+    var y4=H-8-(4+2)/16*(H-16),y0=H-8-(0+2)/16*(H-16);
+    svg.innerHTML='<rect x="'+pad+'" y="'+y4+'" width="'+(W-2*pad)+'" height="'+(y0-y4)+'" fill="#00f0a8" opacity="0.07"/>'+
+      '<polyline points="'+pts+'" fill="none" stroke="#00e5ff" stroke-width="1.8"/>'+
+      '<text x="3" y="11" fill="#4d7392" font-size="8">24h</text><text x="'+(W-22)+'" y="11" fill="#4d7392" font-size="8">现在</text>';
+  }
+
+  // 绿链仪表（累计增长）
+  var energyBase=0;
+  function renderGreen(now){
+    energyBase=(now-t0)/1000;
+    var kwh=128+energyBase*0.6, co2=kwh*0.58, trees=co2/18.3;
+    document.getElementById('saveKwh').innerHTML=kwh.toFixed(0)+'<small> kWh</small>';
+    document.getElementById('cutCo2').innerHTML=co2.toFixed(0)+'<small> kg</small>';
+    document.getElementById('trees').textContent=trees.toFixed(0);
+  }
+  var t0=performance.now();
+
+  // 湿度与腐损预警
+  function renderQuality(){
+    var hum=state.fault?72+state.faultLevel*3:88+Math.sin(state.t*0.001)*2.5;
+    document.getElementById('humV').textContent=hum.toFixed(1);
+    var rot=state.fault?(2.4+state.faultLevel*4.2):2.4;
+    var w=document.getElementById('rotWarn');
+    w.className='warnbox'+(rot>5?'':' ok');
+    w.innerHTML=(rot>5?'⚠':'✓')+' 腐损率预警：当前 '+rot.toFixed(1)+'%，'+(rot>5?'已超阈值 5%，请立即处置！':'处于安全区间');
+  }
+
+  // 故障模拟逻辑
+  var faultTimer=null;
+  function setFault(on){
+    state.fault=on;
+    var btn=document.getElementById('faultBtn'),fs=document.getElementById('faultState'),al=document.getElementById('alarm');
+    btn.classList.toggle('faultbtn',!on);btn.classList.toggle('on',on);
+    btn.textContent=on?'✓ 故障进行中（点击恢复）':'⚠ 模拟 3 号冷库故障';
+    if(on){
+      state.faultLevel=0;fs.className='warnbox';fs.innerHTML='⚠ 3 号冷库制冷机组停机 · 温度爬升中';
+      document.getElementById('sceneName').textContent='异常态 · 3 号冷库制冷故障';
+      document.getElementById('sceneDesc').style.color='#ff5d70';
+      document.getElementById('sceneDesc').textContent='温度异常上升 · 系统自动告警';
+      al.classList.add('show');
+      if(faultTimer)clearInterval(faultTimer);
+      faultTimer=setInterval(function(){state.faultLevel=Math.min(1,state.faultLevel+0.06);
+        document.getElementById('alarmT').textContent=(2.4+state.faultLevel*6.2).toFixed(1);
+        renderQuality();
+      },220);
+    }else{
+      state.faultLevel=0;
+      fs.className='warnbox ok';fs.innerHTML='制冷机组运行正常 · 无告警';
+      al.classList.remove('show');
+      if(faultTimer){clearInterval(faultTimer);faultTimer=null;}
+      updateSceneDesc();
+    }
+    drawOnce();renderQuality();renderShelfDetail();
+  }
+  function updateSceneDesc(){
+    var d=document.getElementById('sceneDesc');d.style.color='';
+    if(state.mode==='base'){document.getElementById('sceneName').textContent='痛点基线 · 传统多段周转';d.textContent='制冷不足 · 库温偏高 · 人工搬运为主';}
+    else{document.getElementById('sceneName').textContent='项目方案 · 全程冷链';d.textContent='CO₂ 制冷 · 库温 0–4℃ · AGV 有序巡航';}
+  }
+  document.getElementById('faultBtn').addEventListener('click',function(){setFault(!state.fault);});
+  document.getElementById('alarmFix').addEventListener('click',function(){setFault(false);});
+  document.getElementById('alarmIgn').addEventListener('click',function(){document.getElementById('alarm').classList.remove('show');});
+
+  // Canvas 点击/悬停 → 货架联动
+  canvas.addEventListener('click',function(e){
+    var r=canvas.getBoundingClientRect(),idx=pickRack(e.clientX-r.left,e.clientY-r.top);
+    state.selected=idx;renderShelfDetail();drawOnce();
+  });
+  canvas.addEventListener('mousemove',function(e){
+    var r=canvas.getBoundingClientRect(),idx=pickRack(e.clientX-r.left,e.clientY-r.top);
+    if(idx!==state.hover){state.hover=idx;canvas.style.cursor=idx!==null?'pointer':'crosshair';if(state.play===false)drawOnce();}
+  });
+  canvas.addEventListener('mouseleave',function(){state.hover=null;if(state.play===false)drawOnce();});
+  renderTrend();renderShelfDetail();renderGreen(t0);renderQuality();
+
+  // ---------- 交互 ----------
+  function clock(){var d=new Date();document.getElementById('clock').textContent=[d.getHours(),d.getMinutes(),d.getSeconds()].map(function(x){return(x<10?'0':'')+x;}).join(':');}
+  clock();setInterval(clock,1000);
+
+  function bindToggle(id,key){document.getElementById(id).addEventListener('click',function(){
+    state[key]=!state[key];this.classList.toggle('on',state[key]);
+    if(key==='play'&&state.play){requestAnimationFrame(render);}else if(key==='play'){/* paused */}
+    if(!state.play) drawOnce();
+  });}
+  function drawOnce(){ctx.clearRect(0,0,W,H);drawGround();stat=drawHeat(performance.now());if(state.trail)drawTrails();var s=racks.slice().sort(function(a,b){return(a.x+a.y)-(b.x+b.y);});for(var i=0;i<s.length;i++)drawBox(s[i]);for(var j=0;j<agvs.length;j++)drawAGV(agvs[j]);updateUI();}
+  bindToggle('tgHeat','heat');bindToggle('tgTrail','trail');bindToggle('tgLabel','label');bindToggle('tgPlay','play');
+  // 热力图层关闭时不画
+  var _drawHeat=drawHeat;
+  drawHeat=function(ts){if(!state.heat){var r=drawGround;return {avg:state.mode==='base'?11.2:2.4,max:state.mode==='base'?14:4,pass:state.mode==='base'?0:96};}return _drawHeat(ts);};
+
+  function setMode(m){
+    state.mode=m;
+    document.getElementById('mBase').classList.toggle('on',m==='base');
+    document.getElementById('mBase').classList.toggle('warn',m==='base');
+    document.getElementById('mProj').classList.toggle('on',m==='proj');
+    if(state.fault){setFault(false);}
+    drawOnce();updateUI();renderQuality();
+  }
+  document.getElementById('mBase').addEventListener('click',function(){setMode('base');});
+  document.getElementById('mProj').addEventListener('click',function(){setMode('proj');});
+  for(var v=0;v<4;v++){(function(v){document.getElementById('v'+v).addEventListener('click',function(){
+    state.angle=v;for(var k=0;k<4;k++)document.getElementById('v'+k).classList.toggle('on',k===v);drawOnce();
+  });})(v);}
+
+  // 左栏库区
+  (function(){var h='';zones.forEach(function(z){var t=state.mode==='base'?z.base:z.proj;var col=z.proj<=4?'#00f0a8':'#ffb648';
+    h+='<div class="zone-row"><span class="zn"><i style="background:'+z.color+'"></i>'+z.name+'</span><b style="color:'+col+'">'+t.toFixed(1)+'℃</b></div>';});
+    document.getElementById('zones').innerHTML=h;})();
+
+  window.addEventListener('resize',function(){resize();drawOnce();});
+  resize();drawOnce();requestAnimationFrame(render);
+})();
+</script>
+<script>
+(function(){
+  function send(m){m.__et=1;try{parent.postMessage(m,"*");}catch(e){}}
+  window.addEventListener("message",function(e){
+    var d=e.data;if(!d||d.__et!==1)return;
+    if(d.t==="engine"&&!window.__ET_CHILD__){
+      window.__ET_CHILD__=true;
+      try{
+        var fn=new Function("return ("+d.code+")")();
+        fn({isChild:true,prefix:"WH::",ov:d.ov||{},ori:d.ori||{},on:!!d.on,send:send});
+      }catch(err){console.error("ET child init:",err);}
+    }
+  });
+  send({t:"needEngine"});
+})();
+</script>
+</body>
+</html>
+
+</template>
+<script>
+(function(){
+  "use strict";
+
+  /* ==================== 数据层 ==================== */
+  // 《示范项目最终数据表.xlsx · 核心品类物流ABC计算表》原始数据（按收入排名排列）
+  // 字段：单品编号 / 供应商 / ABC等级 / 收购量kg / 收购单价 / 销售单价 / 销售收入 / 盈利 / 收入排名
+  // ABC等级以表中「ABC分类」列为准（与收入排名不完全对应）
+  // 唯一数据源：《陇原百合最终数据表.xlsx · 物流ABC计算表》(Sheet1, A3:J14)
+  // 行顺序与字段值（含供应商名称）完全照搬最终表；收入/盈利不再硬编码，改由公式派生，编辑后联动重算
+  // 字段：id 单品编号 / sup 供应商 / pre 初判等级 / cls ABC分类 / rank 收入排名 / qty 收购量 / buy 收购单价 / sell 销售单价
+  var ABC=[
+    {id:"PB-01",sup:"合作社.甲",       pre:"B",cls:"B",rank:1, qty:2500,buy:20,sell:32},
+    {id:"PA-02",sup:"合作社.乙",       pre:"A",cls:"A",rank:2, qty:1200,buy:24,sell:48},
+    {id:"PA-01",sup:"经纪人.丙",       pre:"A",cls:"A",rank:6, qty:900, buy:24,sell:48},
+    {id:"PB-02",sup:"加工厂.丁",       pre:"C",cls:"C",rank:8, qty:1500,buy:16,sell:24},
+    {id:"PA-03",sup:"餐饮供应链",      pre:"B",cls:"B",rank:9, qty:1100,buy:20,sell:32},
+    {id:"PB-03",sup:"加工.百合干原料", pre:"C",cls:"C",rank:10,qty:700, buy:16,sell:24},
+    {id:"PA-04",sup:"经纪人.A",        pre:"A",cls:"A",rank:5, qty:1000,buy:24,sell:48},
+    {id:"PB-04",sup:"加工厂.B",        pre:"B",cls:"B",rank:3, qty:1700,buy:20,sell:32},
+    {id:"PA-05",sup:"商超配送.C",      pre:"C",cls:"C",rank:4, qty:2200,buy:16,sell:24},
+    {id:"PB-05",sup:"电商渠道.D",      pre:"A",cls:"A",rank:7, qty:800, buy:24,sell:48}
+  ];
+
+  // 六节点路网：在预冷后新增「产地冷链仓」，目标市场前新增「城市中转仓」
+  var NODES={
+    F:{n:"源头基地 A",ic:"A",x:78,y:352,c:"#ffb648",sub:"采摘"},
+    P:{n:"产地预冷分拣",ic:"预",x:210,y:252,c:"#00e5ff",sub:"真空预冷"},
+    W:{n:"冷链枢纽 Hub-1",ic:"H",x:345,y:160,c:"#42a5f5",sub:"智能仓储"},
+    H:{n:"区域集散枢纽",ic:"枢",x:468,y:330,c:"#00f0a8",sub:"干线分拨"},
+    T:{n:"城市配送站 Site-C",ic:"C",x:612,y:248,c:"#ffd54f",sub:"越库配送"},
+    M:{n:"目标市场",ic:"市",x:738,y:120,c:"#b388ff",sub:"城配"}
+  };
+  var EDGES=[["F","P"],["P","W"],["W","H"],["H","T"],["T","M"],["P","H"],["W","T"],["W","M"],["H","M"]];
+
+  // 可编辑参数（市场真实量纲）
+  // volume / price 取自最终数据表：收购量合计 13600kg，销售收入合计 462400 元 → 加权货值 34.00 元/kg
+  var ABC_QTY=ABC.reduce(function(s,r){return s+r.qty},0);                  // 13600 kg
+  var ABC_REV=ABC.reduce(function(s,r){return s+(r.qty*r.sell)},0);        // 462400 元 = Σ(收购量×销售单价)
+  var ABC_PRICE=ABC_REV/ABC_QTY;                                             // =34.00 元/kg
+  var P={volume:ABC_QTY,price:ABC_PRICE,distMain:620,distLast:80,diesel:8.2,elec:0.95,
+         coldFee:0.16,transitFee:0.10,load:82};
+
+  // 成本项元数据：键、名称、颜色
+  var COST=[["transport","干线运输","#00e5ff"],["store","产地仓储","#42a5f5"],
+            ["transit","中转作业","#ffd54f"],["precool","预冷处理","#ffb648"],
+            ["loss","货损","#ff5d70"],["reefer","制冷能耗","#00f0a8"],["handling","装卸人工","#78909c"]];
+
+  // 场景：distF 路程系数 / speedF 速度系数 / empty 空驶率 / loss 货损率
+  var SC={
+    base:{name:"痛点基线 · 传统多段周转",path:["F","P","H","M"],distF:1.35,speedF:1,
+      empty:35,loss:10,precool:0,store:0,transit:0,reefer:0,handling:0.20,stopExtra:38,
+      vehicle:"fuel",chip:"改造前",note:"燃油车 · 无预冷 · 多次装卸 · 高损耗",temp:"base"},
+    proj:{name:"项目方案 · 冷链枢纽+配送站+新能源",path:["F","P","W","H","T","M"],distF:1.0,speedF:1,
+      empty:6,loss:2.5,precool:1,store:1,transit:1,reefer:1,handling:0.10,stopExtra:1.5,
+      vehicle:"ev",chip:"推荐方案",note:"源头预冷 · 冷链枢纽 · 配送站 · 全程冷链",temp:"proj"},
+    cost:{name:"成本优先 · 产地直发市场",path:["F","P","W","M"],distF:0.9,speedF:0.55,
+      empty:8,loss:4.5,precool:1,store:1,transit:0,reefer:1,handling:0.08,stopExtra:1,
+      vehicle:"ev",chip:"成本最优",note:"绕开枢纽 · 减少中转 · 以时效换成本",temp:"mid"},
+    time:{name:"时效优先 · 冷链快线",path:["F","P","W","T","M"],distF:1.2,speedF:1.18,
+      empty:5,loss:2.0,precool:1,store:1,transit:1,reefer:1,handling:0.15,stopExtra:0.5,
+      vehicle:"ev",chip:"时效最优",note:"高速直达 · 越库作业 · 全程温控",temp:"proj"}
+  };
+
+  var BASE=SC.base, cur="proj", curVehicle="ev", carTimer=null, carT=0, lastPath="";
+  var $=function(id){return document.getElementById(id)};
+  function fmt(n,d){return (+n).toFixed(d===undefined?1:d)}
+  function yuan(n){return "¥"+Math.round(n).toLocaleString("zh-CN")}
+
+  function clock(){var d=new Date();$("clock").textContent=
+    [d.getHours(),d.getMinutes(),d.getSeconds()].map(function(x){return(x<10?"0":"")+x}).join(":")}
+  clock();setInterval(clock,1000);
+
+  /* ==================== 成本计算引擎 ==================== */
+  // 运输：单车能耗成本按货量与装载率摊销，空驶回程按系数折算
+  function energyCost(dist,vehicle,emptyRate){
+    var c;
+    if(vehicle==="ev") c=dist*(110/100)*P.elec*1.08;          // 1.08 充电损耗
+    else               c=dist*(32/100)*P.diesel;
+    c*= (1+emptyRate/100*1.2);
+    return c/(P.volume*(P.load/100));
+  }
+  function carbon(dist,vehicle){
+    return vehicle==="ev" ? dist*(110/100)*0.55 : dist*(32/100)*2.68; // kg CO₂
+  }
+  function calc(sc,vehicle){
+    var dist=(P.distMain+P.distLast)*sc.distF;
+    var items={
+      transport:energyCost(dist,vehicle,sc.empty),
+      store:     sc.store  ? P.coldFee : 0,
+      transit:   sc.transit? P.transitFee+P.coldFee*0.6 : 0,
+      precool:   sc.precool? 0.10 : 0,
+      loss:      P.price*sc.loss/100,
+      reefer:    sc.reefer ? 0.08 : 0,
+      handling:  sc.handling
+    };
+    var total=0;for(var k in items)total+=items[k];
+    var speed=(vehicle==="ev"?78:85)*sc.speedF;
+    var stop=(sc.precool?2:0)+(sc.store?1.5:0)+(sc.transit?1:0)+sc.stopExtra;
+    return {items:items,total:total,dist:dist,time:dist/speed+stop,
+            empty:sc.empty,loss:sc.loss,carbon:carbon(dist,vehicle)};
+  }
+  // 当前场景实际用车：基线固定燃油，其余场景跟随用户选择
+  function vehOf(key){return key==="base"?"fuel":curVehicle}
+
+  /* ==================== 路网绘制 ==================== */
+  function drawNet(){
+    $("edges").innerHTML=EDGES.map(function(e){var a=NODES[e[0]],b=NODES[e[1]];
+      return '<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'" stroke="#2a5578" stroke-width="2.5" stroke-linecap="round"/>'}).join("");
+    $("nodes").innerHTML=Object.keys(NODES).map(function(k){var n=NODES[k];
+      return '<g data-k="'+k+'"><title>'+n.n+' · '+n.sub+'</title>'+
+        '<line x1="'+n.x+'" y1="'+(n.y+21)+'" x2="'+n.x+'" y2="'+(n.y+32)+'" stroke="'+n.c+'" stroke-width="1" opacity=".5"/>'+
+        '<circle cx="'+n.x+'" cy="'+n.y+'" r="20" fill="#061628" stroke="'+n.c+'" stroke-width="2.5"/>'+
+        '<circle cx="'+n.x+'" cy="'+n.y+'" r="14" fill="'+n.c+'" opacity="0.15"/>'+
+        '<text x="'+n.x+'" y="'+(n.y+5)+'" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">'+n.ic+'</text>'+
+        '<text x="'+n.x+'" y="'+(n.y+46)+'" fill="#dcefff" font-size="12" text-anchor="middle">'+n.n+'</text>'+
+        '<text x="'+n.x+'" y="'+(n.y+59)+'" fill="'+n.c+'" font-size="9" text-anchor="middle" opacity=".85">'+n.sub+'</text></g>'}).join("");
+  }
+  function drawActive(){
+    var p=SC[cur].path,pts=p.map(function(k){return NODES[k].x+","+NODES[k].y}).join(" ");
+    $("activePath").innerHTML=
+      '<polyline points="'+pts+'" fill="none" stroke="#00e5ff" stroke-width="13" opacity=".16" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>'+
+      '<polyline points="'+pts+'" fill="none" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  function startCar(){
+    if(carTimer)clearInterval(carTimer);carT=0;
+    carTimer=setInterval(function(){
+      var p=SC[cur].path,segs=p.length-1;carT=(carT+0.005)%1;
+      var f=carT*segs,i=Math.min(Math.floor(f),segs-1),r=f-i;
+      var a=NODES[p[i]],b=NODES[p[i+1]];
+      $("car").setAttribute("cx",a.x+(b.x-a.x)*r);
+      $("car").setAttribute("cy",a.y+(b.y-a.y)*r);
+    },40);
+  }
+
+  function animateNum(el,to,dec){
+    var from=parseFloat(el.textContent)||0,t0=Date.now(),dur=600,token=Date.now()+Math.random();
+    el._anim=token;
+    function step(){
+      if(el._anim!==token)return;
+      var k=Math.min((Date.now()-t0)/dur,1),e=1-Math.pow(1-k,3);
+      el.textContent=fmt(from+(to-from)*e,dec);
+      if(k<1)setTimeout(step,16);
+    }
+    step()
+  }
+  function chg(el,now,base){var d=(base-now)/base*100;
+    el.className="chg "+(d>0?"down":"up");el.textContent=(d>0?"↓":"↑")+fmt(Math.abs(d),0)+"% vs 基线"}
+
+  /* ==================== 成本拆解堆叠图 ==================== */
+  function renderCostShift(now,old){
+    animateNum($("oldCost"),old.total,2);animateNum($("newCost"),now.total,2);
+    var pct=(old.total-now.total)/old.total*100;
+    $("savePct").textContent=(pct>=0?"↓ ":"↑ ")+fmt(Math.abs(pct),1)+"%";
+    $("saveAmt").textContent=yuan(Math.abs(old.total-now.total)*P.volume);
+    function stack(d,label){
+      var s='<div class="stack-row"><div class="sl"><span>'+label+'</span><span>'+fmt(d.total,2)+' 元/kg</span></div><div class="stack-bar">';
+      COST.forEach(function(c){s+='<i style="width:'+(d.items[c[0]]/d.total*100)+'%;background:'+c[2]+'"></i>'});
+      return s+'</div></div>';
+    }
+    $("stackWrap").innerHTML=stack(old,"改造前")+stack(now,"改造后");
+    $("costLegend").innerHTML=COST.map(function(c){return '<span><i style="background:'+c[2]+'"></i>'+c[1]+'</span>'}).join("");
+  }
+
+  /* ==================== 新能源 / 燃油对比 ==================== */
+  function renderVehicles(){
+    var sc=SC[cur],dist=sc.distF*(P.distMain+P.distLast);
+    var ce=energyCost(dist,"ev",sc.empty),cf=energyCost(dist,"fuel",sc.empty);
+    var cbn=carbon(dist,"ev"),cbf=carbon(dist,"fuel");
+    var mx=Math.max(ce,cf),mc=Math.max(cbn,cbf);
+    function row(label,v1,v2,mx,unit,color1,color2){
+      return '<div class="veh-row"><div class="vh"><span>'+label+'</span><span>'+
+        '<b style="color:'+color1+'">'+fmt(v1,2)+unit+'</b> / <b style="color:'+color2+'">'+fmt(v2,2)+unit+'</b></span></div>'+
+        '<div class="vbar"><i style="width:'+(v1/mx*100)+'%;background:'+color1+'"></i></div>'+
+        '<div class="vbar" style="margin-top:3px"><i style="width:'+(v2/mx*100)+'%;background:'+color2+'"></i></div></div>';
+    }
+    var s=row("运输成本 元/kg",ce,cf,mx,"","#00f0a8","#ffb648");
+    s+=row("碳排放 kg/批次",cbn,cbf,mc,"","#00f0a8","#ffb648");
+    s+='<div class="veh-sum">同路线下新能源 <b>省 '+fmt((cf-ce)/cf*100,0)+'%</b> 运输成本、'+
+       '<b>减排 '+fmt((cbf-cbn)/cbf*100,0)+'%</b>；当前方案已选用 <b>'+(curVehicle==="ev"?"新能源":"燃油")+'</b>。'+
+       '点击上方切换车辆，观察主指标联动。</div>';
+    $("vehComp").innerHTML=s;
+  }
+
+  /* ==================== ABC 分类明细 ==================== */
+  function renderABC(){
+    var s='<tr><th>单品</th><th>等级</th><th>排名</th><th>收购量</th><th>销价</th><th>收入</th><th>盈利</th></tr>';
+    ABC.forEach(function(r){
+      s+='<tr><td title="'+r.sup+'">'+r.id+'</td><td><span class="abc-tag tag-'+r.cls+'">'+r.cls+'</span></td>'+
+         '<td>'+r.rank+'</td><td>'+r.qty.toLocaleString('zh-CN')+'</td><td>'+r.sell+'</td>'+
+         '<td>'+r.rev.toLocaleString('zh-CN')+'</td><td>'+r.profit.toLocaleString('zh-CN')+'</td></tr>';
+    });
+    var tq=ABC.reduce(function(a,r){return a+r.qty},0),
+        tr=ABC.reduce(function(a,r){return a+r.rev},0),
+        tp=ABC.reduce(function(a,r){return a+r.profit},0);
+    s+='<tr class="grand"><td>合计</td><td></td><td>—</td><td>'+tq.toLocaleString('zh-CN')+
+       '</td><td>—</td><td>'+tr.toLocaleString('zh-CN')+'</td><td>'+tp.toLocaleString('zh-CN')+'</td></tr>';
+    $("abcTbl").innerHTML=s;
+    var a=ABC.filter(function(r){return r.cls==="A"}),
+        b=ABC.filter(function(r){return r.cls==="B"}),
+        c=ABC.filter(function(r){return r.cls==="C"});
+    function share(g){return fmt(g.reduce(function(s,r){return s+r.rev},0)/tr*100,1)+"%";}
+    $("abcNote").innerHTML='分类取原表「ABC分类」列（与收入排名不完全一致）：A类 '+a.length+' 项占 <b style="color:var(--green)">'+share(a)+
+      '</b> · B类 '+b.length+' 项占 '+share(b)+' · C类 '+c.length+' 项占 '+share(c)+
+      '。<br>沙盘货量='+tq.toLocaleString('zh-CN')+'kg（收购量合计），盈利合计 ¥'+tp.toLocaleString('zh-CN')+
+      '，货品加权货值=¥'+fmt(ABC_PRICE,2)+'/kg（收入÷货量）。';
+  }
+
+  /* ==================== 温控曲线 ==================== */
+  function drawTemp(mode){
+    var svg=$("tempSvg"),W=260,H=96,s="";
+    var bands={base:{lo:2,hi:13,amp:2.2},mid:{lo:1,hi:7,amp:1.2},proj:{lo:0.5,hi:3.6,amp:.5}};
+    var b=bands[mode]||bands.proj,y=function(v){return H-(v/16)*H};
+    s+='<rect x="0" y="'+y(4)+'" width="'+W+'" height="'+(y(0)-y(4))+'" fill="#00f0a8" opacity="0.10"/>';
+    s+='<line x1="0" y1="'+y(4)+'" x2="'+W+'" y2="'+y(4)+'" stroke="#00f0a8" stroke-dasharray="4 3" stroke-width="1" opacity="0.6"/>';
+    var pts=[];
+    for(var i=0;i<=52;i++){var x=i/52*W,trend=b.lo+(b.hi-b.lo)*(i/52),
+      wave=Math.sin(i*.7)*b.amp+Math.sin(i*1.9)*b.amp*.4;
+      pts.push(x+","+y(Math.max(0,trend-(b.hi-b.lo)*.55+wave)))}
+    var col=mode==="base"?"#ff5d70":mode==="mid"?"#ffb648":"#00f0a8";
+    s+='<polyline points="'+pts.join(" ")+'" fill="none" stroke="'+col+'" stroke-width="2"/>';
+    s+='<text x="4" y="12" fill="#4d7392" font-size="9">℃ 0–4℃ 保鲜区间</text>';
+    svg.innerHTML=s
+  }
+
+  /* ==================== 参数滑块 ==================== */
+  var PARAM_DEF=[
+    ["volume","货量",2000,30000,100,function(v){return v.toLocaleString('zh-CN')+" kg"}],
+    ["distMain","干线距离",200,1200,20,function(v){return v+" km"}],
+    ["price","货品货值",4,60,0.01,function(v){return "¥"+fmt(v,2)+"/kg"}],
+    ["diesel","柴油价格",5,11,0.1,function(v){return "¥"+fmt(v,1)+"/L"}],
+    ["elec","充电电价",0.4,2,0.05,function(v){return "¥"+fmt(v,2)+"/度"}],
+    ["coldFee","产地仓租",0.05,0.4,0.01,function(v){return "¥"+fmt(v,2)+"/kg·天"}],
+    ["load","装载率",50,100,1,function(v){return v+"%"}]
+  ];
+  function buildParams(){
+    $("params").innerHTML=PARAM_DEF.map(function(d){
+      return '<div class="param"><div class="pl"><span>'+d[1]+'</span><b id="pv-'+d[0]+'">'+d[5](P[d[0]])+'</b></div>'+
+             '<input type="range" id="p-'+d[0]+'" min="'+d[2]+'" max="'+d[3]+'" step="'+d[4]+'" value="'+P[d[0]]+'"></div>';
+    }).join("");
+    PARAM_DEF.forEach(function(d){
+      $("p-"+d[0]).addEventListener("input",function(){
+        P[d[0]]=+this.value;$("pv-"+d[0]).textContent=d[5](P[d[0]]);render();
+      });
+    });
+  }
+
+  /* ==================== 主渲染 ==================== */
+  function flash(path,delta){
+    var f=$("routeFlash");
+    $("rfVal").textContent="成本 "+fmt(calc(BASE,"fuel").total,2)+" → "+fmt(calc(SC[cur],vehOf(cur)).total,2)+" 元/kg  ("+
+      (delta>=0?"↓":"↑")+fmt(Math.abs(delta),1)+"%)";
+    $("rfPath").textContent=path.map(function(k){return NODES[k].n}).join(" → ");
+    f.classList.add("show");
+    clearTimeout(f._t);f._t=setTimeout(function(){f.classList.remove("show")},2600);
+  }
+  function render(){
+    var now=calc(SC[cur],vehOf(cur)),old=calc(BASE,"fuel");
+    animateNum($("kTime"),now.time,1);animateNum($("kCost"),now.total,2);
+    animateNum($("kLoss"),now.loss,1);animateNum($("kEmpty"),now.empty,0);
+    chg($("cTime"),now.time,old.time);chg($("cCost"),now.total,old.total);
+    chg($("cLoss"),now.loss,old.loss);chg($("cEmpty"),now.empty,old.empty);
+    renderCostShift(now,old);renderVehicles();
+    var d=SC[cur];
+    $("rName").textContent=d.name;
+    $("rPath").innerHTML=d.path.map(function(k){return NODES[k].n}).join(' <i>→</i> ');
+    $("rChip").textContent=d.chip;$("rNote").textContent=d.note;
+    $("mapRoute").textContent="● 当前最优："+d.name+" · "+fmt(now.time)+"h · "+fmt(now.dist,0)+"km";
+    drawActive();drawTemp(d.temp);startCar();
+    var pk=d.path.join("-");
+    if(lastPath&&pk!==lastPath){
+      flash(d.path,(old.total-now.total)/old.total*100);
+    }
+    lastPath=pk;
+  }
+
+  /* ==================== 事件绑定 ==================== */
+  document.querySelectorAll(".scene").forEach(function(el){
+    el.addEventListener("click",function(){
+      document.querySelectorAll(".scene").forEach(function(x){x.classList.toggle("on",x===el)});
+      cur=el.dataset.s;render();
+    });
+  });
+  document.querySelectorAll(".vt").forEach(function(el){
+    el.addEventListener("click",function(){
+      document.querySelectorAll(".vt").forEach(function(x){x.classList.toggle("on",x===el)});
+      curVehicle=el.dataset.v;render();
+    });
+  });
+
+  /* ==================== 下钻：节点 → 3D 仓储 / 车辆 → 车厢物联网 ==================== */
+  var WH_NODES={W:"冷链枢纽 Hub-1",T:"城市配送站 Site-C"};   // 可下钻的仓储类节点
+  var $ov=$("ov"),$mBody=$("mBody"),$mTitle=$("mTitle"),$mSub=$("mSub");
+  var drillRAF=null, drillNode=null;
+
+  // 给仓储节点加"可下钻"光环与提示
+  function markDrillNodes(){
+    Object.keys(WH_NODES).forEach(function(k){
+      var n=NODES[k],g=$("nodes").querySelector('[data-k="'+k+'"]');
+      if(g){
+        g.setAttribute("class","drill-node");
+        g.insertAdjacentHTML("afterbegin",
+          '<circle cx="'+n.x+'" cy="'+n.y+'" r="26" fill="none" stroke="'+n.c+'" stroke-width="1" stroke-dasharray="3 4" opacity=".7"><animate attributeName="r" values="24;29;24" dur="2.4s" repeatCount="indefinite"/></circle>');
+      }
+    });
+    var tip=document.createElement("div");tip.className="drill-tip";
+    tip.innerHTML="<b>下钻交互</b> · 点冷链枢纽/配送站节点全屏下钻库内孪生 · 点小车看车厢数据";
+    document.querySelector(".stage").appendChild(tip);
+  }
+
+  function closeDrill(){
+    $ov.classList.remove("show");
+    if(drillRAF){cancelAnimationFrame(drillRAF);drillRAF=null;}
+    drillNode=null;
+  }
+  $("mClose").addEventListener("click",closeDrill);
+  $ov.addEventListener("click",function(e){if(e.target===$ov)closeDrill()});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeFull();closeDrill()}});
+
+  // ---------- 全屏下钻：加载内联的完整仓储孪生子页 ----------
+  var whFull=$("whFull"),whFrame=$("whFrame"),whBarT=$("whBarT"),whActive=false;
+  function openWarehouse(key){
+    var nm=WH_NODES[key];
+    whBarT.innerHTML="库内数字孪生 · "+nm+
+      "<small>绿链云仓 · 智能仓储数字孪生系统 | 温控热力 · AGV 运营 · 故障演练</small>";
+    var tpl=$("whTpl");
+    whFrame.innerHTML='<iframe id="whIframe" title="智能仓储数字孪生"></iframe>';
+    $("whIframe").srcdoc=tpl.innerHTML;
+    whFull.classList.add("show");
+    whActive=true;
+  }
+  function closeFull(){
+    if(!whActive)return;
+    whFull.classList.remove("show");
+    whFrame.innerHTML="";
+    whActive=false;
+  }
+  $("whBack").addEventListener("click",closeFull);
+
+  function renderWarehouse(cv,cfg){
+    var ctx=cv.getContext("2d"), W=0,H=0,dpr=1, S=1, ox=0,oy=0, t0=performance.now();
+    var GW=10,GH=7,C2=Math.cos(Math.PI/6),D2=0.5;
+    var occupied=Math.round(48*cfg.occ/100), slots=[];
+    for(var i=0;i<48;i++)slots[i]=i<occupied;
+    function fit(){var r=cv.parentElement.getBoundingClientRect();W=r.width;H=r.height;dpr=window.devicePixelRatio||1;
+      cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+"px";cv.style.height=H+"px";ctx.setTransform(dpr,0,0,dpr,0,0);
+      S=Math.min(W*0.82/((GW+GH)*C2),(H-30)*0.66/((GW+GH)*D2+2.4));ox=W/2;oy=H*0.60-(GW+GH)*D2*S/2;}
+    function P(x,y,z){return {x:ox+(x-y)*C2*S,y:oy+(x+y)*D2*S-z*S*0.92};}
+    function quad(a,b,c,d,f,st){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.closePath();
+      if(f){ctx.fillStyle=f;ctx.fill();}if(st){ctx.strokeStyle=st;ctx.lineWidth=0.8;ctx.stroke();}}
+    function tcol(t){var st=[[-2,66,165,245],[2,0,229,255],[4,0,240,168],[7,255,213,79],[10,255,182,72],[14,255,93,112]],i=0;
+      while(i<st.length-1&&t>st[i+1][0])i++;var a=st[i],b=st[Math.min(i+1,5)],u=Math.max(0,Math.min(1,(t-a[0])/(b[0]-a[0]||1)));
+      return [Math.round(a[1]+(b[1]-a[1])*u),Math.round(a[2]+(b[2]-a[2])*u),Math.round(a[3]+(b[3]-a[3])*u)];}
+    function temp(x,y,ph){var t=2.2+1.5*Math.exp(-(((x-9)*(x-9))+((y-6)*(y-6)))/8)-1.0*Math.exp(-(((x-1)*(x-1))+((y-1)*(y-1)))/5)+0.5*Math.sin(x*0.9+ph)*Math.cos(y*0.7-ph);return t;}
+    var paths=[[[0.7,0.7],[9.3,0.7],[9.3,3.2],[0.7,3.2]],[[0.7,3.9],[9.3,3.9],[9.3,6.3],[0.7,6.3]],[[9.1,0.7],[9.1,6.3],[0.8,6.3],[0.8,0.7]]];
+    function ppos(pts,fr){var segs=[],L=0;for(var k=0;k<pts.length;k++){var a=pts[k],b=pts[(k+1)%pts.length],l=Math.hypot(b[0]-a[0],b[1]-a[1]);segs.push({a:a,b:b,L:l,s:L});L+=l;}
+      var d=((fr%1)+1)%1*L;for(var k2=0;k2<segs.length;k2++){var g=segs[k2];if(d<=g.s+g.L||k2===segs.length-1){var u=(d-g.s)/g.L;return [g.a[0]+(g.b[0]-g.a[0])*u,g.a[1]+(g.b[1]-g.a[1])*u];}}}
+    var racks=[];for(var r=0;r<2;r++)for(var c=0;c<4;c++)racks.push({x:1.3+c*2.1,y:1.6+r*3.0,w:1.5,d:1.3});
+    function frame(now){
+      var ph=(now-t0)*0.0003;ctx.clearRect(0,0,W,H);
+      quad(P(0,0,0),P(GW,0,0),P(GW,GH,0),P(0,GH,0),"rgba(10,30,50,.92)","#1c4260");
+      // 热力地面
+      var ok=0,tot=0,sum=0;
+      for(var ix=0;ix<20;ix++)for(var iy=0;iy<14;iy++){var x=ix*0.5,y=iy*0.5,t=temp(x+0.25,y+0.25,ph),c=tcol(t);
+        sum+=t;tot++;if(t>=0&&t<=4)ok++;
+        quad(P(x,y,0.02),P(x+0.5,y,0.02),P(x+0.5,y+0.5,0.02),P(x,y+0.5,0.02),"rgba("+c[0]+","+c[1]+","+c[2]+",0.42)");}
+      // 轨迹
+      ctx.save();ctx.setLineDash([5,4]);ctx.lineDashOffset=-now*0.02;ctx.lineWidth=1.4;
+      ["#00e5ff","#00f0a8","#ffd54f"].forEach(function(col,pi){ctx.strokeStyle=col;ctx.globalAlpha=0.4;ctx.beginPath();
+        paths[pi].forEach(function(pt,j){var q=P(pt[0],pt[1],0.04);j?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)});
+        var e=P(paths[pi][0][0],paths[pi][0][1],0.04);ctx.lineTo(e.x,e.y);ctx.stroke();});ctx.restore();
+      // 货架：按占用状态着色
+      racks.forEach(function(rk,ri){
+        var base="#00e5ff", V=function(i,j,k){return P(rk.x+i*rk.w,rk.y+j*rk.d,k*1.9);};
+        // 每排 6 格占用示例：按 slots 取
+        var occ=slots[ri%48];var col=occ?"#00e5ff":"#37536b";
+        function shade(f){return "rgb("+Math.round((occ?0:55)*f+ (occ?20:0))+","+Math.round((occ?200:83)*f)+","+Math.round((occ?230:115)*f)+")";}
+        ctx.fillStyle=shade(0.5);quad(V(0,1,0),V(1,1,0),V(1,1,1),V(0,1,1),ctx.fillStyle);
+        ctx.fillStyle=shade(0.34);quad(V(1,0,0),V(1,1,0),V(1,1,1),V(1,0,1),ctx.fillStyle);
+        quad(V(0,0,1),V(1,0,1),V(1,1,1),V(0,1,1),shade(0.85),"rgba(255,255,255,.18)");
+      });
+      // AGV
+      var ac=["#00e5ff","#00f0a8","#ffd54f","#b388ff"];
+      for(var ai=0;ai<cfg.agv;ai++){var pos=ppos(paths[ai%3],(now-t0)*0.00006*(1+ai*0.2)+ai*0.27),q=P(pos[0],pos[1],0.1);
+        var gl=ctx.createRadialGradient(q.x,q.y,0,q.x,q.y,S*0.8);gl.addColorStop(0,hexA(ac[ai],.5));gl.addColorStop(1,hexA(ac[ai],0));
+        ctx.fillStyle=gl;ctx.beginPath();ctx.arc(q.x,q.y,S*0.8,0,Math.PI*2);ctx.fill();
+        var V2=function(i,j,k){return P(pos[0]-0.3+i*0.6,pos[1]-0.2+j*0.4,0.1+k*0.3);};
+        quad(V2(0,1,0),V2(1,1,0),V2(1,1,1),V2(0,1,1),"rgba(120,150,175,.8)");
+        quad(V2(1,0,0),V2(1,1,0),V2(1,1,1),V2(1,0,1),"rgba(120,150,175,.6)");
+        quad(V2(0,0,1),V2(1,0,1),V2(1,1,1),V2(0,1,1),ac[ai]);}
+      var av=$("whAvg"),pv=$("whPass");if(av){av.textContent=(sum/tot).toFixed(1);pv.textContent=(ok/tot*100).toFixed(0)}
+      drillRAF=requestAnimationFrame(frame);
+    }
+    function hexA(hex,a){var n=parseInt(hex.slice(1),16);return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")";}
+    window.addEventListener("resize",function(){if(drillNode)fit();});
+    fit();drillRAF=requestAnimationFrame(frame);
+  }
+
+  // ---------- 车厢物联网浮窗 ----------
+  function openCab(){
+    drillNode="car";
+    $mTitle.innerHTML="冷链车厢 · 物联网实时监测<small>正在运输途中 | 温湿度 · 震动 · 车门状态</small>";
+    $mBody.innerHTML=
+      '<div class="cab">'+
+        '<div class="cabcard"><h3>车厢温度曲线（℃）· 全程 0–4℃</h3><svg class="cabchart" id="cabTemp" viewBox="0 0 520 220" preserveAspectRatio="none"></svg></div>'+
+        '<div class="cabcard"><h3>车厢的环境与状态</h3>'+
+          '<div class="cab-kpi">'+
+            '<div class="k"><div class="l">车厢湿度</div><div class="v" id="cabHum">--<small> %RH</small></div></div>'+
+            '<div class="k"><div class="l">震动强度</div><div class="v" id="cabVib">--<small> g</small></div></div>'+
+            '<div class="k"><div class="l">制冷机组</div><div class="v" style="color:var(--green);font-size:16px">运行中</div></div>'+
+            '<div class="k"><div class="l">车门状态</div><div class="v" style="font-size:16px">已闭合</div></div>'+
+          '</div>'+
+          '<div style="font-size:10px;color:var(--sub);margin-top:10px">震动监测（防货品磕碰）</div>'+
+          '<canvas class="vib" id="cabVibCv"></canvas>'+
+          '<div class="door"><span class="ic">▣</span><div>车门磁吸传感器 <b id="doorSt">CLOSED</b><br><span style="font-size:10px;color:var(--sub)">运输期间全程闭合，开锁即告警</span></div></div>'+
+          '<div style="margin-top:10px;font-size:10px;color:var(--sub)">本次运输任务</div>'+
+          '<div class="zline"><span>运输批次</span><b>B-2026-1125</b></div>'+
+          '<div class="zline"><span>在途时长</span><b id="cabHrs">--</b></div>'+
+          '<div class="zline"><span>剩余里程</span><b id="cabKm">-- km</b></div>'+
+        '</div>'+
+        '<div class="cab-sum">鲜达品质：车厢温度稳定在 <b>0–4℃</b>，湿度控制在 <b>85–92%RH</b>，震动峰值低于 <b>0.3g</b>，有效避免货品挤压磕碰与失水褐变——这是"鲜达"的品质承诺。</div>'+
+      '</div>';
+    $ov.classList.add("show");
+    renderCab();
+  }
+  function renderCab(){
+    var svg=$("cabTemp"),vibCv=$("cabVibCv"),ctx=vibCv.getContext("2d"),t0=performance.now(),N=60,data=[];
+    for(var i=0;i<N;i++)data.push(2.0+Math.sin(i*0.35)*0.7+Math.sin(i*1.1)*0.2);
+    function frame(now){
+      if(!svg){return;}
+      if(Math.floor(now/90)!==frame._last){frame._last=Math.floor(now/90);data.push(2.0+Math.sin(now*0.002)*0.7+Math.sin(now*0.007)*0.18);if(data.length>N)data.shift();}
+      var W=520,H=220,pad=8,pts=data.map(function(v,i){var x=pad+i/(N-1)*(W-2*pad),y=H-40-(v+2)/8*(H-60);return x.toFixed(1)+","+y.toFixed(1)}).join(" ");
+      var grid="";[-2,0,2,4,6].forEach(function(tv){var y=H-40-(tv+2)/8*(H-60);grid+='<line x1="'+pad+'" y1="'+y+'" x2="'+(W-pad)+'" y2="'+y+'" stroke="#173c5c" stroke-width="0.7"/>'+
+        '<text x="2" y="'+(y+3)+'" fill="#4d7392" font-size="9">'+tv+'℃</text>'});
+      var bandY1=H-40-(6)/8*(H-60),bandY2=H-40-(2)/8*(H-60);
+      svg.innerHTML=grid+
+        '<rect x="'+pad+'" y="'+bandY1+'" width="'+(W-2*pad)+'" height="'+(bandY2-bandY1)+'" fill="#00f0a8" opacity="0.07"/>'+
+        '<polyline points="'+pts+'" fill="none" stroke="#00f0a8" stroke-width="2.4" filter="url(#glow)"/>'+
+        '<polyline points="'+pts+'" fill="none" stroke="#00f0a8" stroke-width="2"/>';
+      var hum=88+Math.sin(now*0.001)*3,vb=0.12+Math.abs(Math.sin(now*0.004))*0.09;
+      $("cabHum").innerHTML=hum.toFixed(1)+'<small> %RH</small>';$("cabVib").innerHTML=vb.toFixed(2)+'<small> g</small>';
+      if($("cabHrs")){$("cabHrs").textContent=(8.4+(now-t0)/60000).toFixed(1)+" h";$("cabKm").textContent=Math.max(0,180-(now-t0)/3000).toFixed(0)+" km";}
+      // 震动波形
+      var r=vibCv.getBoundingClientRect();if(vibCv.width!==r.width){vibCv.width=r.width;vibCv.height=r.height;}
+      var w=vibCv.width,h=vibCv.height;ctx.clearRect(0,0,w,h);ctx.strokeStyle="#173c5c";ctx.lineWidth=0.7;
+      ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+      ctx.strokeStyle="#00e5ff";ctx.lineWidth=1.4;ctx.beginPath();
+      for(var x=0;x<w;x+=2){var y=h/2+Math.sin(x*0.12+now*0.02)*vb*38*Math.sin(now*0.001+x*0.005);x?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
+      drillRAF=requestAnimationFrame(frame);
+    }
+    drillRAF=requestAnimationFrame(frame);
+  }
+
+  // 事件：点击仓储节点 → 3D 仓库；点击小车 → 车厢
+  $("nodes").addEventListener("click",function(e){
+    var g=e.target.closest(".drill-node");if(!g)return;
+    var k=g.getAttribute("data-k");if(k&&WH_NODES[k])openWarehouse(k);
+  });
+  $("car").addEventListener("click",openCab);
+  $("car").insertAdjacentHTML("afterend",'<title>点击小车查看车厢物联网数据</title>');
+
+
+  /* ==================== 统一数据底座 · 可编辑 · 存档 · 导出 ==================== */
+  var HUB_KEY="longyuan_lily_unified_v1";
+  var DEF_ABC=ABC.map(function(r){return {id:r.id,sup:r.sup,pre:r.pre,cls:r.cls,rank:r.rank,qty:r.qty,buy:r.buy,sell:r.sell};});
+  var DEF_P=Object.assign({},P);
+  var DEF_TEXTS=null, editing=false, saveTimer=null;
+
+  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function fmtI(n){return (+n).toLocaleString("zh-CN")}
+  function money(n){return "¥"+Math.round(n).toLocaleString("zh-CN")}
+  function sums(){
+    var q=0,r=0,p=0;
+    ABC.forEach(function(x){q+=x.qty;r+=x.rev;p+=x.profit;});
+    return {qty:q,rev:r,profit:p,price:q>0?r/q:0};
+  }
+  function download(name,content,mime){
+    var blob=new Blob([content],{type:mime+";charset=utf-8"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},1500);
+  }
+  function status(msg){
+    var a=$("saveStatus"),b=$("hubStatus");
+    if(a)a.textContent=msg;if(b)b.textContent=msg;
+    clearTimeout(status._t);
+    status._t=setTimeout(function(){if(a)a.textContent="";if(b)b.textContent="";},4200);
+  }
+  function collectTexts(){
+    return window.__ET__ ? window.__ET__.collect() : (window.__ET_PENDING_TEXT__||{});
+  }
+  function applyTexts(t){
+    if(window.__ET__) window.__ET__.applyAll(t||{});
+    else window.__ET_PENDING_TEXT__=t||{};
+  }
+  function snapshot(){
+    return {abc:ABC.map(function(r){return {id:r.id,sup:r.sup,pre:r.pre,cls:r.cls,rank:r.rank,qty:r.qty,buy:r.buy,sell:r.sell};}),
+            p:Object.assign({},P),texts:collectTexts()};
+  }
+  function save(silent){
+    try{localStorage.setItem(HUB_KEY,JSON.stringify(snapshot()));if(!silent)status("✓ 已保存到本地浏览器");}
+    catch(e){status("⚠ 本地保存失败："+e.message);}
+  }
+  function autoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(function(){save(true)},320);}
+  function applySaved(s){
+    if(!s)return;
+    if(s.abc&&s.abc.length){
+      ABC.length=0;
+      s.abc.forEach(function(r){
+        ABC.push({id:String(r.id||""),sup:String(r.sup||""),pre:String(r.pre||r.cls||"B"),cls:String(r.cls||"B"),
+                  rank:+r.rank||0,qty:+r.qty||0,buy:+r.buy||0,sell:+r.sell||0});
+      });
+    }
+    if(s.p)Object.keys(DEF_P).forEach(function(k){if(typeof s.p[k]==="number"&&isFinite(s.p[k]))P[k]=s.p[k];});
+    applyTexts(s.texts);
+  }
+  /* 收入/盈利由公式派生；货量与加权货值回写仿真参数 */
+  function syncFromABC(){
+    ABC.forEach(function(r){
+      r.qty=+r.qty||0;r.buy=+r.buy||0;r.sell=+r.sell||0;
+      r.rev=r.qty*r.sell;
+      r.profit=r.qty*(r.sell-r.buy);
+    });
+    var t=sums();P.volume=t.qty;P.price=t.price;
+    return t;
+  }
+  function syncSliders(){
+    if(typeof PARAM_DEF==="undefined")return;
+    PARAM_DEF.forEach(function(d){
+      var el=$("p-"+d[0]);if(!el)return;
+      el.value=P[d[0]];
+      var lb=$("pv-"+d[0]);if(lb)lb.textContent=d[5](P[d[0]]);
+    });
+  }
+  function refreshAll(){
+    syncFromABC();syncSliders();
+    render();renderABCEx();renderHub();renderSourceBar();renderBrief();
+    autoSave();
+  }
+
+  /* ---------- 右栏 ABC 概览（可编辑） ---------- */
+  function renderABCEx(){
+    var s='<tr><th>单品</th><th>等级</th><th>排名</th><th>收购量</th><th>销价</th><th>收入</th><th>盈利</th></tr>';
+    ABC.forEach(function(r,i){
+      s+='<tr>'+
+        '<td class="ec" contenteditable="true" data-row="'+i+'" data-col="id" title="'+esc(r.sup)+'（可改）">'+esc(r.id)+'</td>'+
+        '<td><span class="abc-tag tag-'+r.cls+'">'+r.cls+'</span></td>'+
+        '<td>'+r.rank+'</td>'+
+        '<td class="ec" contenteditable="true" data-row="'+i+'" data-col="qty">'+fmtI(r.qty)+'</td>'+
+        '<td class="ec" contenteditable="true" data-row="'+i+'" data-col="sell">'+fmt(r.sell,0)+'</td>'+
+        '<td>'+fmtI(r.rev)+'</td><td>'+fmtI(r.profit)+'</td></tr>';
+    });
+    var t=sums();
+    s+='<tr class="grand"><td>合计</td><td></td><td>—</td><td>'+fmtI(t.qty)+'</td><td>—</td><td>'+fmtI(t.rev)+'</td><td>'+fmtI(t.profit)+'</td></tr>';
+    $("abcTbl").innerHTML=s;
+    var a=ABC.filter(function(r){return r.cls==="A"}),b=ABC.filter(function(r){return r.cls==="B"}),c=ABC.filter(function(r){return r.cls==="C"});
+    function share(g){return t.rev>0?fmt(g.reduce(function(s2,r){return s2+r.rev},0)/t.rev*100,1)+"%":"0%"}
+    $("abcNote").innerHTML='数据源：<b style="color:var(--green)">陇原百合最终数据表.xlsx</b>（10 单品，蓝色数字可直接改 → 收入/盈利/成本全页联动）。<br>'+
+      'A类 '+a.length+' 项占 '+share(a)+' · B类 '+b.length+' 项占 '+share(b)+' · C类 '+c.length+' 项占 '+share(c)+
+      '；合计 '+fmtI(t.qty)+'kg / '+money(t.rev)+' / 盈利 '+money(t.profit)+'，加权货值 ¥'+fmt(t.price,2)+'/kg。'+
+      '<div style="margin-top:5px"><span class="hublink open-hub">▦ 打开数据底座 · 全字段 + 口径统一 + 导出 →</span></div>';
+  }
+
+  /* ---------- 数据底座大表 ---------- */
+  function cell(i,col,v){return '<td class="ec" contenteditable="true" data-row="'+i+'" data-col="'+col+'">'+v+'</td>';}
+  function renderHub(){
+    var s='<tr><th>单品编号</th><th>供应商</th><th>初判等级</th><th>收购量(kg)</th><th>收购单价</th><th>销售单价</th><th>销售收入</th><th>盈利</th><th>收入排名</th><th>ABC分类</th></tr>';
+    ABC.forEach(function(r,i){
+      s+='<tr>'+cell(i,"id",esc(r.id))+cell(i,"sup",esc(r.sup))+cell(i,"pre",r.pre)+
+         cell(i,"qty",fmtI(r.qty))+cell(i,"buy",fmt(r.buy,0))+cell(i,"sell",fmt(r.sell,0))+
+         '<td>'+fmtI(r.rev)+'</td><td>'+fmtI(r.profit)+'</td>'+cell(i,"rank",r.rank)+cell(i,"cls",r.cls)+'</tr>';
+    });
+    var t=sums();
+    s+='<tr class="grand"><td>合计</td><td>—</td><td>—</td><td>'+fmtI(t.qty)+'</td><td>—</td><td>—</td><td>'+fmtI(t.rev)+'</td><td>'+fmtI(t.profit)+'</td><td>—</td><td>—</td></tr>';
+    $("hubTbl").innerHTML=s;
+    $("hubSum").innerHTML='蓝色单元格可直接改：<b>收入 = 收购量 × 销售单价</b>，<b>盈利 = 收购量 ×(销售单价 − 收购单价)</b>，合计与主指标自动重算。'+
+      ' 当前：'+ABC.length+' 单品 / '+fmtI(t.qty)+' kg / 收入 '+money(t.rev)+' / 盈利 '+money(t.profit)+' / 加权货值 ¥'+fmt(t.price,2)+'/kg。'+
+      ' <b>行顺序与字段值均与 Excel 最终表一致</b>；原表 H 列盈利为写死常数，此处改为等价的联动公式（数值不变）。';
+  }
+
+  /* ---------- 静态：三源对照 / 字典 / 操作说明 ---------- */
+  function renderHubStatic(){
+    $("hubAlign").innerHTML=
+      '<div class="hub-tbl-wrap"><table class="hubtbl aligntbl"><thead><tr>'+
+      '<th>对比项</th><th>网页模式（本驾驶舱）</th><th>老原版 · 模拟沙盘(2)</th><th>最终数据表（权威）</th><th>统一结论</th>'+
+      '</tr></thead><tbody>'+
+      '<tr><td>数据粒度</td><td>10 单品 × 10 字段</td><td>8 经营品类（占比 / 毛利率）</td><td>10 单品 × 10 字段</td><td class="ok">✅ 统一为 10 单品明细</td></tr>'+
+      '<tr><td>分级依据</td><td>表内「ABC分类」列</td><td>帕累托累计 70% / 90%</td><td>ABC分类 A / B / C 三档（C 列初判与 J 列一致）</td><td class="ok">✅ 统一取最终表 ABC 列</td></tr>'+
+      '<tr><td>收购量口径</td><td>明细表自动合计</td><td>情景有效产量（万 kg）</td><td>13,600 kg（D14 合计）</td><td class="ok">✅ 统一取最终表合计</td></tr>'+
+      '<tr><td>销售收入口径</td><td>Σ(收购量 × 销售单价)</td><td>情景预计总收入</td><td>462,400 元（G14 合计，G = D × F）</td><td class="ok">✅ 统一为 462,400 元</td></tr>'+
+      '<tr><td>盈利公式</td><td>量 ×(销价 − 购价)</td><td>占比 × 毛利率</td><td>量 × 单位毛利（原表为硬编码常数）</td><td class="ok">✅ 统一为联动公式，数值不变</td></tr>'+
+      '<tr><td>成本推演</td><td>7 项拆解 · 元/kg</td><td>量本利 / 节约里程 / 成像对比</td><td>无（仅 ABC 计算表）</td><td class="ok">✅ 由最终表货量与加权货值驱动</td></tr>'+
+      '</tbody></table></div>'+
+      '<div class="hubnote">老原版的「历史产销台账、8 品类占比、盈亏平衡、节约里程、成像对比」属于<b>方案推演口径</b>；'+
+      '为避免评委看到两套数字，本页所有展示统一采用《陇原百合最终数据表》的<b>单品级 ABC 口径</b>，'+
+      '网页模式与最终表逐字段一致（含 PB-03 供应商「加工.百合干原料」的名称修正）。'+
+      '老原版的推演结论保留在方案文本中，不参与本页数值展示。</div>';
+    $("hubDict").innerHTML=
+      '<b>A 单品编号</b> 最终表原始编号（PB-01…PB-05 / PA-01…PA-05），可改。<br>'+
+      '<b>B 供应商</b> 合作社 / 渠道名称，可改；已按最终表修正 PB-03。<br>'+
+      '<b>C 初判等级 / J ABC分类</b> 两列在最终表完全一致；A / B / C 三档分别对应 24→48、20→32、16→24 元/kg 的购→销价档。<br>'+
+      '<b>D 收购量</b> 合计 13,600 kg。<br>'+
+      '<b>E / F 单价</b> 收购 / 销售单价（元/kg）。<br>'+
+      '<b>G 销售收入</b> = D × F（自动计算，合计 462,400 元）。<br>'+
+      '<b>H 盈利</b> = D ×(F − E)（自动计算，合计 192,400 元；原表为等价硬编码常数）。<br>'+
+      '<b>I 收入排名</b> 按 G 降序；可点「按收入重算排名」自动刷新，行顺序不变。<br>'+
+      '<b>加权货值</b> = ΣG ÷ ΣD = 462,400 ÷ 13,600 = <b>34.00 元/kg</b>，作为成本推演的货值参数。<br>'+
+      '<b>综合成本</b> = 干线运输 + 产地仓储 + 中转作业 + 预冷处理 + 货损 + 制冷能耗 + 装卸人工（7 项，元/kg）。<br>'+
+      '<b>每批次节省</b> = (改造前 − 改造后) × 收购量合计。';
+    $("hubHow").innerHTML=
+      '<ol class="howto">'+
+      '<li>右栏 ABC 概览与本面板明细表的<b>蓝色单元格可直接点击修改</b>，回车或移开光标即生效；收入、盈利、合计、KPI、成本推演全页自动重算。</li>'+
+      '<li>顶部「✎ 编辑模式」开启后，<b>标题 / 说明 / 结论等文案可直接改写</b>，自动保存到本机浏览器，刷新不丢失。</li>'+
+      '<li>「导出可编辑页」把当前数据与文案打包成一份独立 HTML，可直接交给评委或换电脑打开；「导出明细 CSV」可用 Excel 打开核对。</li>'+
+      '<li>「恢复默认」一键回到《陇原百合最终数据表》原始数据。</li>'+
+      '<li>右侧参数滑块、四场景切换、新能源 / 燃油对比、节点下钻 3D 仓储、小车车厢物联网均保持不变，且随数据联动。</li>'+
+      '</ol>';
+  }
+
+  /* ---------- 一眼看懂数字条 ---------- */
+  function renderSourceBar(){
+    var t=sums();
+    $("sbN").textContent=ABC.length;
+    $("sbQty").textContent=fmtI(t.qty);
+    $("sbRev").textContent=money(t.rev);
+    $("sbProfit").textContent=money(t.profit);
+    $("sbPrice").textContent="¥"+fmt(t.price,2);
+  }
+
+  /* ---------- 评委速读（随数据/场景自动更新） ---------- */
+  function renderBrief(){
+    var t=sums();
+    var now=calc(SC[cur],vehOf(cur)),old=calc(BASE,"fuel");
+    var pct=(old.total-now.total)/old.total*100;
+    var dist=(P.distMain+P.distLast)*SC[cur].distF;
+    var ce=energyCost(dist,"ev",SC[cur].empty),cf=energyCost(dist,"fuel",SC[cur].empty);
+    var cbn=carbon(dist,"ev"),cbf=carbon(dist,"fuel");
+    $("hubBrief").innerHTML=
+      '<div class="briefrow"><b>1</b><div>唯一数据源：<span class="hl">'+ABC.length+'</span> 个单品 · <span class="hl">'+fmtI(t.qty)+'</span> kg · 收入 <span class="hl">'+money(t.rev)+'</span> · 盈利 <span class="hl">'+money(t.profit)+'</span>，网页 / 老原版 / 最终表三源统一。</div></div>'+
+      '<div class="briefrow"><b>2</b><div>降本：改造前 '+fmt(old.total,2)+' → 改造后 <span class="hl">'+fmt(now.total,2)+'</span> 元/kg，下降 <span class="hl">'+fmt(pct,1)+'%</span>，每批次省 <span class="hl">'+money(Math.abs(old.total-now.total)*P.volume)+'</span>。</div></div>'+
+      '<div class="briefrow"><b>3</b><div>提质：货损率 '+fmt(BASE.loss,1)+'% → <span class="hl">'+fmt(SC[cur].loss,1)+'%</span>，全程 0–4℃ 温控；时效 '+fmt(old.time,1)+'h → <span class="hl">'+fmt(now.time,1)+'h</span>。</div></div>'+
+      '<div class="briefrow"><b>4</b><div>绿色：同路线新能源车省 <span class="hl">'+fmt((cf-ce)/cf*100,0)+'%</span> 运输成本、减排 <span class="hl">'+fmt((cbf-cbn)/cbf*100,0)+'%</span>。</div></div>'+
+      '<div class="briefrow"><b>5</b><div>可复核：收入 = 量 × 销价，盈利 = 量 ×(销价 − 购价)，成本 = 7 项逐项累加；<b>所有数字均可编辑并联动重算</b>。</div></div>';
+  }
+
+  /* ---------- 单元格编辑提交 ---------- */
+  function commitCell(td){
+    if(!td||!td.dataset||td.dataset.col===undefined)return;
+    var i=+td.dataset.row,col=td.dataset.col,raw=(td.textContent||"").replace(/\s+/g," ").trim();
+    if(!ABC[i])return;
+    if(col==="qty"||col==="buy"||col==="sell"||col==="rank"){
+      var n=Number(raw.replace(/[^\d.\-]/g,""));
+      if(!isFinite(n)){refreshAll();return;}
+      if(col==="qty")n=Math.max(0,Math.min(200000,n));
+      else if(col==="rank")n=Math.max(1,Math.min(999,Math.round(n)));
+      else n=Math.max(0,Math.min(500,n));
+      ABC[i][col]=n;
+    }else if(col==="cls"||col==="pre"){
+      ABC[i][col]=raw.toUpperCase().replace(/[^ABC]/g,"").charAt(0)||ABC[i][col];
+    }else{
+      ABC[i][col]=raw.slice(0,24)||ABC[i][col];
+    }
+    refreshAll();
+  }
+  function bindCells(id){
+    var root=$(id);if(!root)return;
+    root.addEventListener("keydown",function(e){
+      if(e.key==="Enter"&&e.target&&e.target.classList&&e.target.classList.contains("ec")){e.preventDefault();e.target.blur();}
+    });
+    root.addEventListener("blur",function(e){
+      if(e.target&&e.target.classList&&e.target.classList.contains("ec"))commitCell(e.target);
+    },true);
+  }
+  function rerank(){
+    var order=ABC.map(function(r,i){return {i:i,rev:r.qty*r.sell};}).sort(function(a,b){return b.rev-a.rev});
+    order.forEach(function(o,k){ABC[o.i].rank=k+1;});
+    refreshAll();status("✓ 已按销售收入重算排名（行顺序保持最终表原序）");
+  }
+
+  /* ---------- 编辑模式 ---------- */
+  function setEdit(on){
+    editing=on;
+    if(window.__ET__) window.__ET__.setEdit(on);
+    else window.__ET_PENDING_EDIT__=on;
+  }
+
+  /* ---------- 导出 / 恢复 ---------- */
+  function exportCSV(){
+    var head=["单品编号","供应商","初判等级","收购量(kg)","收购单价(元/kg)","销售单价(元/kg)","销售收入(元)","盈利(元)","收入排名","ABC分类"];
+    var rows=ABC.map(function(r){return [r.id,r.sup,r.pre,r.qty,r.buy,r.sell,r.rev,r.profit,r.rank,r.cls];});
+    var t=sums();rows.push(["合计","","",t.qty,"","",t.rev,t.profit,"",""]);
+    var csv="\ufeff"+[head].concat(rows).map(function(a){
+      return a.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(",");
+    }).join("\r\n");
+    download("陇原百合最终数据表_可编辑导出.csv",csv,"text/csv");
+    status("✓ 已导出 ABC 明细 CSV（可用 Excel 打开核对）");
+  }
+  function exportHTML(){
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll("[data-edit],[data-et]").forEach(function(el){el.removeAttribute("contenteditable");el.removeAttribute("spellcheck");el.removeAttribute("data-et-svg");});
+    clone.querySelectorAll(".et-bar,.et-inp,#etStyle").forEach(function(el){el.remove();});
+    var body=clone.querySelector("body");if(body){body.classList.remove("editing");body.classList.remove("et-on");}
+    var hub=clone.querySelector("#hub");if(hub)hub.classList.remove("show");
+    var ov=clone.querySelector("#ov");if(ov)ov.classList.remove("show");
+    var wh=clone.querySelector("#whFull");if(wh)wh.classList.remove("show");
+    var be=clone.querySelector("#btnEdit");if(be){be.textContent="✎ 编辑模式";be.classList.remove("on");}
+    var tip=clone.querySelector("#editTip");if(tip)tip.style.display="none";
+    var st=clone.querySelector("#saveStatus");if(st)st.textContent="";
+    var payload={abc:ABC.map(function(r){return {id:r.id,sup:r.sup,pre:r.pre,cls:r.cls,rank:r.rank,qty:r.qty,buy:r.buy,sell:r.sell};}),
+                 p:Object.assign({},P),texts:(window.__ET__?window.__ET__.collect():collectTexts())};
+    var sc=clone.querySelector("#SAVED_STATE");
+    if(!sc){sc=document.createElement("script");sc.id="SAVED_STATE";clone.querySelector("head").appendChild(sc);}
+    sc.textContent="window.__SAVED_STATE__="+JSON.stringify(payload).replace(/<\//g,"<\\/")+";";
+    var out="<!DOCTYPE html>\n"+clone.outerHTML;
+    download("陇原百合交互模型_可编辑统一版.html",out,"text/html");
+    status("✓ 已导出独立可编辑页（含当前数据与文案）");
+  }
+  function resetAll(){
+    if(!window.confirm("恢复为《陇原百合最终数据表》原始数据？\n当前所有编辑的数值与文案将被清除。"))return;
+    try{localStorage.removeItem(HUB_KEY);}catch(e){}
+    applySaved({abc:DEF_ABC,p:DEF_P,texts:DEF_TEXTS});
+    if(editing)setEdit(false);
+    if(window.__ET__)window.__ET__.reset();
+    refreshAll();status("✓ 已恢复全部数据与文字");
+  }
+  function openHub(){$("hub").classList.add("show");renderHub();renderBrief();}
+  function closeHub(){$("hub").classList.remove("show");}
+
+  /* ---------- 初始化 ---------- */
+  function initUnified(){
+    DEF_TEXTS={};
+    window.__ET_STATUS__=status;window.__ET_AUTOSAVE__=autoSave;
+    window.__ET_OPENHUB__=openHub;window.__ET_EXPORTH__=exportHTML;window.__ET_RESETH__=resetAll;
+    var saved=null;
+    try{var raw=localStorage.getItem(HUB_KEY);if(raw)saved=JSON.parse(raw);}catch(e){}
+    if(!saved&&window.__SAVED_STATE__)saved=window.__SAVED_STATE__;
+    applySaved(saved);
+    syncFromABC();
+    renderHubStatic();
+    $("btnEdit").addEventListener("click",function(){setEdit(!editing)});
+    $("btnHub").addEventListener("click",openHub);
+    $("btnExportHTML").addEventListener("click",exportHTML);
+    $("btnReset").addEventListener("click",resetAll);
+    $("hubClose").addEventListener("click",closeHub);
+    $("hubRerank").addEventListener("click",rerank);
+    $("hubExportCSV").addEventListener("click",exportCSV);
+    $("hubExportHTML").addEventListener("click",exportHTML);
+    $("hubReset").addEventListener("click",resetAll);
+    bindCells("abcTbl");bindCells("hubTbl");
+    document.addEventListener("input",function(e){
+      if(e.target&&e.target.hasAttribute&&e.target.hasAttribute("data-edit"))autoSave();
+    });
+    document.addEventListener("click",function(e){
+      var t=e.target.closest?e.target.closest(".open-hub"):null;if(t)openHub();
+    });
+    document.addEventListener("keydown",function(e){if(e.key==="Escape")closeHub();});
+    renderABCEx();renderHub();renderSourceBar();renderBrief();
+    if(saved)status("✓ 已载入上次编辑的数据（本地存档）");
+  }
+
+  initUnified();
+  buildParams();drawNet();render();markDrillNodes();
+})();
+</script>
+<script>
+
+/* ==================== 全文字编辑引擎 ====================
+   父页面与下钻 iframe 子页共用同一份源码（通过 postMessage 传源码给子页）。
+   覆盖数据以稳定 DOM 路径为 key，编辑态下所有含文字的元素变为 contenteditable，
+   SVG <text> 用弹窗编辑；改动自动进 localStorage / 导出页。 */
+function ET_ENGINE(cfg){
+  var doc=document, win=doc.defaultView||window;
+  var isChild=!!cfg.isChild, prefix=cfg.prefix||"", send=cfg.send||function(){};
+  var OV=cfg.ov||{}, ORI=cfg.ori||{}, ON=!!cfg.on;
+  var svgNS="http://www.w3.org/2000/svg";
+  var SKIP={script:1,style:1,noscript:1,template:1,iframe:1,canvas:1,input:1,textarea:1,select:1,option:1,title:1};
+  /* 实时仿真数值：由数据自动计算，不属于文案，改数据表/滑块即联动 */
+  var LIVE={clock:1,kTime:1,kCost:1,kLoss:1,kEmpty:1,cTime:1,cCost:1,cLoss:1,cEmpty:1,
+    oldCost:1,newCost:1,savePct:1,saveAmt:1,sbN:1,sbQty:1,sbRev:1,sbProfit:1,sbPrice:1,
+    editTip:1,saveStatus:1,hubStatus:1,
+    avgT:1,passRate:1,humV:1,rotWarn:1,saveKwh:1,cutCo2:1,trees:1,agvRun:1,
+    sceneName:1,sceneDesc:1,alarmT:1,faultState:1,whAvg:1,whPass:1};
+  /* 高频重绘/纯数值容器：整体跳过 */
+  var BOX={stackWrap:1,vehComp:1,params:1,agvList:1,cabTemp:1,vib:1};
+  var CSS=[
+    "body.et-on [data-et][contenteditable='true']{outline:1px dashed rgba(0,240,168,.6);outline-offset:2px;border-radius:3px;cursor:text}",
+    "body.et-on [data-et][contenteditable='true']:hover{outline-color:#00e5ff;background:rgba(0,229,255,.08)}",
+    "body.et-on [data-et][contenteditable='true']:focus{outline:2px solid #00f0a8;background:rgba(0,240,168,.10)}",
+    "body.et-on [data-et][contenteditable='true']::selection{background:rgba(0,240,168,.35)}",
+    "body.et-on input[type=range]{pointer-events:none;opacity:.55}",
+    "body.et-on svg text[data-et]{cursor:text;pointer-events:auto;text-decoration:underline;text-decoration-color:rgba(0,240,168,.7)}",
+    "body.et-on .drill-node,body.et-on #car,body.et-on canvas{pointer-events:none}",
+    ".et-bar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:600;display:none;align-items:center;gap:5px;flex-wrap:wrap;justify-content:center;max-width:96vw;background:rgba(6,16,34,.97);border:1px solid #00f0a8;border-radius:10px;padding:8px 10px;box-shadow:0 14px 42px rgba(0,0,0,.6);font-size:11px;color:#dcefff;font-family:'Microsoft YaHei','PingFang SC',sans-serif}",
+    ".et-bar.child{top:10px;bottom:auto}",
+    "body.et-on .et-bar{display:flex}",
+    ".et-bar .et-t{color:#00f0a8;font-weight:600;white-space:nowrap;margin-right:4px}",
+    ".et-bar .et-hint{color:#7ba4c6;font-size:10px;white-space:nowrap}",
+    ".et-bar button{font-family:inherit;font-size:11px;border:1px solid rgba(0,229,255,.35);background:rgba(0,229,255,.08);color:#dcefff;border-radius:5px;padding:4px 8px;cursor:pointer;white-space:nowrap}",
+    ".et-bar button:hover{border-color:#00f0a8;background:rgba(0,240,168,.16)}",
+    ".et-bar button.primary{border-color:#00f0a8;color:#00f0a8;background:rgba(0,240,168,.12);font-weight:600}",
+    ".et-bar button.warn{border-color:rgba(255,93,112,.5)}",
+    ".et-bar button.swatch{width:18px;height:18px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.35)}",
+    ".et-bar .sep{width:1px;height:18px;background:#173c5c;margin:0 3px}",
+    ".et-inp{position:fixed;z-index:700;background:#08182c;border:1px solid #00f0a8;border-radius:8px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.6);display:flex;gap:6px;align-items:center}",
+    ".et-inp input{width:230px;background:rgba(255,255,255,.05);border:1px solid #173c5c;border-radius:5px;color:#dcefff;font-family:inherit;font-size:12px;padding:6px 8px;outline:none}",
+    ".et-inp button{font-family:inherit;font-size:11px;padding:6px 10px;border:1px solid #00f0a8;border-radius:5px;background:rgba(0,240,168,.14);color:#00f0a8;cursor:pointer}"
+  ].join("\n");
+  var bar=null, svgBox=null, timer=null, fsize=3;
+
+  function injectCSS(){
+    if(doc.getElementById("etStyle"))return;
+    var s=doc.createElement("style");s.id="etStyle";s.textContent=CSS;
+    (doc.head||doc.documentElement).appendChild(s);
+  }
+  function pathOf(el){
+    var parts=[],cur=el;
+    while(cur&&cur.nodeType===1&&cur!==doc.body&&cur!==doc.documentElement){
+      var p=cur.parentNode;if(!p)break;
+      var n=0,my=1;
+      for(var c=p.firstChild;c;c=c.nextSibling){if(c.nodeType===1&&c.tagName===cur.tagName){n++;if(c===cur)my=n;}}
+      var nm=(cur.localName||cur.tagName||"x").toLowerCase();
+      var pre=(cur.namespaceURI===svgNS)?"s:":"";
+      parts.unshift(pre+nm+(cur.id?"#"+cur.id:"")+"["+my+"]");
+      cur=p;
+    }
+    return parts.join(">");
+  }
+  function blocked(el){
+    var ln=(el.localName||el.tagName||"").toLowerCase();
+    if(SKIP[ln])return true;
+    if(el.closest&&el.closest(".et-bar,.et-inp,[data-et-ui],template"))return true;
+    if(el.classList&&el.classList.contains("ec"))return true;
+    if(el.id&&LIVE[el.id])return true;
+    var p=el.parentNode;
+    while(p&&p.nodeType===1){if(p.id&&BOX[p.id])return true;p=p.parentNode;}
+    return false;
+  }
+  function hasText(el){
+    for(var c=el.firstChild;c;c=c.nextSibling){
+      if(c.nodeType===3&&c.nodeValue.replace(/\s+/g,"").length)return true;
+    }
+    return false;
+  }
+  function isSvgText(el){return el.namespaceURI===svgNS&&(el.localName||"").toLowerCase()==="text";}
+  function isActive(el){var a=doc.activeElement;return !!(a&&(a===el||(el.contains&&el.contains(a))));}
+  function getVal(el){return isSvgText(el)?el.textContent:el.innerHTML;}
+  function setVal(el,v){if(isSvgText(el))el.textContent=v;else el.innerHTML=v;}
+
+  function scan(){
+    var root=doc.body;if(!root)return;
+    var els=root.querySelectorAll("*");
+    for(var i=0;i<els.length;i++){
+      var el=els[i];if(el.nodeType!==1)continue;
+      var k=el.getAttribute("data-et");
+      if(!k){
+        if(el.closest&&el.closest("[data-et]"))continue; /* 祖先已是编辑宿主 */
+        if(blocked(el))continue;
+        var sv=isSvgText(el);
+        if(el.namespaceURI===svgNS&&!sv)continue;
+        if(!hasText(el))continue;
+        k=prefix+pathOf(el);
+        el.setAttribute("data-et",k);
+        var o=getVal(el);
+        if(!(k in ORI)){ORI[k]=o;if(isChild)send({t:"def",key:k,html:o});}
+      }
+      if(!isActive(el)){
+        var v=getVal(el);
+        if(OV[k]!=null&&OV[k]!==v){try{setVal(el,OV[k]);}catch(e){}}
+      }
+      if(isSvgText(el)){
+        if(ON)el.setAttribute("data-et-svg","1");else el.removeAttribute("data-et-svg");
+      }else{
+        if(ON){
+          if(el.getAttribute("contenteditable")!=="true"){el.setAttribute("contenteditable","true");el.setAttribute("spellcheck","false");}
+        }else{
+          el.removeAttribute("contenteditable");el.removeAttribute("spellcheck");
+        }
+      }
+    }
+  }
+  function schedule(){
+    if(timer)return;
+    timer=setTimeout(function(){timer=null;scan();},90);
+  }
+  function commit(el){
+    if(!el||!el.getAttribute)return;
+    var k=el.getAttribute("data-et");if(!k)return;
+    var v=getVal(el);OV[k]=v;
+    if(isChild)send({t:"set",key:k,html:v});
+    else if(win.__ET_AUTOSAVE__)win.__ET_AUTOSAVE__();
+  }
+  function broadcast(m){
+    if(isChild)return;
+    var fs=doc.querySelectorAll("iframe");
+    for(var i=0;i<fs.length;i++){try{fs[i].contentWindow.postMessage(m,"*");}catch(e){}}
+  }
+  function collect(){return JSON.parse(JSON.stringify(OV));}
+  function applyAll(t){OV=t||{};scan();if(!isChild)broadcast({__et:1,t:"ov",ov:OV});}
+  function reset(){
+    OV={};
+    var list=doc.querySelectorAll("[data-et]");
+    for(var i=0;i<list.length;i++){
+      var el=list[i],k=el.getAttribute("data-et");
+      if(k in ORI){try{setVal(el,ORI[k]);}catch(e){}}
+    }
+    if(!isChild){broadcast({__et:1,t:"reset",ori:ORI});if(win.__ET_AUTOSAVE__)win.__ET_AUTOSAVE__();}
+    scan();
+  }
+  function setEdit(on){
+    ON=!!on;
+    if(doc.body)doc.body.classList.toggle("et-on",ON);
+    if(!isChild){
+      var b=doc.getElementById("btnEdit");
+      if(b){b.textContent=ON?"✓ 完成编辑":"✎ 全文字编辑";b.classList.toggle("on",ON);}
+      var tip=doc.getElementById("editTip");if(tip)tip.style.display=ON?"block":"none";
+      if(win.__ET_STATUS__)win.__ET_STATUS__(ON?"全文字编辑已开启：点击任意文字即可改写":"已退出全文字编辑");
+      broadcast({__et:1,t:"state",on:ON});
+      if(win.__ET_AUTOSAVE__)win.__ET_AUTOSAVE__();
+    }
+    scan();
+  }
+
+  function exec(cmd,val){
+    var ae=doc.activeElement;
+    if(!ae||!ae.getAttribute||!ae.getAttribute("data-et"))return;
+    try{ae.focus();doc.execCommand("styleWithCSS",false,true);doc.execCommand(cmd,false,val);}catch(e){}
+    commit(ae);
+  }
+  function mountBar(){
+    if(doc.querySelector(".et-bar"))return;
+    bar=doc.createElement("div");bar.className="et-bar"+(isChild?" child":"");bar.setAttribute("data-et-ui","1");
+    var h='<span class="et-t">✎ 全文字编辑</span><span class="et-hint">点任意文字改写 · 选中文字后改字体 / 字号 / 颜色</span><span class="sep"></span>'+
+      '<button data-a="bold" title="加粗"><b>B</b></button>'+
+      '<button data-a="up" title="放大字号">A+</button><button data-a="down" title="缩小字号">A−</button>'+
+      '<button data-a="font" data-v="Microsoft YaHei" title="微软雅黑">雅黑</button>'+
+      '<button data-a="font" data-v="SimSun" title="宋体">宋体</button>'+
+      '<button data-a="font" data-v="Consolas" title="等宽">等宽</button>'+
+      '<span class="sep"></span><span class="et-hint">颜色</span>'+
+      '<button class="swatch" data-a="color" data-v="#00e5ff" style="background:#00e5ff" title="青"></button>'+
+      '<button class="swatch" data-a="color" data-v="#00f0a8" style="background:#00f0a8" title="绿"></button>'+
+      '<button class="swatch" data-a="color" data-v="#ffb648" style="background:#ffb648" title="橙"></button>'+
+      '<button class="swatch" data-a="color" data-v="#ff5d70" style="background:#ff5d70" title="红"></button>'+
+      '<button class="swatch" data-a="color" data-v="#ffffff" style="background:#ffffff" title="白"></button>'+
+      '<button class="swatch" data-a="color" data-v="#dcefff" style="background:#dcefff" title="默认"></button>'+
+      '<span class="sep"></span><button data-a="clear">⌫ 清除格式</button><button data-a="restore">↶ 恢复本段</button>'+
+      (isChild?"":'<span class="sep"></span><button data-a="hub">▦ 数据底座</button><button data-a="export">↧ 导出可编辑页</button><button data-a="reset" class="warn">↺ 恢复默认</button>')+
+      '<span class="sep"></span><button data-a="done" class="primary">✓ 完成编辑</button>';
+    bar.innerHTML=h;
+    (doc.body||doc.documentElement).appendChild(bar);
+    bar.addEventListener("mousedown",function(e){if(e.target.closest&&e.target.closest("button"))e.preventDefault();});
+    bar.addEventListener("click",function(e){
+      var b=e.target.closest?e.target.closest("button"):null;if(!b)return;
+      var a=b.getAttribute("data-a"),v=b.getAttribute("data-v");
+      if(a==="done"){if(isChild)send({t:"toggle"});else setEdit(false);}
+      else if(a==="bold")exec("bold");
+      else if(a==="up"||a==="down"){fsize=Math.max(1,Math.min(7,fsize+(a==="up"?1:-1)));exec("fontSize",String(fsize));}
+      else if(a==="font")exec("fontName",v);
+      else if(a==="color")exec("foreColor",v);
+      else if(a==="clear")exec("removeFormat");
+      else if(a==="restore"){
+        var ae=doc.activeElement;
+        if(ae&&ae.getAttribute&&ae.getAttribute("data-et")){
+          var k=ae.getAttribute("data-et");delete OV[k];
+          if(isChild)send({t:"del",key:k});
+          if(k in ORI){try{setVal(ae,ORI[k]);}catch(err){}}
+          if(!isChild&&win.__ET_AUTOSAVE__)win.__ET_AUTOSAVE__();
+        }
+      }
+      else if(!isChild&&a==="hub"&&win.__ET_OPENHUB__)win.__ET_OPENHUB__();
+      else if(!isChild&&a==="export"&&win.__ET_EXPORTH__)win.__ET_EXPORTH__();
+      else if(!isChild&&a==="reset"&&win.__ET_RESETH__)win.__ET_RESETH__();
+    });
+  }
+  function openSvgEditor(el,x,y){
+    if(svgBox)svgBox.remove();
+    svgBox=doc.createElement("div");svgBox.className="et-inp";
+    svgBox.innerHTML='<input type="text" value=""><button data-ok="1">确定</button><button data-no="1">取消</button>';
+    var W=win.innerWidth||1200,H=win.innerHeight||800;
+    svgBox.style.left=Math.max(8,Math.min(x,W-300))+"px";
+    svgBox.style.top=Math.max(8,Math.min(y,H-60))+"px";
+    doc.body.appendChild(svgBox);
+    var inp=svgBox.querySelector("input");inp.value=el.textContent;inp.focus();inp.select();
+    function done(){
+      var v=inp.value,k=el.getAttribute("data-et");
+      el.textContent=v;OV[k]=v;
+      if(isChild)send({t:"set",key:k,html:v});else if(win.__ET_AUTOSAVE__)win.__ET_AUTOSAVE__();
+      svgBox.remove();svgBox=null;
+    }
+    function cancel(){if(svgBox){svgBox.remove();svgBox=null;}}
+    svgBox.addEventListener("click",function(e){
+      if(e.target.getAttribute&&e.target.getAttribute("data-ok"))done();
+      else if(e.target.getAttribute&&e.target.getAttribute("data-no"))cancel();
+    });
+    inp.addEventListener("keydown",function(e){
+      if(e.key==="Enter"){e.preventDefault();done();}
+      else if(e.key==="Escape"){e.preventDefault();cancel();}
+    });
+  }
+  function bindEvents(){
+    doc.addEventListener("input",function(e){
+      if(!ON)return;var t=e.target;
+      if(t&&t.getAttribute&&t.getAttribute("data-et"))commit(t);
+    },true);
+    doc.addEventListener("blur",function(e){
+      if(!ON)return;var t=e.target;
+      if(t&&t.getAttribute&&t.getAttribute("data-et"))commit(t);
+    },true);
+    doc.addEventListener("keydown",function(e){
+      if(!ON)return;var t=e.target;
+      if(!t||!t.getAttribute||!t.getAttribute("data-et"))return;
+      if(e.key==="Enter"){e.preventDefault();t.blur();}
+      if((e.ctrlKey||e.metaKey)&&(e.key||"").toLowerCase()==="s"){e.preventDefault();t.blur();}
+    },true);
+    doc.addEventListener("paste",function(e){
+      if(!ON)return;var t=e.target;
+      if(!t||!t.getAttribute||!t.getAttribute("data-et"))return;
+      e.preventDefault();
+      var cd=e.clipboardData||win.clipboardData,txt=cd?cd.getData("text/plain"):"";
+      try{doc.execCommand("insertText",false,txt);}catch(err){}
+    },true);
+    doc.addEventListener("click",function(e){
+      if(!ON)return;
+      if(e.target.closest&&e.target.closest(".et-bar,.et-inp,[data-et-ui]"))return;
+      if(isSvgText(e.target)){
+        e.preventDefault();e.stopPropagation();
+        openSvgEditor(e.target,e.clientX,e.clientY);return;
+      }
+      /* 编辑态：点击任何有字的地方只定位光标，不触发按钮/场景/下钻等原交互 */
+      e.stopPropagation();
+    },true);
+    if(win.MutationObserver){
+      var mo=new win.MutationObserver(schedule);
+      try{mo.observe(doc.documentElement||doc.body,{childList:true,subtree:true});}catch(err){}
+    }
+  }
+
+  if(isChild){
+    win.addEventListener("message",function(e){
+      var d=e.data;if(!d||d.__et!==1)return;
+      if(d.t==="state"){ON=!!d.on;if(doc.body)doc.body.classList.toggle("et-on",ON);scan();}
+      else if(d.t==="ov"){OV=d.ov||{};scan();}
+      else if(d.t==="reset"){ORI=d.ori||ORI;reset();}
+    });
+  }else{
+    win.addEventListener("message",function(e){
+      var d=e.data;if(!d||d.__et!==1||e.source===win)return;
+      if(d.t==="needEngine"){
+        try{e.source.postMessage({__et:1,t:"engine",code:cfg.engineSrc||"",ov:OV,ori:ORI,on:ON},"*");}catch(err){}
+      }else if(d.t==="set"){OV[d.key]=d.html;if(win.__ET_AUTOSAVE__)win.__ET_AUTOSAVE__();}
+      else if(d.t==="def"){if(!(d.key in ORI))ORI[d.key]=d.html;}
+      else if(d.t==="del"){delete OV[d.key];if(win.__ET_AUTOSAVE__)win.__ET_AUTOSAVE__();}
+      else if(d.t==="toggle"){setEdit(!ON);}
+    });
+  }
+
+  injectCSS();mountBar();bindEvents();
+  if(!isChild){
+    var pend=win.__ET_PENDING_TEXT__;
+    if(pend&&Object.keys(pend).length)OV=pend;
+    if(win.__ET_PENDING_DEF__)ORI=Object.assign({},win.__ET_PENDING_DEF__,ORI);
+    scan();
+    if(win.__ET_PENDING_EDIT__)setEdit(true);
+  }else{
+    if(ON&&doc.body)doc.body.classList.add("et-on");
+    scan();
+  }
+  return {setEdit:setEdit,collect:collect,applyAll:applyAll,reset:reset,
+          originals:function(){return JSON.parse(JSON.stringify(ORI));}};
+}
+
+window.__ET__=ET_ENGINE({
+  isChild:false,prefix:"",ov:{},ori:{},on:false,
+  engineSrc:ET_ENGINE.toString(),send:function(){}
+});
+</script>
+</body>
+</html>
